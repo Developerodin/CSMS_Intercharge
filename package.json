@@ -2,7 +2,7 @@
   "name": "demo1",
   "version": "8.1.5",
   "private": true,
-  "homepage": "http://Developerodin.github.io/CSMS_Intercharge",
+  "homepage": "http://Developerodin.github.io/CSMS_Intercharge/",
   "dependencies": {
     "@emotion/react": "^11.10.6",
     "@emotion/styled": "^11.10.6",
@@ -74,14 +74,15 @@
   },
   "scripts": {
     "start": "react-scripts start",
+    "predeploy" : "npm run build",
+    "deploy" : "gh-pages -d build",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "lint": "prettier --check .",
     "format": "prettier --write .",
-    "rtl": "webpack --config=rtl.config.js",
-    "predeploy" : "npm run build",
-     "deploy" : "gh-pages -d build"
+    "rtl": "webpack --config=rtl.config.js"
+   
   },
   "eslintConfig": {
     "extends": [
