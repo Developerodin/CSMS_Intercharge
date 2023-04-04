@@ -50,7 +50,7 @@ const {values,errors,touched,handleBlur,handleChange,handleSubmit}=useFormik({
   })
 
   return (
-    <div>
+    <Box >
       
       <IconButton sx={{color:"#000000" }} onClick={handleClickOpen} >
        
@@ -63,16 +63,17 @@ const {values,errors,touched,handleBlur,handleChange,handleSubmit}=useFormik({
         keepMounted
         onClose={handleClose}
         aria-describedby="alert-dialog-slide-description"
+        
       >
         
-        <Box sx={{display:"flex",justifyContent:"space-around", alignItems:"center"}}>
+        <Box sx={{display:"flex",justifyContent:"space-around", alignItems:"center"}} >
 
         <Typography sx={{color:"Black",marginTop:"5px", fontWeight:"bold"}}variant="h5" component="h5">Edit Booking Details</Typography>
      
         </Box>
 
         <DialogContent >
-            <Box width={"500px"}>
+            <Box width={"100%"} >
 
             <Box  marginTop={"10px"}>
             <TextField id="outlined-basic" sx={{width:"100%",marginBottom:"20px"}} label="Booking ID" variant="outlined" name="BookingID" onChange={handleChange} value={values.BookingID}/>
@@ -110,7 +111,7 @@ const {values,errors,touched,handleBlur,handleChange,handleSubmit}=useFormik({
           
         </DialogActions>
       </Dialog>
-    </div>
+    </Box>
   )
 }
 

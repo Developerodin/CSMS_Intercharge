@@ -26,6 +26,7 @@ import LockOpenIcon from '@mui/icons-material/LockOpen';
 import ClearAllIcon from '@mui/icons-material/ClearAll';
 import EvStationIcon from '@mui/icons-material/EvStation';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
+import TextareaAutosize from '@mui/base/TextareaAutosize';
 const column=[
     {name:"Name"},
     {name:"Type"},
@@ -71,8 +72,8 @@ const ChargerDetails = () => {
       </IconButton>
         </Box>
     <Box margin="30px">
-        <Box display="flex" justifyContent="space-between" sx={{sm:{display:"block"}}}>
-            <Box sx={{width:"48%",sm:{width:"100%"}}}>
+        <Box display="flex" justifyContent="space-between" sx={{display:{xs:"block",sm:"block",md:"flex",lg:"flex",xl:"flex"}}}>
+            <Box sx={{width:{xs:"100%",sm:"100%",md:"48%",lg:"48%",xl:"48%"}}}>
             <Card sx={{ minWidth: 275 }}>
       <CardContent >
         
@@ -125,8 +126,8 @@ const ChargerDetails = () => {
 
 {/* ====================================================== */}
 
-            <Box width="48%" >
-            <Card sx={{ minWidth: 275,padding:"0px" ,minHeight:"100%"}}>
+            <Box  sx={{width:{xs:"100%",sm:"100%",md:"48%",lg:"48%",xl:"48%"},marginTop:{xs:"100px",sm:"100px",md:"0px",lg:"0px",xl:"0px"}}}>
+            <Card sx={{ minWidth: 275,padding:"0px" ,minHeight:"100%" }}>
       <CardContent padding="0px">
         <Typography variant='h5' fontWeight="bold">Stakeholder Information</Typography>
         <GenralTabel rows={rows} column={column}/>
@@ -140,7 +141,7 @@ const ChargerDetails = () => {
 {/* =================================================================================================== */}
 <Box  paddingTop="20px" marginTop="50px" marginBottom="20px">
 
-<Box display="flex"  justifyContent="space-between" sx={{alignItems:"center",width:"48%",marginLeft:"auto"}}>
+<Box display="flex"  justifyContent="space-between" sx={{alignItems:"center",width:{xs:"100%",sm:"100%",md:"48%",lg:"48%",xl:"48%"},marginLeft:{xs:"none",sm:"none",md:"auto",lg:"auto",xl:"auto"}}}>
 
   <Box >
 
@@ -207,8 +208,8 @@ const ChargerDetails = () => {
 </Box>
 
 {/* =================================================================================================== */}
-<Box display="flex" justifyContent="space-between">
-            <Box width="48%">
+<Box display="flex" justifyContent="space-between" sx={{display:{xs:"block",sm:"block",md:"flex",lg:"flex",xl:"flex"}}}>
+            <Box  sx={{width:{xs:"100%",sm:"100%",md:"48%",lg:"48%",xl:"48%"}}}>
             <Card sx={{ minWidth: 275 }}>
       <CardContent>
       <Typography variant='h5' fontWeight="bold">OCPP Commands</Typography>
@@ -279,12 +280,17 @@ const ChargerDetails = () => {
 
 {/* ====================================================== */}
 
-            <Box width="48%" >
-            <Card sx={{ minWidth: 275, minHeight:"100%"}}>
+            <Box  sx={{width:{xs:"100%",sm:"100%",md:"48%",lg:"48%",xl:"48%"},marginTop:{xs:"100px",sm:"100px",md:"0px",lg:"0px",xl:"0px"}}}>
+            <Card sx={{ minWidth: 275,padding:"0px" ,minHeight:"100%" }}>
       <CardContent>
       <Typography variant='h5' fontWeight="bold">Utilisation Summary</Typography>
 
-        
+      <TextareaAutosize
+      aria-label="minimum height"
+      minRows={10}
+      placeholder="Summary....."
+      style={{ width:"100%",marginTop:"20px"}}
+    />
           
       </CardContent>
      
