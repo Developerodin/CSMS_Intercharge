@@ -41,9 +41,9 @@ const ChartsWidget3: React.FC<Props> = ({className}) => {
       {/* begin::Header */}
       <div className='card-header border-0 pt-5'>
         <h3 className='card-title align-items-start flex-column'>
-          <span className='card-label fw-bold fs-3 mb-1'>Recent Transactions</span>
+          <span className='card-label fw-bold fs-3 mb-1'>Date-wise revenue</span>
 
-          <span className='text-muted fw-semibold fs-7'>More than 1000 new records</span>
+          <span className='text-muted fw-semibold fs-7'>Past 6 Months transactions</span>
         </h3>
 
         {/* begin::Toolbar */}
@@ -89,8 +89,8 @@ export {ChartsWidget3}
 function getChartOptions(height: number): ApexOptions {
   const labelColor = getCSSVariableValue('--kt-gray-500')
   const borderColor = getCSSVariableValue('--kt-gray-200')
-  const baseColor = getCSSVariableValue('--kt-info')
-  const lightColor = getCSSVariableValue('--kt-info-light')
+  const baseColor = "#302A4E"
+  const lightColor = "#f0edfa"
 
   return {
     series: [

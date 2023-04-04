@@ -14,7 +14,7 @@ const CardsWidget20 = ({className, description, color, img,percent,heading,pendi
     style={{
       backgroundColor: color,
       backgroundImage: `url('${img}')`,
-      
+      height:"45%"
     }}
   >
     <div className='card-header pt-5'>
@@ -25,13 +25,13 @@ const CardsWidget20 = ({className, description, color, img,percent,heading,pendi
       </div>
     </div>
     <div className='card-body d-flex align-items-end pt-0'>
-      <div className='d-flex align-items-center flex-column mt-3 w-100'>
+      <div className='d-flex align-items-center flex-column w-100'>
         <div className='d-flex justify-content-between fw-bold fs-6 text-white opacity-75 w-100 mt-auto mb-2'>
           <span>{pending}</span>
           <span>{percent}%</span>
         </div>
 
-        <div className='h-8px mx-3 w-100 bg-white bg-opacity-50 rounded'>
+        <div className=' mx-3 w-100 bg-white bg-opacity-50 rounded'>
           <div
             className='bg-white rounded h-8px'
             role='progressbar'

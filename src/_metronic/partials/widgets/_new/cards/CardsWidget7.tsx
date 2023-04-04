@@ -27,7 +27,7 @@ const items: Array<{
 ]
 
 const CardsWidget7 = ({className, description, icon, stats, labelColor, textColor,color}: Props) => (
-  <div className={`card card-flush ${className}`} style={{backgroundColor:color}}>
+  <div className={`card card-flush ${className}`} style={{backgroundColor:color,height:"50%"}}>
     <div className='card-header pt-5'>
       <div className='card-title d-flex flex-column'>
         <div className='card-title d-flex flex-column'>

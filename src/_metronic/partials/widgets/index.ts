@@ -50,6 +50,8 @@ export * from './charts/ChartsWidget6'
 export * from './charts/ChartsWidget7'
 export * from './charts/ChartsWidget8'
 
+export * from './charts/ChartsWidgetCus1'
+
 // tables
 export * from './tables/TablesWidget1'
 export * from './tables/TablesWidget2'
@@ -85,6 +87,7 @@ export * from './tiles/TilesWidget5'
 // new
 export * from './_new/cards/CardsWidget7'
 export * from './_new/cards/CardsWidget17'
+
 export * from './_new/cards/CardsWidget20'
 
 export * from './_new/lists/ListsWidget26'

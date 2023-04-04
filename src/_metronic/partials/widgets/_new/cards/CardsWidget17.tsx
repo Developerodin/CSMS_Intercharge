@@ -55,9 +55,9 @@ const CardsWidget17: FC<Props> = ({
         </div>
       </div>
 
-      <div className='card-body pt-2 pb-4 d-flex flex-wrap align-items-center'>
+      <div className='card-body pt-2 pb-4 d-flex flex-wrap align-items-center p-05' style={{height:"190px"}}>
         <div className='d-flex flex-center me-5 pt-2'>
-          <div
+         <div
             id='kt_card_widget_17_chart'
             ref={chartRef}
             style={{minWidth: chartSize + 'px', minHeight: chartSize + 'px'}}

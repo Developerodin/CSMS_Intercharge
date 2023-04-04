@@ -37,6 +37,7 @@
     "react-dom": "18.0.0",
     "react-inlinesvg": "3.0.0",
     "react-intl": "5.25.0",
+    "react-minimal-pie-chart": "^8.4.0",
     "react-pie-graph-chart": "^1.0.3",
     "react-query": "3.38.0",
     "react-router-dom": "6.3.0",
@@ -74,15 +75,14 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "predeploy" : "npm run build",
-    "deploy" : "gh-pages -d build",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "lint": "prettier --check .",
     "format": "prettier --write .",
     "rtl": "webpack --config=rtl.config.js"
-   
   },
   "eslintConfig": {
     "extends": [
