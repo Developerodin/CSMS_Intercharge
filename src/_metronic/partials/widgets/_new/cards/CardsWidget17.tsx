@@ -41,7 +41,7 @@ const CardsWidget17: FC<Props> = ({
           <div className='d-flex align-items-center'>
             <span className='fs-4 fw-semibold text-gray-400 me-1 align-self-start'></span>
 
-            <span className='fs-2hx fw-bold text-dark me-2 lh-1 ls-n2 '>₹ 24,450</span>
+            <span className='fs-2hx fw-bold text-dark me-2 lh-1 ls-n2 '>₹ 12,500</span>
 
             <span className='badge badge-light-success fs-base'>
               <KTSVG
@@ -70,12 +70,12 @@ const CardsWidget17: FC<Props> = ({
           <div className='d-flex fw-semibold align-items-center'>
             <div className='bullet w-8px h-3px rounded-2 bg-success me-3'></div>
             <div className='text-gray-500 flex-grow-1 me-4'>To CPOs</div>
-            <div className='fw-bolder text-gray-700 text-xxl-end'>$60,000</div>
+            <div className='fw-bolder text-gray-700 text-xxl-end'>₹ 1,12,500</div>
           </div>
           <div className='d-flex fw-semibold align-items-center my-3'>
             <div className='bullet w-8px h-3px rounded-2 bg-primary me-3'></div>
-            <div className='text-gray-500 flex-grow-1 me-4'>To Users</div>
-            <div className='fw-bolder text-gray-700 text-xxl-end'>$25,000</div>
+            <div className='text-gray-500 flex-grow-1 me-4'>From Users</div>
+            <div className='fw-bolder text-gray-700 text-xxl-end'>₹ 1,25,000</div>
           </div>
          
           <div className='d-flex fw-semibold align-items-center'>
@@ -84,7 +84,7 @@ const CardsWidget17: FC<Props> = ({
               style={{backgroundColor: '#E4E6EF'}}
             ></div>
             <div className='text-gray-500 flex-grow-1 me-4'>Total Transactions</div>
-            <div className=' fw-bolder text-gray-700 text-xxl-end'>$85,000</div>
+            <div className=' fw-bolder text-gray-700 text-xxl-end'>2,500</div>
           </div>
         </div>
       </div>
