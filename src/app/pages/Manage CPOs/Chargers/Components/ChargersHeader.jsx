@@ -13,12 +13,12 @@ import ChargeList from '../ClientComponents/ChargeList';
 
 const MyBox = styled('Button')({
     width:'100%',
-    color: 'white',
-    backgroundColor: 'crimson',
+    color: '#fff',
+    backgroundColor: '#009ef7',
     padding: 8,
     borderRadius: 4,
     border:"none",
-
+    fontWeight: 'bold'
   });
 
 
@@ -31,7 +31,7 @@ const ChargersHeader = () => {
             <Box display={'flex'}   justifyContent={"space-evenly"} alignItems={"center"} sx={{width:{xs:"100%",md:"45%",lg:"45%",xl:"45%"}}}>
             <Box sx={{display:"flex", width:"20%"}}>
 
-            <MyBox>AC 743
+            <MyBox>AC (743)
             </MyBox>
 
             {/* <Box sx={{ marginLeft:"10px"}}>
@@ -42,7 +42,7 @@ const ChargersHeader = () => {
 
 
             <Box sx={{display:"flex",  width:"20%"}}>
-            <MyBox>DC  300
+            <MyBox>DC  (300)
           
             </MyBox>
 
@@ -54,8 +54,8 @@ const ChargersHeader = () => {
 
             <Box sx={{display:{xs:"none",md:"flex",lg:"flex",xl:"flex"},  width:"20%"}} >
 
-            <Button color="success" variant="contained" >Active</Button>
-            <Button  sx={{backgroundColor:"crimson","&:hover": { backgroundColor: "#E21818"}}} variant="contained" >InActive</Button>
+            <Button sx={{backgroundColor:"#259300","&:hover": { backgroundColor: "#1b6802"}}}   variant="contained" >Active</Button>
+            <Button  sx={{backgroundColor:"gray","&:hover": { backgroundColor: "#259300"}}} variant="contained" >InActive</Button>
             </Box>
             
             </Box>
