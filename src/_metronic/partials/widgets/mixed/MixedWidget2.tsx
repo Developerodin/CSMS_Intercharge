@@ -209,7 +209,9 @@ const MixedWidget2: React.FC<Props> = ({className, chartColor, chartHeight, stro
                   {/* <span className="text-gray-700 fw-bolder d-block fs-2qx lh-1 ls-n1 mb-1">
                   Chargers
                 </span> */}
-                <span className="text-gray-700 fw-bolder  fs-6"> 1043 Chargers</span>
+                <span className="text-gray-700 fw-bolder  fs-6"> 1043 </span>
+                <span className="text-gray-700 fw-bolder  fs-6"> Chargers</span>
+                
                   </div>
 
               </div>

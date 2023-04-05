@@ -52,7 +52,7 @@ const ChargersHeader = () => {
             
             </Box>
 
-            <Box sx={{display:"flex",  width:"20%"}}>
+            <Box sx={{display:{xs:"none",md:"flex",lg:"flex",xl:"flex"},  width:"20%"}} >
 
             <Button color="success" variant="contained" >Active</Button>
             <Button  sx={{backgroundColor:"crimson","&:hover": { backgroundColor: "#E21818"}}} variant="contained" >InActive</Button>
