@@ -25,22 +25,14 @@ const UserHeader = () => {
     <KTCard>
         <Box    justifyContent={"space-between"} p={"10px"} display='flex' sx={{display:{xs:"block",sm:"flex",md:"flex",lg:"flex",xl:"flex"}, alignItems:"center"}} >
 
-            <Box display={'flex'}   justifyContent={"space-evenly"} alignItems={"center"} sx={{width:{xs:"100%",md:"45%",lg:"45%",xl:"30%"}}}>
+            <Box display={'flex'}    sx={{width:{xs:"100%",md:"45%",lg:"45%",xl:"30%"}}}>
            
-            <Box sx={{display:"flex", width:"40%"}}>
-
-<MyBox>Total User</MyBox>
-
-<Box sx={{ marginLeft:"10px"}}>
-<Typography sx={{color:"gray",marginTop:"5px"}}variant="h5" component="h3">100/100</Typography>
-</Box>
-
-</Box>
+      
 
 
 <Box sx={{display:{xs:"none",md:"flex",lg:"flex",xl:"flex"},  width:"20%"}} >
 
-<Button  sx={{backgroundColor:"#fff", color:"black","&:hover": { backgroundColor: "#fff"}}} variant="contained" >Active</Button>
+<Button  sx={{backgroundColor:"gray", color:"#fff","&:hover": { backgroundColor: "gray"}}} variant="contained" >Active</Button>
 <Button  sx={{backgroundColor:"crimson","&:hover": { backgroundColor: "#E21818"}}} variant="contained" >InActive</Button>
 </Box>
 
@@ -78,7 +70,7 @@ const UserHeader = () => {
                  </IconButton>
            
                  <Box sx={{ marginLeft:"10px", display:'flex', alignItems:"center"}}>
-            <Typography sx={{color:"gray",marginTop:"5px",display:{xs:"none",sm:"none",md:"none",lg:"none",xl:"block"}}}variant="subtitle1" component="h6">Add Ev Owner</Typography>
+            <Typography sx={{color:"gray",marginTop:"5px",display:{xs:"none",sm:"none",md:"none",lg:"none",xl:"block"}}}variant="subtitle1" component="h6">Add EV Owner</Typography>
             <IconButton  ><AddUser/></IconButton>
            
             </Box>

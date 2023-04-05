@@ -21,26 +21,29 @@ const UserList = () => {
     {name:"Name"},
     {name:"Email"},
     {name:"Phone"},
-    {name:"Company"},
-    {name:"Credits"},
+    {name:"VIN"},
+    {name:"Charge Duration"},
+    {name:"Available Credits"},
+    
     {name:" "},
     {name:"Vehicles"},
     {name:"Active"},
+    
     {name:"     "},
     {name:"     "},
     {name:"     "}
   ]
   const rows=[
-    {UserID:"17905",Name:"fleet_admin","Email":"test@gmail.com","Phone":"+37-9090909090","Company":"Tata","Credits":"100","":<UserWalletModal/>,"Vehicles":"kia EV6",Active:<Switch/>,"Icon":<AddVehicle/>,"Icon2":<EnergySavingsLeafIcon/>,Update:<DriveFileRenameOutlineIcon/>},
-    {UserID:"17905",Name:"fleet_admin","Email":"test@gmail.com","Phone":"+37-9090909090","Company":"Tata","Credits":"100","":<UserWalletModal/>,"Vehicles":"kia EV6",Active:<Switch/>,"Icon":<AddVehicle/>,"Icon2":<EnergySavingsLeafIcon/>,Update:<DriveFileRenameOutlineIcon/>},
-    {UserID:"17905",Name:"fleet_admin","Email":"test@gmail.com","Phone":"+37-9090909090","Company":"Tata","Credits":"100","":<UserWalletModal/>,"Vehicles":"kia EV6",Active:<Switch/>,"Icon":<AddVehicle/>,"Icon2":<EnergySavingsLeafIcon/>,Update:<DriveFileRenameOutlineIcon/>},
-    {UserID:"17905",Name:"fleet_admin","Email":"test@gmail.com","Phone":"+37-9090909090","Company":"Tata","Credits":"100","":<UserWalletModal/>,"Vehicles":"kia EV6",Active:<Switch/>,"Icon":<AddVehicle/>,"Icon2":<EnergySavingsLeafIcon/>,Update:<DriveFileRenameOutlineIcon/>},
-    {UserID:"17905",Name:"fleet_admin","Email":"test@gmail.com","Phone":"+37-9090909090","Company":"Tata","Credits":"100","":<UserWalletModal/>,"Vehicles":"kia EV6",Active:<Switch/>,"Icon":<AddVehicle/>,"Icon2":<EnergySavingsLeafIcon/>,Update:<DriveFileRenameOutlineIcon/>},
-    {UserID:"17905",Name:"fleet_admin","Email":"test@gmail.com","Phone":"+37-9090909090","Company":"Tata","Credits":"100","":<UserWalletModal/>,"Vehicles":"kia EV6",Active:<Switch/>,"Icon":<AddVehicle/>,"Icon2":<EnergySavingsLeafIcon/>,Update:<DriveFileRenameOutlineIcon/>},
-    {UserID:"17905",Name:"fleet_admin","Email":"test@gmail.com","Phone":"+37-9090909090","Company":"Tata","Credits":"100","":<UserWalletModal/>,"Vehicles":"kia EV6",Active:<Switch/>,"Icon":<AddVehicle/>,"Icon2":<EnergySavingsLeafIcon/>,Update:<DriveFileRenameOutlineIcon/>},
-    {UserID:"17905",Name:"fleet_admin","Email":"test@gmail.com","Phone":"+37-9090909090","Company":"Tata","Credits":"100","":<UserWalletModal/>,"Vehicles":"kia EV6",Active:<Switch/>,"Icon":<AddVehicle/>,"Icon2":<EnergySavingsLeafIcon/>,Update:<DriveFileRenameOutlineIcon/>},
-    {UserID:"17905",Name:"fleet_admin","Email":"test@gmail.com","Phone":"+37-9090909090","Company":"Tata","Credits":"100","":<UserWalletModal/>,"Vehicles":"kia EV6",Active:<Switch/>,"Icon":<AddVehicle/>,"Icon2":<EnergySavingsLeafIcon/>,Update:<DriveFileRenameOutlineIcon/>},
-    {UserID:"17905",Name:"fleet_admin","Email":"test@gmail.com","Phone":"+37-9090909090","Company":"Tata","Credits":"100","":<UserWalletModal/>,"Vehicles":"kia EV6",Active:<Switch/>,"Icon":<AddVehicle/>,"Icon2":<EnergySavingsLeafIcon/>,Update:<DriveFileRenameOutlineIcon/>},
+    {UserID:"17905",Name:"Olivia","Email":"test@gmail.com","Phone":"+37-9090909090","Company":" ","Charge Duration":"00:37:23","Credits":"100","":<UserWalletModal/>,"Vehicles":"Tata Nexon EV",Active:<Switch/>,"Icon":<AddVehicle/>,"Icon2":<EnergySavingsLeafIcon/>,Update:<DriveFileRenameOutlineIcon/>},
+    {UserID:"17905",Name:"Ethan","Email":"test@gmail.com","Phone":"+37-9090909090","Company":" ","Charge Duration":"00:37:23","Credits":"100","":<UserWalletModal/>,"Vehicles":"kia EV6",Active:<Switch/>,"Icon":<AddVehicle/>,"Icon2":<EnergySavingsLeafIcon/>,Update:<DriveFileRenameOutlineIcon/>},
+    {UserID:"17905",Name:"Sophia","Email":"test@gmail.com","Phone":"+37-9090909090","Company":"","Charge Duration":"00:37:23","Credits":"100","":<UserWalletModal/>,"Vehicles":"Audi e-tron",Active:<Switch/>,"Icon":<AddVehicle/>,"Icon2":<EnergySavingsLeafIcon/>,Update:<DriveFileRenameOutlineIcon/>},
+    {UserID:"17905",Name:"Liam","Email":"test@gmail.com","Phone":"+37-9090909090","Company":"","Charge Duration":"00:37:23","Credits":"100","":<UserWalletModal/>,"Vehicles":"Tata Nexon EV",Active:<Switch/>,"Icon":<AddVehicle/>,"Icon2":<EnergySavingsLeafIcon/>,Update:<DriveFileRenameOutlineIcon/>},
+    {UserID:"17905",Name:"Ava","Email":"test@gmail.com","Phone":"+37-9090909090","Company":"","Charge Duration":"00:37:23","Credits":"100","":<UserWalletModal/>,"Vehicles":"kia EV6",Active:<Switch/>,"Icon":<AddVehicle/>,"Icon2":<EnergySavingsLeafIcon/>,Update:<DriveFileRenameOutlineIcon/>},
+    {UserID:"17905",Name:"Noah","Email":"test@gmail.com","Phone":"+37-9090909090","Company":"","Charge Duration":"00:37:23","Credits":"100","":<UserWalletModal/>,"Vehicles":"Tata Nexon EV",Active:<Switch/>,"Icon":<AddVehicle/>,"Icon2":<EnergySavingsLeafIcon/>,Update:<DriveFileRenameOutlineIcon/>},
+    {UserID:"17905",Name:"Emma","Email":"test@gmail.com","Phone":"+37-9090909090","Company":"","Charge Duration":"00:37:23","Credits":"100","":<UserWalletModal/>,"Vehicles":"kia EV6",Active:<Switch/>,"Icon":<AddVehicle/>,"Icon2":<EnergySavingsLeafIcon/>,Update:<DriveFileRenameOutlineIcon/>},
+    {UserID:"17905",Name:"Mason","Email":"test@gmail.com","Phone":"+37-9090909090","Company":"","Charge Duration":"00:37:23","Credits":"100","":<UserWalletModal/>,"Vehicles":"Tata Nexon EV",Active:<Switch/>,"Icon":<AddVehicle/>,"Icon2":<EnergySavingsLeafIcon/>,Update:<DriveFileRenameOutlineIcon/>},
+    {UserID:"17905",Name:"Isabella","Email":"test@gmail.com","Phone":"+37-9090909090","Company":"","Charge Duration":"00:37:23","Credits":"100","":<UserWalletModal/>,"Vehicles":"Audi e-tron",Active:<Switch/>,"Icon":<AddVehicle/>,"Icon2":<EnergySavingsLeafIcon/>,Update:<DriveFileRenameOutlineIcon/>},
+    {UserID:"17905",Name:"Alexander","Email":"test@gmail.com","Phone":"+37-9090909090","Company":"","Charge Duration":"00:37:23","Credits":"100","":<UserWalletModal/>,"Vehicles":"kia EV6",Active:<Switch/>,"Icon":<AddVehicle/>,"Icon2":<EnergySavingsLeafIcon/>,Update:<DriveFileRenameOutlineIcon/>},
   
   ]
 

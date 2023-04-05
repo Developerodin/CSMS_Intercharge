@@ -80,7 +80,7 @@ export default function AddUser() {
             <div className="container-fluid">
               <div className="row">
                 <div className="col-12">
-                  <h3>Add Ev Owner</h3>
+                  <h3>Add EV Owner</h3>
                   <hr />
                 </div>
                 <div className="col-12 mt-3">

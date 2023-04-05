@@ -68,7 +68,7 @@ export const UserWalletModal=(props)=>{
           <Box sx={{margin:"20px 0px"}}>
             <Box sx={{display:"flex",justifyContent:"space-between"}}>
             <Typography sx={{color:"gray",fontWeight:"bold"}}variant="subtitle1" component="h2">User Name</Typography>
-            <Typography sx={{color:"black"}}variant="subtitle1" component="h2">Townhall Fleet</Typography>
+            <Typography sx={{color:"black"}}variant="subtitle1" component="h2">Gaurav Pandey</Typography>
             </Box>
             <Box sx={{display:"flex",justifyContent:"space-between"}}>
             <Typography sx={{color:"gray",fontWeight:"bold"}}variant="subtitle1" component="h2">User Phone number</Typography>
@@ -86,7 +86,7 @@ export const UserWalletModal=(props)=>{
         <Box sx={{padding:"5px"}}>
             <Box sx={{display:"flex",justifyContent:"space-between",backgroundColor:"#f4f5f7",padding:"10px",borderRadius:"10px"}}>
             <Typography sx={{fontWeight:"bold"}} variant="h6" component="h2">Available Balance</Typography>
-            <Typography variant="h6" component="h2">₹-90</Typography>
+            <Typography variant="h6" component="h2">₹100</Typography>
             </Box>
 
             <Box sx={{display:"flex",justifyContent:"space-between",margin:"20px 5px"}}>
