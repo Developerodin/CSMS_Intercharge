@@ -2,16 +2,18 @@ import React from "react";
 import { KTSVG } from "../../../../../_metronic/helpers";
 import { useFormik } from "formik";
 import { Checkbox } from "@mui/material";
-const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
-const UserModal = () => {
-  const module=[
-    {name:"Charger Management"},
-    {name:"User Management"},
-    {name:"Company Management"},
-    {name:"Billing and Payment"},
-    {name:"Complaints Management"},
-    {name:"Coupon Management"}
-  ]
+import BorderColorIcon from "@mui/icons-material/BorderColor";
+const label = { inputProps: { "aria-label": "Checkbox demo" } };
+
+const UserModal2 = () => {
+  const module = [
+    { name: "Charger Management" },
+    { name: "User Management" },
+    { name: "Company Management" },
+    { name: "Billing and Payment" },
+    { name: "Complaints Management" },
+    { name: "Coupon Management" },
+  ];
   const design = {
     minWidth: "85%",
     background: "rgb(244,245,247)",
@@ -20,56 +22,57 @@ const UserModal = () => {
     marginTop: "10px",
   };
 
+  const initialValues = {
+    Register_Name: "Townhall",
+    Brand_Name: "Townhall-1",
+    GST_No: "45673GGh123456",
+    MID: "2345432",
+    Registered_Address:"216, Ganesh Marg, C-Block, Mahesh Nagar, Gopal Pura Mode, Jaipur, Rajasthan 302015",
+    state:"Rajasthan",
+    regional: "true",
+    National: "",
+    Initial_Balance: "1000",
+    Admin_Name: "Intercharge",
+    Number: "+91 8875343434",
+    Email: "intercharge@gmail.com",
+    Assign_Role: "Admin",
+    ABB_TestCharger: "3",
+    Select_Price: "30,000",
+    Fixed_Rent: "12,000",
+    Company_Share: "none",
+  };
 
-  const initialValues={
-  Register_Name:"",
-  Brand_Name:"",
-  GST_No:"",
-  MID:"",
-  Registered_Address:"",
-  state:"",
-  regional:"",
-  National:"",
-  Initial_Balance:"",
-  Admin_Name:"",
-  Number:"",
-  Email:"",
-  Assign_Role:"",
-  ABB_TestCharger:"",
-  Select_Price:"",
-  Fixed_Rent:"",
-  Company_Share:""
-
-}
-
-
-  const {values,errors,handleSubmit,handleChange,handelBlur}=useFormik({
-    initialValues:initialValues,
-    onSubmit:(values,{resetForm}) => {
-      console.log("🚀 ~ file: UserModal.jsx:27 ~ UserModal ~ values:", values)
-      resetForm()
-    }
-  })
+  const { values, errors, handleSubmit, handleChange, handelBlur } = useFormik({
+    initialValues: initialValues,
+    onSubmit: (values, { resetForm }) => {
+      console.log("🚀 ~ file: UserModal.jsx:27 ~ UserModal ~ values:", values);
+      resetForm();
+    },
+  });
   return (
     <>
       <button
         type="button"
-        className="btn btn-primary"
         data-bs-toggle="modal"
-        data-bs-target="#exampleModal"
+        data-bs-target="#exampleModal3"
+        style={{ border: "none", backgroundColor: "#fff" }}
       >
-       <KTSVG path='/media/icons/duotune/arrows/arr075.svg' className='svg-icon-2' /> Add CPO
+        <BorderColorIcon />
       </button>
 
       <div
         className="modal fade"
-        id="exampleModal"
+        id="exampleModal3"
         tabindex="-1"
         role="dialog"
         aria-labelledby="exampleModalLabel"
         aria-hidden="true"
       >
-        <div className="modal-dialog" role="document" style={{ minWidth: "90%" }}>
+        <div
+          className="modal-dialog"
+          role="document"
+          style={{ minWidth: "90%" }}
+        >
           <div className="modal-content">
             <div className="modal-header">
               <h3 className="modal-title" id="exampleModalLongTitle">
@@ -89,7 +92,7 @@ const UserModal = () => {
                     GST No.
                   </div>
                   <div className="col-md-3 d-flex justify-content-start">
-                  Initial Balance
+                    Initial Balance
                   </div>
 
                   <div className="col-md-3 d-flex justify-content-start">
@@ -99,7 +102,7 @@ const UserModal = () => {
                       name="Register_Name"
                       value={values.Register_Name}
                       onChange={handleChange}
-                    placeholder="Register Name"
+                      placeholder="Register Name"
                     />
                   </div>
                   <div className="col-md-3 d-flex justify-content-start">
@@ -113,14 +116,24 @@ const UserModal = () => {
                     />
                   </div>
                   <div className="col-md-3 d-flex justify-content-start design">
-                    <input type="text" style={design} placeholder="GST NO" name="GST_No"
+                    <input
+                      type="text"
+                      style={design}
+                      placeholder="GST NO"
+                      name="GST_No"
                       value={values.GST_No}
-                      onChange={handleChange} />
+                      onChange={handleChange}
+                    />
                   </div>
                   <div className="col-md-3 d-flex justify-content-start design">
-                    <input type="text" style={design} placeholder="Initial Balance" name="Initial_Balance"
+                    <input
+                      type="text"
+                      style={design}
+                      placeholder="Initial Balance"
+                      name="Initial_Balance"
                       value={values.Initial_Balance}
-                      onChange={handleChange}/>
+                      onChange={handleChange}
+                    />
                   </div>
                 </div>
                 <div className="row mt-5 ">
@@ -138,26 +151,38 @@ const UserModal = () => {
                   </div>
 
                   <div className="col-md-3 d-flex justify-content-start">
-                    <input type="text" style={design} placeholder="MID" name="MID"
+                    <input
+                      type="text"
+                      style={design}
+                      placeholder="MID"
+                      name="MID"
                       value={values.MID}
-                      onChange={handleChange}/>
+                      onChange={handleChange}
+                    />
                   </div>
                   <div
                     className="col-md-3 d-flex justify-content-start"
                     placeholder="Select CPO"
                   >
-                    <input type="text" style={design} placeholder="Registered Address" name="Registered_Address"
+                    <input
+                      type="text"
+                      style={design}
+                      placeholder="Registered Address"
+                      name="Registered_Address"
                       value={values.Registered_Address}
-                      onChange={handleChange}/>
+                      onChange={handleChange}
+                    />
                   </div>
 
-                  <div
-                    className="col-md-3 d-flex justify-content-start"
-                   
-                  >
-                    <input type="text" style={design} placeholder="State" name="state"
-                      value={values.state}
-                      onChange={handleChange}/>
+                  <div className="col-md-3 d-flex justify-content-start">
+                    <input
+                      type="text"
+                      style={design}
+                      placeholder="State"
+                      name="state"
+                      value={initialValues.state}
+                      onChange={handleChange}
+                    />
                   </div>
 
                   <div className="col-md-3 d-flex justify-content-start design mt-5">
@@ -170,7 +195,7 @@ const UserModal = () => {
                       value={values.regional}
                       onChange={handleChange}
                       /> */}
-                       <Checkbox {...label}  />
+                      <Checkbox {...label} defaultChecked />
                       <label
                         className="form-check-label"
                         for="flexRadioDefault1"
@@ -189,7 +214,7 @@ const UserModal = () => {
                       value={values.National}
                       onChange={handleChange}
                       /> */}
-                       <Checkbox {...label}  />
+                      <Checkbox {...label} />
                       <label
                         className="form-check-label"
                         for="flexRadioDefault1"
@@ -198,7 +223,6 @@ const UserModal = () => {
                         National
                       </label>
                     </div>
-                   
                   </div>
                 </div>
               </div>
@@ -216,25 +240,38 @@ const UserModal = () => {
                   <div className="col-md-4 d-flex justify-content-start">
                     Email
                   </div>
-                  
-                  
 
                   <div className="col-md-4 d-flex justify-content-start">
-                    <input type="text" style={design} placeholder="Name" name="Admin_Name"
+                    <input
+                      type="text"
+                      style={design}
+                      placeholder="Name"
+                      name="Admin_Name"
                       value={values.Admin_Name}
-                      onChange={handleChange}/>
+                      onChange={handleChange}
+                    />
                   </div>
                   <div className="col-md-4 d-flex justify-content-start">
-                    <input type="text" style={design} placeholder="Number" name="Number"
+                    <input
+                      type="text"
+                      style={design}
+                      placeholder="Number"
+                      name="Number"
                       value={values.Number}
-                      onChange={handleChange}/>
+                      onChange={handleChange}
+                    />
                   </div>
                   <div className="col-md-4 d-flex justify-content-start design">
-                    <input type="Email" style={design} placeholder="Email" name="Email"
+                    <input
+                      type="Email"
+                      style={design}
+                      placeholder="Email"
+                      name="Email"
                       value={values.Email}
-                      onChange={handleChange}/>
+                      onChange={handleChange}
+                    />
                   </div>
-                 
+
                   <div className="col-md-4 mt-3 d-flex justify-content-start design">
                     <span> Assign Role</span>
                     <div
@@ -283,7 +320,6 @@ const UserModal = () => {
                       style={{ minWidth: "80%", border: "1px solid #f4f5f7" }}
                       placeholder="Search"
                       name="Search"
-                     
                     />
                   </div>
 
@@ -303,13 +339,15 @@ const UserModal = () => {
                       <input
                         className="form-check-input"
                         type="checkbox"
-                       
                         id="flexCheckDefault"
                         name="Select_Price"
-                      value={values.Select_Price}
-                      onChange={handleChange}
+                        value={values.Select_Price}
+                        onChange={handleChange}
                       />
-                      <label className="form-check-label" for="flexCheckDefault">
+                      <label
+                        className="form-check-label"
+                        for="flexCheckDefault"
+                      >
                         ABB_TestCharger
                       </label>
                     </div>
@@ -324,7 +362,6 @@ const UserModal = () => {
                         background: "#f4f5f7",
                         border: "none",
                       }}
-                    
                       value={values.ABB_TestCharger}
                       onChange={handleChange}
                     />
@@ -339,7 +376,6 @@ const UserModal = () => {
                         background: "#f4f5f7",
                         border: "none",
                       }}
-                     
                       value={values.Fixed_Rent}
                       onChange={handleChange}
                     />
@@ -355,7 +391,6 @@ const UserModal = () => {
                         marginRight: "5px",
                         background: "#f4f5f7",
                       }}
-                     
                       value={values.Company_Share}
                       onChange={handleChange}
                     />
@@ -368,7 +403,6 @@ const UserModal = () => {
                         border: "none",
                         background: "#f4f5f7",
                       }}
-                      
                       value={values.Company_Share2}
                       onChange={handleChange}
                     />
@@ -385,7 +419,12 @@ const UserModal = () => {
               >
                 Close
               </button>
-              <button type="button" onClick={handleSubmit} data-bs-dismiss="modal" className="btn btn-primary">
+              <button
+                type="button"
+                onClick={handleSubmit}
+                data-bs-dismiss="modal"
+                className="btn btn-primary"
+              >
                 Save
               </button>
             </div>
@@ -462,33 +501,43 @@ const UserModal = () => {
               </div>
               <div className="row mt-5">
                 <div className="col-12">Permission and Functionality </div>
-                <div className="col-12"style={{border:"1px solid #f9f9f9"}}>
-<div className="row mb-3">
-  <div className="col-4 mt-2" style={{color:'#d3d2d8'}}>
-    Select modules
-  </div>
-  <div className="col-8 mt-2  d-flex justify-content-center" style={{color:'#d3d2d8'}}>
-    Access Details
-  </div>
-  </div>
-  <div className="row pb-3"  style={{background:"#f4f5f7"}}>
-  {/* map */}
-  {module.map((self,index)=>
-  {return(
-<>
-<div key={index+12} className="col-4 mt-4 txt-center ">
-  {self.name}
-  </div>
-  <div className="col-8 d-flex justify-content-center mt-4">
-  <div className="form-check form-switch">
-  <input className="form-check-input" type="checkbox" id="flexSwitchCheckDefault"/>
-</div>
-  </div>
-</>
-  )})}
- 
-</div>
-  {/* map */}
+                <div className="col-12" style={{ border: "1px solid #f9f9f9" }}>
+                  <div className="row mb-3">
+                    <div className="col-4 mt-2" style={{ color: "#d3d2d8" }}>
+                      Select modules
+                    </div>
+                    <div
+                      className="col-8 mt-2  d-flex justify-content-center"
+                      style={{ color: "#d3d2d8" }}
+                    >
+                      Access Details
+                    </div>
+                  </div>
+                  <div className="row pb-3" style={{ background: "#f4f5f7" }}>
+                    {/* map */}
+                    {module.map((self, index) => {
+                      return (
+                        <>
+                          <div
+                            key={index + 12}
+                            className="col-4 mt-4 txt-center "
+                          >
+                            {self.name}
+                          </div>
+                          <div className="col-8 d-flex justify-content-center mt-4">
+                            <div className="form-check form-switch">
+                              <input
+                                className="form-check-input"
+                                type="checkbox"
+                                id="flexSwitchCheckDefault"
+                              />
+                            </div>
+                          </div>
+                        </>
+                      );
+                    })}
+                  </div>
+                  {/* map */}
                 </div>
               </div>
             </div>
@@ -511,4 +560,4 @@ const UserModal = () => {
   );
 };
 
-export default UserModal;
+export default UserModal2;

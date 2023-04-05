@@ -67,7 +67,7 @@ const MixedWidget2: React.FC<Props> = ({className, chartColor, chartHeight, stro
             <span className="position-absolute opacity-50 bottom-0 start-0 border-2 border-body border-bottom w-100" />
             {/*end::Separator*/}
           </span>
-          <span className="opacity-75">Chargers added in last 24 hours</span>
+          <span className="opacity-75"> Chargers added in last 24 hours</span>
         </div>
       </h3>
       {/*end::Title*/}
@@ -180,7 +180,7 @@ const MixedWidget2: React.FC<Props> = ({className, chartColor, chartHeight, stro
             {/*begin::Items*/}
             <div className="bg-gray-100 bg-opacity-70 rounded-2 px-6 py-5">
               {/*begin::Symbol*/}
-              <div className="symbol symbol-30px me-5 mb-8">
+              <div className="symbol symbol-30px me-5 mb-8 d-flex justify-content-between">
                 <span className="symbol-label">
                   {/*begin::Svg Icon | path: icons/duotune/finance/fin001.svg*/}
                   <span className="svg-icon svg-icon-1 svg-icon-primary">
@@ -204,17 +204,44 @@ const MixedWidget2: React.FC<Props> = ({className, chartColor, chartHeight, stro
                   </span>
                   {/*end::Svg Icon*/}
                 </span>
+
+                <div>
+                  {/* <span className="text-gray-700 fw-bolder d-block fs-2qx lh-1 ls-n1 mb-1">
+                  Chargers
+                </span> */}
+                <span className="text-gray-700 fw-bolder  fs-6"> 1043 Chargers</span>
+                  </div>
+
               </div>
               {/*end::Symbol*/}
               {/*begin::Stats*/}
               <div className="m-0">
                 {/*begin::Number*/}
-                <span className="text-gray-700 fw-bolder d-block fs-2qx lh-1 ls-n1 mb-1">
-                  1043
+                <div className="d-flex justify-content-between">
+                  
+
+                  <div >
+                  <span className="text-gray-700 fw-bolder d-block fs-2qx lh-1 ls-n1 mb-1">
+                  743
                 </span>
+                <span className="text-gray-500 fw-semibold fs-6">AC</span>
+                  </div>
+
+                  <div >
+                  <span className="text-gray-700 fw-bolder d-block fs-2qx lh-1 ls-n1 mb-1">
+                  300
+                </span>
+                <span className="text-gray-500 fw-semibold fs-6">DC</span>
+                  </div>
+               
+                
+                
+                </div>
+               
                 {/*end::Number*/}
                 {/*begin::Desc*/}
-                <span className="text-gray-500 fw-semibold fs-6">Chargers</span>
+               
+                
                 {/*end::Desc*/}
               </div>
               {/*end::Stats*/}

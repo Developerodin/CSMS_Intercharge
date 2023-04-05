@@ -17,8 +17,10 @@ const MyBox = styled('Button')({
     backgroundColor: 'crimson',
     padding: 8,
     borderRadius: 4,
-    border:"none"
+    border:"none",
+
   });
+
 
 
 const ChargersHeader = () => {
@@ -29,27 +31,32 @@ const ChargersHeader = () => {
             <Box display={'flex'}   justifyContent={"space-evenly"} alignItems={"center"} sx={{width:{xs:"100%",md:"45%",lg:"45%",xl:"45%"}}}>
             <Box sx={{display:"flex", width:"20%"}}>
 
-            <MyBox>AC</MyBox>
+            <MyBox>AC 743
+            </MyBox>
 
-            <Box sx={{ marginLeft:"10px"}}>
-            <Typography sx={{color:"gray",marginTop:"5px"}}variant="h5" component="h3">0/0</Typography>
-            </Box>
+            {/* <Box sx={{ marginLeft:"10px"}}>
+            <Typography sx={{color:"gray",marginTop:"5px"}}variant="h5" component="h3"></Typography>
+            </Box> */}
             
             </Box>
 
 
             <Box sx={{display:"flex",  width:"20%"}}>
-            <MyBox>DC</MyBox>
+            <MyBox>DC  300
+          
+            </MyBox>
 
-            <Box sx={{ marginLeft:"10px"}}>
-            <Typography sx={{color:"gray",marginTop:"5px"}}variant="h5" component="h3">0/0</Typography>
-            </Box>
+            {/* <Box sx={{ marginLeft:"10px"}}>
+            <Typography sx={{color:"gray",marginTop:"5px"}}variant="h5" component="h3"></Typography>
+            </Box> */}
             
             </Box>
 
-             <Box sx={{width:"20%"}}>
-             <Button  color="primary" variant="contained" >Price History</Button>
-             </Box>
+            <Box sx={{display:"flex",  width:"20%"}}>
+
+            <Button color="success" variant="contained" >Active</Button>
+            <Button  sx={{backgroundColor:"crimson","&:hover": { backgroundColor: "#E21818"}}} variant="contained" >InActive</Button>
+            </Box>
             
             </Box>
             
