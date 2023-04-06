@@ -6,12 +6,19 @@ type Props = {
   }
 
 const dataMock = [
-    { title: '2-Wheelers', value: 10, color: '#2E2A4F' },
-    { title: 'Mini Cooper', value: 15, color: '#1B9A8B' },
-    { title: 'Kia', value: 20, color: '#DCE2C8' },
-    { title: 'MG Hector', value: 7, color: '#FFC700' },
-    { title: 'Tata', value: 12, color: '#7239EA' },
-    { title: 'Maruti', value: 4, color: '#6A2135' },
+    { title: '2-Wheelers', value: 13, color: '#2E2A4F' },
+   
+    { title: 'Kia', value: 10, color: '#DCE2C8' },
+    { title: 'MG Hector', value: 20, color: '#FFC700' },
+    { title: 'Tata', value: 25, color: '#7239EA' },
+    { title: 'BYD', value: 25, color: '#1B9A8B' },
+    { title: 'Maruti', value: 7, color: '#6A2135' },
+  ];
+
+  const dataMock2 = [
+    { title: 'MG', value: 30, color: '#FFC700' },
+    { title: 'Tata', value: 40, color: '#7239EA' },
+    { title: 'BYD', value: 30, color: '#1B9A8B'  },
   ];
   
 const defaultLabelStyle = {
@@ -34,29 +41,57 @@ const PieWidgetDashboard: React.FC<Props> = ({className}) =>{
       {/* end::Header */}
       {/* begin::Body */}
       <div className='card-body'>  
-      <div className="row">
-        <div className="col-sm-6">
+      <div className="row justify-content-around" >
+        <div className="col-sm-4 " >
           <p>User Market Share</p>
-            <PieChart
+          <div >
+          <div>
+          <PieChart
             data={dataMock}
             label={({ dataEntry }) => dataEntry.value}
             labelStyle={{
-              ...defaultLabelStyle,
+              color:"#fff",
+              fontSize: '7px',
+              
             }}
-           
-            lineWidth={85}
+            
+            lineWidth={90}
           />
+          </div>
+
+          <div style={{width:"90%",display:"flex",flexWrap:"wrap",marginTop:"5px"}}>
+              {dataMock.map((el)=>{
+                return(
+                  <div style={{margin:"5px"}}> <span style={{margin:"2px",borderRadius:"100px", backgroundColor:`${el.color}`,color:`${el.color}`}}>OO</span>{el.title}</div>
+                )
+              })}
+          </div>
+          </div>
+         
+            
         </div>
-        <div className="col-sm-6">
+        <div className="col-sm-4">
           <p>Revenue Market Share</p>
-            <PieChart
-            data={[
-              { title: 'One', value: 10, color: '#E38627' },
-              { title: 'Two', value: 15, color: '#C13C37' },
-              { title: 'Three', value: 20, color: '#6A2135' },
-            ]}
-            lineWidth={85}
+          <div>
+          <PieChart
+            data={dataMock2}
+            label={({ dataEntry }) => dataEntry.value}
+            labelStyle={{
+              color:"#fff",
+              fontSize: '7px',
+            }}
+            
+            lineWidth={90}
           />
+          </div>
+
+          <div style={{width:"90%",display:"flex",flexWrap:"wrap",marginTop:"5px"}}>
+              {dataMock2.map((el)=>{
+                return(
+                  <div style={{margin:"5px"}}> <span style={{margin:"2px",borderRadius:"100px", backgroundColor:`${el.color}`,color:`${el.color}`}}>OO</span>{el.title}</div>
+                )
+              })}
+          </div>
         </div>
       </div>
       
