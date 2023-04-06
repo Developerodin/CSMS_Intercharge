@@ -41663,6 +41663,10 @@ body,html{
         font-size:12px!important
     }
 }
+
+.pt-10px{
+    padding-top: 10px !important;
+}
 body{
     display:flex;
     flex-direction:column

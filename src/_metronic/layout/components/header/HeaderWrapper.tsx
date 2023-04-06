@@ -36,7 +36,7 @@ export function HeaderWrapper() {
               </div>
               <div className='d-flex align-items-center flex-grow-1 flex-lg-grow-0'>
                 <Link to='/dashboard' className='d-lg-none'>
-                  <img alt='Logo' src='./assets/media/logos/default-small.svg' className='h-30px' />
+                  <img alt='Logo' src='./assets/media/logos/default-small.png' className='h-40px' />
                 </Link>
               </div>
             </div>

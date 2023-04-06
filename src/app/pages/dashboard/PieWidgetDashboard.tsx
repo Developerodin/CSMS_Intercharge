@@ -43,7 +43,7 @@ const PieWidgetDashboard: React.FC<Props> = ({className}) =>{
       <div className='card-body'>  
       <div className="row justify-content-around" >
         <div className="col-sm-4 " >
-          <p>User Market Share</p>
+          <p style={{fontWeight:"bold"}}>User Market Share</p>
           <div >
           <div>
           <PieChart
@@ -71,7 +71,7 @@ const PieWidgetDashboard: React.FC<Props> = ({className}) =>{
             
         </div>
         <div className="col-sm-4">
-          <p>Revenue Market Share</p>
+          <p style={{fontWeight:"bold"}}>Revenue Market Share</p>
           <div>
           <PieChart
             data={dataMock2}
