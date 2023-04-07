@@ -23,16 +23,16 @@ const BaseUrl ="CSMS_Intercharge"
 
 const AppRoutes: FC = () => {
   // const {currentUser} = useAuth()
-  let currentUser=false;
+  let currentUser=true;
   
   var AuthValue = localStorage.getItem("authValue");
 
-  if(AuthValue==="true"){
-    currentUser=true;
-  }
-  else{
-    currentUser=false;
-  }
+  // if(AuthValue==="true"){
+  //   currentUser=true;
+  // }
+  // else{
+  //   currentUser=false;
+  // }
   
   return (
     <BrowserRouter basename={BaseUrl}>
