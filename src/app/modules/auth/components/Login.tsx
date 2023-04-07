@@ -7,6 +7,8 @@ import {useFormik} from 'formik'
 import {getUserByToken, login} from '../core/_requests'
 import {toAbsoluteUrl} from '../../../../_metronic/helpers'
 import {useAuth} from '../core/Auth'
+import { useNavigate,Navigate } from 'react-router-dom'
+import { Button } from '@mui/material'
 
 const loginSchema = Yup.object().shape({
   email: Yup.string()
@@ -21,8 +23,8 @@ const loginSchema = Yup.object().shape({
 })
 
 const initialValues = {
-  email: 'admin@demo.com',
-  password: 'demo',
+  email: '',
+  password: '',
 }
 
 /*
@@ -32,25 +34,53 @@ const initialValues = {
 */
 
 export function Login() {
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(false)
   const {saveAuth, setCurrentUser} = useAuth()
+
+
+  const handelDashboard =()=>{
+    var AuthValue = localStorage.getItem("authValue");
+    console.log("AuthValue",AuthValue)
+    if(AuthValue === "true"){
+      window.location.reload();
+      navigate("/dashboard");
+    }
+    else{
+      navigate("/auth");
+    }
+  }
+
+
 
   const formik = useFormik({
     initialValues,
     validationSchema: loginSchema,
     onSubmit: async (values, {setStatus, setSubmitting}) => {
       setLoading(true)
-      try {
-        const {data: auth} = await login(values.email, values.password)
-        saveAuth(auth)
-        const {data: user} = await getUserByToken(auth.api_token)
-        setCurrentUser(user)
-      } catch (error) {
-        console.error(error)
-        saveAuth(undefined)
-        setStatus('The login details are incorrect')
-        setSubmitting(false)
+      // try {
+      //   const {data: auth} = await login(values.email, values.password)
+      //   saveAuth(auth)
+      //   const {data: user} = await getUserByToken(auth.api_token)
+      //   setCurrentUser(user)
+      // } catch (error) {
+      //   console.error(error)
+      //   saveAuth(undefined)
+      //   setStatus('The login details are incorrect')
+      //   setSubmitting(false)
+      //   setLoading(false)
+      // }
+      if(values.email===`admin@demo.com` && values.password===`admin`){
+        localStorage.setItem("authValue", "true");
         setLoading(false)
+        window.location.reload();
+        
+      }
+      else{
+        setStatus('The login details are incorrect')
+        localStorage.setItem("authValue", "false");
+        setSubmitting(false)
+      setLoading(false)
       }
     },
   })
@@ -65,15 +95,18 @@ export function Login() {
       {/* begin::Heading */}
       <div className='text-center mb-11'>
         <h1 className='text-dark fw-bolder mb-3'>Sign In</h1>
-        <div className='text-gray-500 fw-semibold fs-6'>Your Social Campaigns</div>
+        {/* <div className='text-gray-500 fw-semibold fs-6'>Your Social Campaigns</div> */}
       </div>
       {/* begin::Heading */}
 
       {/* begin::Login options */}
-      <div className='row g-3 mb-9'>
-        {/* begin::Col */}
+
+{/* Googel and email lofin part */}
+
+      {/* <div className='row g-3 mb-9'>
+        
         <div className='col-md-6'>
-          {/* begin::Google link */}
+          
           <a
             href='#'
             className='btn btn-flex btn-outline btn-text-gray-700 btn-active-color-primary bg-state-light flex-center text-nowrap w-100'
@@ -85,13 +118,12 @@ export function Login() {
             />
             Sign in with Google
           </a>
-          {/* end::Google link */}
+         
         </div>
-        {/* end::Col */}
+        
 
-        {/* begin::Col */}
         <div className='col-md-6'>
-          {/* begin::Google link */}
+        
           <a
             href='#'
             className='btn btn-flex btn-outline btn-text-gray-700 btn-active-color-primary bg-state-light flex-center text-nowrap w-100'
@@ -108,16 +140,15 @@ export function Login() {
             />
             Sign in with Apple
           </a>
-          {/* end::Google link */}
+          
         </div>
-        {/* end::Col */}
-      </div>
-      {/* end::Login options */}
+     
+      </div> */}
+      
 
-      {/* begin::Separator */}
-      <div className='separator separator-content my-14'>
+      {/* <div className='separator separator-content my-14'>
         <span className='w-125px text-gray-500 fw-semibold fs-7'>Or with email</span>
-      </div>
+      </div> */}
       {/* end::Separator */}
 
       {formik.status ? (
@@ -127,7 +158,7 @@ export function Login() {
       ) : (
         <div className='mb-10 bg-light-info p-8 rounded'>
           <div className='text-info'>
-            Use account <strong>admin@demo.com</strong> and password <strong>demo</strong> to
+            Use account <strong>admin@demo.com</strong> and password <strong>admin</strong> to
             continue.
           </div>
         </div>
@@ -163,6 +194,8 @@ export function Login() {
         <label className='form-label fw-bolder text-dark fs-6 mb-0'>Password</label>
         <input
           type='password'
+          
+          placeholder='Password'
           autoComplete='off'
           {...formik.getFieldProps('password')}
           className={clsx(
@@ -204,6 +237,7 @@ export function Login() {
           id='kt_sign_in_submit'
           className='btn btn-primary'
           disabled={formik.isSubmitting || !formik.isValid}
+          onClick={handelDashboard}
         >
           {!loading && <span className='indicator-label'>Continue</span>}
           {loading && (
@@ -213,6 +247,7 @@ export function Login() {
             </span>
           )}
         </button>
+
       </div>
       {/* end::Action */}
 

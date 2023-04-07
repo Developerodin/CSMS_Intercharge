@@ -61,36 +61,36 @@ const AuthLayout = () => {
         <div className='d-flex flex-column flex-center py-15 px-5 px-md-15 w-100'>
           {/* begin::Logo */}
           <Link to='/' className='mb-12'>
-            <img alt='Logo' src={toAbsoluteUrl('/media/logos/custom-1.png')} className='h-75px' />
+            <img alt='Logo' src={toAbsoluteUrl('/media/logos/Intercharge_Logo.png')} className='h-95px' />
           </Link>
           {/* end::Logo */}
 
           {/* begin::Image */}
           <img
             className='mx-auto w-275px w-md-50 w-xl-500px mb-10 mb-lg-20'
-            src={toAbsoluteUrl('/media/misc/auth-screens.png')}
+            src={toAbsoluteUrl('/media/logos/intercharge_dashboard.png')}
             alt=''
           />
           {/* end::Image */}
 
           {/* begin::Title */}
-          <h1 className='text-white fs-2qx fw-bolder text-center mb-7'>
-            Fast, Efficient and Productive
+          <h1 className='text-white fs-2qx fw-bolder text-center mb-7 '>
+            Charge Anywhere and Everywhere
           </h1>
           {/* end::Title */}
 
           {/* begin::Text */}
           <div className='text-white fs-base text-center'>
-            In this kind of post,{' '}
+          We aim to provide an integrated platform,{' '}
             <a href='#' className='opacity-75-hover text-warning fw-bold me-1'>
-              the blogger
+            that builds a vast network
             </a>
-            introduces a person they’ve interviewed <br /> and provides some background information
-            about
+            of aggregated chargers to provide access <br /> to numerous eMobility partners.  
+            
             <a href='#' className='opacity-75-hover text-warning fw-bold me-1'>
-              the interviewee
+            Become a part of the largest EV Community in the country
             </a>
-            and their <br /> work following this is a transcript of the interview.
+            which aims to have <br /> a network of 1,00,000 chargers and over 5 Million EV drivers
           </div>
           {/* end::Text */}
         </div>

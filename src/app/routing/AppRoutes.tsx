@@ -11,6 +11,7 @@ import {PrivateRoutes} from './PrivateRoutes'
 import {ErrorsPage} from '../modules/errors/ErrorsPage'
 // import {Logout, AuthPage, useAuth} from '../modules/auth'
 import {App} from '../App'
+import { AuthPage, Logout } from '../modules/auth'
 
 /**
  * Base URL of the website.
@@ -22,25 +23,35 @@ const BaseUrl ="CSMS_Intercharge"
 
 const AppRoutes: FC = () => {
   // const {currentUser} = useAuth()
-  const currentUser=true;
+  let currentUser=false;
+  
+  var AuthValue = localStorage.getItem("authValue");
+
+  if(AuthValue==="true"){
+    currentUser=true;
+  }
+  else{
+    currentUser=false;
+  }
+  
   return (
     <BrowserRouter basename={BaseUrl}>
       <Routes>
         <Route element={<App />}>
           <Route path='error/*' element={<ErrorsPage />} />
-          {/* <Route path='logout' element={<Logout />} /> */}
-          {/* {currentUser ? (
-            <> */}
+          <Route path='logout' element={<Logout />} />
+          {currentUser ? (
+            <>
               <Route path='/*' element={<PrivateRoutes />} />
               <Route index element={<Navigate to='/dashboard' />} />
-            {/* </>
-          ) : ( */}
-            {/* <> */}
-              {/* <Route path='auth/*' element={<AuthPage />} />
-              <Route path='*' element={<Navigate to='/auth' />} /> */}
-            {/* </>
+            </>
+          ) : (
+            <> 
+              <Route path='auth/*' element={<AuthPage />} />
+              <Route path='*' element={<Navigate to='/auth' />} />
+             </>
           )}
-          */}
+          
         </Route>
       </Routes>
     </BrowserRouter>
