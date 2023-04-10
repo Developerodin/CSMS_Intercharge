@@ -43,8 +43,9 @@ export function Login() {
     var AuthValue = localStorage.getItem("authValue");
     console.log("AuthValue",AuthValue)
     if(AuthValue === "true"){
-      window.location.reload();
+      // window.location.reload();
       navigate("/dashboard");
+      console.log("hii from navigate")
     }
     else{
       navigate("/auth");
