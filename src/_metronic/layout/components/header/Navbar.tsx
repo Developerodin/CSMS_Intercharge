@@ -13,6 +13,11 @@ const Navbar = () => {
   const {config} = useLayout()
   return (
     <div className='app-navbar flex-shrink-0'>
+
+      <div style={{display:"flex",justifyContent:"space-around",width:"130px"}}>
+        
+      
+      
       <div className={clsx('app-navbar-item align-items-stretch', itemClass)}>
         <Search />
       </div>
@@ -21,7 +26,7 @@ const Navbar = () => {
         <div id='kt_activities_toggle' className={btnClass}>
           <KTSVG path='/media/icons/duotune/general/gen032.svg' className={btnIconClass} />
         </div>
-      </div> */}
+      </div>  */}
 
       {/* <div className={clsx('app-navbar-item', itemClass)}>
         <div
@@ -35,18 +40,31 @@ const Navbar = () => {
         <HeaderNotificationsMenu />
       </div> */}
 
-      <div className={clsx('app-navbar-item', itemClass)}>
+      {/* <div className={clsx('app-navbar-item', itemClass)}>
         <div className={clsx('position-relative', btnClass)} id='kt_drawer_chat_toggle'>
           <KTSVG path='/media/icons/duotune/communication/com012.svg' className={btnIconClass} />
           <span className='bullet bullet-dot bg-success h-6px w-6px position-absolute translate-middle top-0 start-50 animation-blink' />
         </div>
-      </div>
+      </div> */}
 
       {/* <div className={clsx('app-navbar-item', itemClass)}>
         <ThemeModeSwitcher toggleBtnClass={clsx('btn-active-light-primary btn-custom')} />
       </div> */}
 
-      <div className={clsx('app-navbar-item', itemClass)}>
+      
+
+       {/* {config.app?.header?.default?.menu?.display && (
+        <div className='app-navbar-item d-lg-none ms-2 me-n3' title='Show header menu'>
+          <div
+            className='btn btn-icon btn-active-color-primary w-35px h-35px'
+            id='kt_app_header_menu_toggle'
+          >
+            <KTSVG path='/media/icons/duotune/text/txt001.svg' className={btnIconClass} />
+          </div>
+        </div>
+      )} */}
+
+<div style={{marginRight:"30px"}} className={clsx('app-navbar-item', itemClass)}>
         <div
           className={clsx('cursor-pointer symbol', userAvatarClass)}
           data-kt-menu-trigger="{default: 'click'}"
@@ -58,16 +76,7 @@ const Navbar = () => {
         <HeaderUserMenu />
       </div>
 
-      {config.app?.header?.default?.menu?.display && (
-        <div className='app-navbar-item d-lg-none ms-2 me-n3' title='Show header menu'>
-          <div
-            className='btn btn-icon btn-active-color-primary w-35px h-35px'
-            id='kt_app_header_menu_toggle'
-          >
-            <KTSVG path='/media/icons/duotune/text/txt001.svg' className={btnIconClass} />
-          </div>
         </div>
-      )}
     </div>
   )
 }

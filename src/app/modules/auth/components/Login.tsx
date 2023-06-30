@@ -59,30 +59,33 @@ export function Login() {
     validationSchema: loginSchema,
     onSubmit: async (values, {setStatus, setSubmitting}) => {
       setLoading(true)
-      // try {
-      //   const {data: auth} = await login(values.email, values.password)
-      //   saveAuth(auth)
-      //   const {data: user} = await getUserByToken(auth.api_token)
-      //   setCurrentUser(user)
-      // } catch (error) {
-      //   console.error(error)
-      //   saveAuth(undefined)
-      //   setStatus('The login details are incorrect')
-      //   setSubmitting(false)
-      //   setLoading(false)
-      // }
-      if(values.email===`admin@demo.com` && values.password===`admin`){
-        localStorage.setItem("authValue", "true");
-        setLoading(false)
-        window.location.reload();
+      try {
+        const {data: userData} = await login(values.email, values.password)
+        saveAuth(userData)
+        console.log("userdata after Login====>",userData);
+        // const {data: user} = await getUserByToken(auth.api_token)
+        // const user=
         
-      }
-      else{
+        if(userData && userData.status === "success"){
+          setCurrentUser(userData.user);
+          localStorage.setItem("authValue", "true");
+           setLoading(false)
+            window.location.reload();
+        }
+        else{
+            setStatus('The login details are incorrect')
+            localStorage.setItem("authValue", "false");
+            setSubmitting(false)
+          setLoading(false)
+          }
+      } catch (error) {
+        console.error(error)
+        saveAuth(undefined)
         setStatus('The login details are incorrect')
-        localStorage.setItem("authValue", "false");
         setSubmitting(false)
-      setLoading(false)
+        setLoading(false)
       }
+ 
     },
   })
 
@@ -159,7 +162,7 @@ export function Login() {
       ) : (
         <div className='mb-10 bg-light-info p-8 rounded'>
           <div className='text-info'>
-            Use account <strong>admin@demo.com</strong> and password <strong>admin</strong> to
+            Use account <strong>testingApi@gmail.com</strong> and password <strong>Akshay@0111</strong> to
             continue.
           </div>
         </div>

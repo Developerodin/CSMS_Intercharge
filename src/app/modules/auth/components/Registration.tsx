@@ -5,7 +5,7 @@ import {useFormik} from 'formik'
 import * as Yup from 'yup'
 import clsx from 'clsx'
 import {getUserByToken, register} from '../core/_requests'
-import {Link} from 'react-router-dom'
+import {Link, useNavigate} from 'react-router-dom'
 import {toAbsoluteUrl} from '../../../../_metronic/helpers'
 import {PasswordMeterComponent} from '../../../../_metronic/assets/ts/components'
 import {useAuth} from '../core/Auth'
@@ -16,6 +16,7 @@ const initialValues = {
   email: '',
   password: '',
   changepassword: '',
+  location:'',
   acceptTerms: false,
 }
 
@@ -43,28 +44,46 @@ const registrationSchema = Yup.object().shape({
       is: (val: string) => (val && val.length > 0 ? true : false),
       then: Yup.string().oneOf([Yup.ref('password')], "Password and Confirm Password didn't match"),
     }),
+    location: Yup.string()
+    .min(3, 'Minimum 3 symbols')
+    .max(50, 'Maximum 50 symbols')
+    .required('location is required'),
   acceptTerms: Yup.bool().required('You must accept the terms and conditions'),
 })
 
 export function Registration() {
   const [loading, setLoading] = useState(false)
   const {saveAuth, setCurrentUser} = useAuth()
+  const navigate = useNavigate();
   const formik = useFormik({
     initialValues,
     validationSchema: registrationSchema,
     onSubmit: async (values, {setStatus, setSubmitting}) => {
       setLoading(true)
       try {
-        const {data: auth} = await register(
+        const {data: RegisterResposne} = await register(
           values.email,
           values.firstname,
           values.lastname,
           values.password,
-          values.changepassword
+          values.changepassword,
+          values.location,
         )
-        saveAuth(auth)
-        const {data: user} = await getUserByToken(auth.api_token)
-        setCurrentUser(user)
+        console.log("register Data res =====>",RegisterResposne);
+
+        if(RegisterResposne && RegisterResposne.status === "success") {
+          setStatus(RegisterResposne.message);
+          setLoading(false);
+          navigate("/auth");
+
+        }
+        else{
+          setLoading(false);
+          setStatus('The registration details is incorrect try again');
+        }
+        // saveAuth(auth)
+        // const {data: user} = await getUserByToken(auth.api_token)
+        // setCurrentUser(user)
       } catch (error) {
         console.error(error)
         saveAuth(undefined)
@@ -300,6 +319,33 @@ export function Registration() {
           <div className='fv-plugins-message-container'>
             <div className='fv-help-block'>
               <span role='alert'>{formik.errors.changepassword}</span>
+            </div>
+          </div>
+        )}
+      </div>
+
+
+      <div className='fv-row mb-5'>
+        <label className='form-label fw-bolder text-dark fs-6'>Location</label>
+        <input
+          type='text'
+          placeholder='location'
+          autoComplete='off'
+          {...formik.getFieldProps('location')}
+          className={clsx(
+            'form-control bg-transparent',
+            {
+              'is-invalid': formik.touched.location && formik.errors.location,
+            },
+            {
+              'is-valid': formik.touched.location && !formik.errors.location,
+            }
+          )}
+        />
+        {formik.touched.location && formik.errors.location && (
+          <div className='fv-plugins-message-container'>
+            <div className='fv-help-block'>
+              <span role='alert'>{formik.errors.location}</span>
             </div>
           </div>
         )}

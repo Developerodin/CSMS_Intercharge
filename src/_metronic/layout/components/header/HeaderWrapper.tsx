@@ -13,7 +13,8 @@ export function HeaderWrapper() {
   }
 
   return (
-    <div id='kt_app_header' className='app-header'>
+    <div id='kt_app_header' className='app-header' style={{display:"flex",justifyContent:"space-between",alignItems:"center"}}>
+
       <div
         id='kt_app_header_container'
         className={clsx(
@@ -34,9 +35,9 @@ export function HeaderWrapper() {
               >
                 <KTSVG path='/media/icons/duotune/abstract/abs015.svg' className=' svg-icon-1' />
               </div>
-              <div className='d-flex align-items-center flex-grow-1 flex-lg-grow-0'>
+              <div className='d-flex align-items-center flex-grow-1 flex-lg-grow-0 mt-2'>
                 <Link to='/dashboard' className='d-lg-none'>
-                  <img alt='Logo' src='./assets/media/logos/default-small.png' className='h-40px' />
+                  <img alt='Logo' src={toAbsoluteUrl('/media/logos/chargesol-orange-black.png')} className='h-20px' />
                 </Link>
               </div>
             </div>
@@ -70,7 +71,12 @@ export function HeaderWrapper() {
           </div>
         )}
 
+        
+      </div>
+
+      <div>
         <div
+        
           id='kt_app_header_wrapper'
           className='d-flex align-items-stretch justify-content-between flex-lg-grow-1'
         >

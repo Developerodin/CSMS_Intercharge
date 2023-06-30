@@ -19,7 +19,7 @@ import { AuthPage, Logout } from '../modules/auth'
  * @see https://facebook.github.io/create-react-app/docs/using-the-public-folder
  */
 const {PUBLIC_URL} = process.env
-const BaseUrl ="CSMS_Intercharge"
+const BaseUrl ="CHARGE_SOL"
 
 const AppRoutes: FC = () => {
   // const {currentUser} = useAuth()
@@ -35,7 +35,7 @@ const AppRoutes: FC = () => {
   }
   
   return (
-    <BrowserRouter basename={BaseUrl}>
+    <BrowserRouter >
       <Routes>
         <Route element={<App />}>
           <Route path='error/*' element={<ErrorsPage />} />
