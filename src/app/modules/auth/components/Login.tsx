@@ -67,8 +67,9 @@ export function Login() {
         // const user=
         
         if(userData && userData.status === "success"){
-          setCurrentUser(userData.user);
+          setCurrentUser(userData.data.user);
           localStorage.setItem("authValue", "true");
+          localStorage.setItem("User",JSON.stringify(userData.data.user));
            setLoading(false)
             window.location.reload();
         }

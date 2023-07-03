@@ -318,6 +318,14 @@ const SidebarMenuMain = () => {
 
 
 
+
+
+
+
+
+
+
+
 <div className='menu-item'>
         <div className='menu-content'>
           <span className='menu-heading fw-bold  fs-7'>Manage CPOs</span>
@@ -410,6 +418,30 @@ const SidebarMenuMain = () => {
          
         />
 
+
+
+
+{/* Chats  */}
+
+<div className='menu-item'>
+        <div className='menu-content'>
+          <span className='menu-heading fw-bold  fs-7'>Chats</span>
+        </div>
+      </div>
+
+      <SidebarMenuItem
+    to='/chats/private-chat/'
+    icon='/media/icons/duotune/general/gen002.svg'
+    title='Private Chat'
+    fontIcon='bi-layers'
+  />
+
+<SidebarMenuItem
+    to='/chats/group-chat/'
+    icon='/media/icons/duotune/abstract/abs027.svg'
+    title='Group Chart'
+    fontIcon='bi-layers'
+  />
 
 
       {/* <SidebarMenuItemWithSub to='/crafted/pages/profile' title='Overview' hasBullet={false} icon='/media/icons/duotune/communication/com012.svg'>
@@ -794,6 +826,18 @@ const SidebarMenuMain = () => {
     title='System Masters'
     fontIcon='bi-layers'
   />
+
+
+
+
+
+
+
+
+
+
+
+
 
       {/* <SidebarMenuItemWithSub to='/crafted/pages/profile' title='Admin Managment' hasBullet={false} icon='/media/icons/duotune/communication/com012.svg'>
         

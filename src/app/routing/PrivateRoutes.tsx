@@ -50,6 +50,9 @@ import Chargers from '../pages/Manage CPOs/Chargers/Chargers'
 import ChargerDetails from '../pages/Manage CPOs/Chargers/Pages/ChargerDetails'
 import UserPayments from '../pages/Billing & Payments/All Transactions/Pages/UserPayments'
 import CompanyPayments from '../pages/Billing & Payments/All Transactions/Pages/CompanyPayments'
+import ChatPage from '../modules/apps/chat/ChatPage'
+import { Private } from '../modules/apps/chat/components/Private'
+import { Group } from '../modules/apps/chat/components/Group'
 
 
 
@@ -553,7 +556,23 @@ const PrivateRoutes = () => {
           }
         />
 
+<Route
+          path='chats/private-chat/*'
+          element={
+            <SuspensedView>
+              <Private/>
+            </SuspensedView>
+          }
+        />
 
+<Route
+          path='chats/group-chat/*'
+          element={
+            <SuspensedView>
+              <Group/>
+            </SuspensedView>
+          }
+        />
 
 
 <Route

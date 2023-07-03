@@ -1,8 +1,6 @@
 {
   "name": "demo1",
   "version": "8.1.5",
-
- 
   "dependencies": {
     "@emotion/react": "^11.10.6",
     "@emotion/styled": "^11.10.6",
@@ -46,6 +44,7 @@
     "react-topbar-progress-indicator": "4.1.1",
     "sass": "1.50.1",
     "socicon": "3.0.5",
+    "socket.io-client": "^4.7.1",
     "yup": "0.32.11"
   },
   "devDependencies": {
