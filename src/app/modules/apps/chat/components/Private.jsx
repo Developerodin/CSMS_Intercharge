@@ -31,7 +31,7 @@ const Private = () => {
     email: ''
   });
   const [ContactData, setContactData] = React.useState([]);
-  
+  const [ClickedContact, setClickedContact] = React.useState({});
   useEffect(() => {
     // no-op if the socket is already connected
     console.log('Connect socket')
@@ -39,9 +39,7 @@ const Private = () => {
     socket.emit("new-user-joined", userId, username);
     console.log('Soceket id',socket.id);
     // ContectList();
-    socket.on('contactsLists', ({ contacts }) => {
-      console.log('Contact===>', contacts);
-    });
+    socket.emit("userData", { userId });
     socket.on('contactsError', ({ msg }) => {
       console.log('Contacts error',msg);
       // toastr.error(msg, 'Error');
@@ -54,6 +52,11 @@ const Private = () => {
       // value.click();
     });
 
+    socket.on('contactsLists', ({ contacts }) => {
+      console.log('Contact===>', contacts);
+      setContactData(contacts);
+      setClickedContact(contacts[0])
+    });
    
 
     socket.on("contact_delete", function ({ receiverId, userId }) {
@@ -77,7 +80,34 @@ const Private = () => {
       //   document.getElementsByClassName("chat-welcome-section")[0].style.display = "flex";
       // }
     });
+ 
 
+    socket.on('contactInfo', ({ contacts }) => {
+      console.log("Contact info ===> " + contacts)
+      CharacterData(ClickedContact.user_id,ClickedContact.name)
+      // contacts.forEach(contact => {
+      //   receiver_Id = contact.user_id;
+      //   const time = new Date(contact.createdAt);
+      //   const created_at =
+      //     time.getDate() +
+      //     "-" +
+      //     (time.getMonth() + 1) +
+      //     "-" +
+      //     time.getFullYear() +
+      //     "&ensp;" +
+      //     time.getHours() +
+      //     ":" +
+      //     time.getMinutes();
+    
+     
+      
+     
+      //   userhtml = CharacterData(contact.user_id, contact.name);
+      
+      // });
+    });
+
+   
 
     return () => {
       console.log('disconnect socket')
@@ -86,7 +116,33 @@ const Private = () => {
     };
   }, []);
 
+  function singleChat(id) {
+  
+      socket.emit('contactByUser', { id, userId });
+      socket.emit('chat_online', { id });
+     
+  }
+
+  function CharacterData(id, name) {
+    let startm = 0
+    socket.emit("userClick", { id, userId, startm });
+  
+    socket.on("userMessage", ({ users, msgno }) => {
+      console.log("userMessage",users, msgno)
+      let msgtno = msgno
+      // messageBox.innerHTML = "";
+      // $('.messages__history').html('')
+      // adduchat(users, receiverName)
+      startm = 10
+    });
+  
+  }
  
+  const handelClickedContact=(el)=>{
+    console.log("handelClickedContact==>",el)
+    setClickedContact(el);
+    singleChat(el._id);
+  }
 
   const HandelAddContect=()=>{
     // console.log("Add new Contect",addContactData);
@@ -169,30 +225,12 @@ const Private = () => {
               data-kt-scroll-wrappers='#kt_content, #kt_chat_contacts_body'
               data-kt-scroll-offset='0px'
             >
-              <div className='d-flex flex-stack py-4'>
-                <div className='d-flex align-items-center'>
-                  <div className='symbol symbol-45px symbol-circle'>
-                    <span className='symbol-label bg-light-danger text-danger fs-6 fw-bolder'>
-                      M
-                    </span>
-                  </div>
-
-                  <div className='ms-5'>
-                    <a href='#' className='fs-5 fw-bolder text-gray-900 text-hover-primary mb-2'>
-                      Melody Macy
-                    </a>
-                    <div className='fw-bold text-gray-400'>melody@altbox.com</div>
-                  </div>
-                </div>
-
-                <div className='d-flex flex-column align-items-end ms-2'>
-                  <span className='text-muted fs-7 mb-1'>5 hrs</span>
-                </div>
-              </div>
-
-              <div className='separator separator-dashed d-none'></div>
-
-              <div className='d-flex flex-stack py-4'>
+            
+            {ContactData.length > 0 &&
+              ContactData.map((el,index)=>{
+                    return (
+                      <div key={index} onClick={()=>{handelClickedContact(el)}}>
+                  <div className='d-flex flex-stack py-4'>
                 <div className='d-flex align-items-center'>
                   <div className='symbol symbol-45px symbol-circle'>
                     <img alt='Pic' src={toAbsoluteUrl('/media/avatars/300-1.jpg')} />
@@ -200,9 +238,9 @@ const Private = () => {
 
                   <div className='ms-5'>
                     <a href='#' className='fs-5 fw-bolder text-gray-900 text-hover-primary mb-2'>
-                      Max Smith
+                      {el.name}
                     </a>
-                    <div className='fw-bold text-gray-400'>max@kt.com</div>
+                    <div className='fw-bold text-gray-400'>{el.email}</div>
                   </div>
                 </div>
 
@@ -211,187 +249,17 @@ const Private = () => {
                 </div>
               </div>
 
-              <div className='separator separator-dashed d-none'></div>
+                 <div className='separator separator-dashed d-none'></div>
+                      </div>
+                    )
+              })
+            }
 
-              <div className='d-flex flex-stack py-4'>
-                <div className='d-flex align-items-center'>
-                  <div className='symbol symbol-45px symbol-circle'>
-                    <img alt='Pic' src={toAbsoluteUrl('/media/avatars/300-5.jpg')} />
-                  </div>
+              
 
-                  <div className='ms-5'>
-                    <a href='#' className='fs-5 fw-bolder text-gray-900 text-hover-primary mb-2'>
-                      Sean Bean
-                    </a>
-                    <div className='fw-bold text-gray-400'>sean@dellito.com</div>
-                  </div>
-                </div>
+             
 
-                <div className='d-flex flex-column align-items-end ms-2'>
-                  <span className='text-muted fs-7 mb-1'>20 hrs</span>
-                  <span className='badge badge-sm badge-circle badge-light-success'>6</span>
-                </div>
-              </div>
-
-              <div className='separator separator-dashed d-none'></div>
-
-              <div className='d-flex flex-stack py-4'>
-                <div className='d-flex align-items-center'>
-                  <div className='symbol symbol-45px symbol-circle'>
-                    <img alt='Pic' src={toAbsoluteUrl('/media/avatars/300-25.jpg')} />
-                  </div>
-
-                  <div className='ms-5'>
-                    <a href='#' className='fs-5 fw-bolder text-gray-900 text-hover-primary mb-2'>
-                      Brian Cox
-                    </a>
-                    <div className='fw-bold text-gray-400'>brian@exchange.com</div>
-                  </div>
-                </div>
-
-                <div className='d-flex flex-column align-items-end ms-2'>
-                  <span className='text-muted fs-7 mb-1'>20 hrs</span>
-                </div>
-              </div>
-
-              <div className='separator separator-dashed d-none'></div>
-
-              <div className='d-flex flex-stack py-4'>
-                <div className='d-flex align-items-center'>
-                  <div className='symbol symbol-45px symbol-circle'>
-                    <span className='symbol-label bg-light-warning text-warning fs-6 fw-bolder'>
-                      M
-                    </span>
-                  </div>
-
-                  <div className='ms-5'>
-                    <a href='#' className='fs-5 fw-bolder text-gray-900 text-hover-primary mb-2'>
-                      Mikaela Collins
-                    </a>
-                    <div className='fw-bold text-gray-400'>mikaela@pexcom.com</div>
-                  </div>
-                </div>
-
-                <div className='d-flex flex-column align-items-end ms-2'>
-                  <span className='text-muted fs-7 mb-1'>1 day</span>
-                </div>
-              </div>
-
-              <div className='separator separator-dashed d-none'></div>
-
-              <div className='d-flex flex-stack py-4'>
-                <div className='d-flex align-items-center'>
-                  <div className='symbol symbol-45px symbol-circle'>
-                    <img alt='Pic' src={toAbsoluteUrl('/media/avatars/300-9.jpg')} />
-                  </div>
-
-                  <div className='ms-5'>
-                    <a href='#' className='fs-5 fw-bolder text-gray-900 text-hover-primary mb-2'>
-                      Francis Mitcham
-                    </a>
-                    <div className='fw-bold text-gray-400'>f.mitcham@kpmg.com.au</div>
-                  </div>
-                </div>
-
-                <div className='d-flex flex-column align-items-end ms-2'>
-                  <span className='text-muted fs-7 mb-1'>5 hrs</span>
-                  <span className='badge badge-sm badge-circle badge-light-success'>6</span>
-                </div>
-              </div>
-
-              <div className='separator separator-dashed d-none'></div>
-
-              <div className='d-flex flex-stack py-4'>
-                <div className='d-flex align-items-center'>
-                  <div className='symbol symbol-45px symbol-circle'>
-                    <span className='symbol-label bg-light-danger text-danger fs-6 fw-bolder'>
-                      O
-                    </span>
-                    <div className='symbol-badge bg-success start-100 top-100 border-4 h-15px w-15px ms-n2 mt-n2'></div>
-                  </div>
-
-                  <div className='ms-5'>
-                    <a href='#' className='fs-5 fw-bolder text-gray-900 text-hover-primary mb-2'>
-                      Olivia Wild
-                    </a>
-                    <div className='fw-bold text-gray-400'>olivia@corpmail.com</div>
-                  </div>
-                </div>
-
-                <div className='d-flex flex-column align-items-end ms-2'>
-                  <span className='text-muted fs-7 mb-1'>1 week</span>
-                </div>
-              </div>
-
-              <div className='separator separator-dashed d-none'></div>
-
-              <div className='d-flex flex-stack py-4'>
-                <div className='d-flex align-items-center'>
-                  <div className='symbol symbol-45px symbol-circle'>
-                    <span className='symbol-label bg-light-primary text-primary fs-6 fw-bolder'>
-                      N
-                    </span>
-                  </div>
-
-                  <div className='ms-5'>
-                    <a href='#' className='fs-5 fw-bolder text-gray-900 text-hover-primary mb-2'>
-                      Neil Owen
-                    </a>
-                    <div className='fw-bold text-gray-400'>owen.neil@gmail.com</div>
-                  </div>
-                </div>
-
-                <div className='d-flex flex-column align-items-end ms-2'>
-                  <span className='text-muted fs-7 mb-1'>20 hrs</span>
-                  <span className='badge badge-sm badge-circle badge-light-success'>6</span>
-                </div>
-              </div>
-
-              <div className='separator separator-dashed d-none'></div>
-
-              <div className='d-flex flex-stack py-4'>
-                <div className='d-flex align-items-center'>
-                  <div className='symbol symbol-45px symbol-circle'>
-                    <img alt='Pic' src={toAbsoluteUrl('/media/avatars/300-23.jpg')} />
-                  </div>
-
-                  <div className='ms-5'>
-                    <a href='#' className='fs-5 fw-bolder text-gray-900 text-hover-primary mb-2'>
-                      Dan Wilson
-                    </a>
-                    <div className='fw-bold text-gray-400'>dam@consilting.com</div>
-                  </div>
-                </div>
-
-                <div className='d-flex flex-column align-items-end ms-2'>
-                  <span className='text-muted fs-7 mb-1'>2 weeks</span>
-                  <span className='badge badge-sm badge-circle badge-light-warning'>9</span>
-                </div>
-              </div>
-
-              <div className='separator separator-dashed d-none'></div>
-
-              <div className='d-flex flex-stack py-4'>
-                <div className='d-flex align-items-center'>
-                  <div className='symbol symbol-45px symbol-circle'>
-                    <span className='symbol-label bg-light-danger text-danger fs-6 fw-bolder'>
-                      E
-                    </span>
-                    <div className='symbol-badge bg-success start-100 top-100 border-4 h-15px w-15px ms-n2 mt-n2'></div>
-                  </div>
-
-                  <div className='ms-5'>
-                    <a href='#' className='fs-5 fw-bolder text-gray-900 text-hover-primary mb-2'>
-                      Emma Bold
-                    </a>
-                    <div className='fw-bold text-gray-400'>emma@intenso.com</div>
-                  </div>
-                </div>
-
-                <div className='d-flex flex-column align-items-end ms-2'>
-                  <span className='text-muted fs-7 mb-1'>1 day</span>
-                </div>
-              </div>
+              
             </div>
           </div>
         </div>
@@ -407,7 +275,7 @@ const Private = () => {
                   href='#'
                   className='fs-4 fw-bolder text-gray-900 text-hover-primary me-1 mb-2 lh-1'
                 >
-                  Brian Cox
+                  {ClickedContact && ClickedContact.name}
                 </a>
 
                 <div className='mb-0 lh-1'>
@@ -431,7 +299,7 @@ const Private = () => {
               </div>
             </div>
           </div>
-          <ChatInner />
+         {ClickedContact && <ChatInner Data={ClickedContact} /> } 
         </div>
       </div>
       <Modal

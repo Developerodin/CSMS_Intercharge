@@ -321,7 +321,7 @@ const Group: FC = () => {
             </div>
           </div>
 
-          <ChatInner />
+          {/* <ChatInner Data={{}} /> */}
         </div>
       </div>
     </div>

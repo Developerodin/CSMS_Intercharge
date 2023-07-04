@@ -13,9 +13,9 @@ import { socket } from '../../../socket'
 
 
 
-const bufferMessages = defaultMessages
+const bufferMessages = []
 
-const ChatInner = ({isDrawer = false}) => {
+const ChatInner = ({isDrawer = false,Data}) => {
   const userData=JSON.parse(localStorage.getItem('User'))
   const userEmail=userData.email;
   const created_by=userData._id;
@@ -25,29 +25,38 @@ const ChatInner = ({isDrawer = false}) => {
   const [message, setMessage] = useState('')
   const [messages, setMessages] = useState(bufferMessages)
   const [userInfos] = useState(defaultUserInfos)
+  const [Sendmessage, setSendMessage] = useState('');
+  const [IncomingMessage, setIncomingMessage] = useState('')
+
 
 
   useEffect(() => {
-    // Chat message event
-    socket.on('chat message', ({ id, message, sender_id, receiver_id, file_upload, createdAt, receiverName, receiverImage, myid, flag }) => {
-      // Handle incoming messages
-      // ...
-      console.log('msg',message,receiverName);
-    });
+    let count = 1;
+    
+    const handleChatMessage = ({ id, message, sender_id, receiver_id, file_upload, createdAt, receiverName, receiverImage, myid, flag }) => {
+      console.log('on msg', message);
+      if (sender_id !== userId) {
+        const newMessage = {
+          user: 2,
+          type: 'in',
+          text: message,
+          time: 'Just now',
+        };
   
-    // Message update event
-    socket.on('message_update', ({ messageId, message, receiverId, userId, flag }) => {
-      // Handle message updates
-      // ...
-      console.log("MSG update",message,receiverId)
-    });
-  
-    // Cleanup the event listeners
-    return () => {
-      socket.off('chat message');
-      socket.off('message_update');
+        setMessages(prevMessages => [...prevMessages, newMessage]);
+        
+        // bufferMessages.push(newMessage)
+        // setMessages(bufferMessages)
+        // toggleChatUpdateFlat(!chatUpdateFlag)
+        // setMessage('')
+      }
     };
-  }, [])
+  
+    socket.on('chat message', handleChatMessage);
+    
+    
+   
+  }, []);
 
   const sendMessage = () => {
     const newMessage = {
@@ -86,14 +95,28 @@ const ChatInner = ({isDrawer = false}) => {
 
   const sendMessageIO = () => {
     // Emit the 'chat message' event
+    console.log("Sending message to",Data.name)
     socket.emit('chat message', {
       message: message,
       sender_id: userId,
-      // receiver_id: receiverId,
-      receiver_id: "64a2aaa1858dbb46e32cc36c",
+      receiver_id: Data.user_id,
       file_upload: "",
       flag: '0'
     });
+    // setSendMessage(message);
+    const newMessage = {
+      user: 2,
+      type: 'out',
+      text: message,
+      time: 'Just now',
+    }
+
+    setMessages(prevMessages => [...prevMessages, newMessage]);
+    setMessage("");
+    // bufferMessages.push(newMessage)
+    // setMessages(bufferMessages)
+    // toggleChatUpdateFlat(!chatUpdateFlag)
+    // setMessage('')
   
     // ...
   };
@@ -101,7 +124,7 @@ const ChatInner = ({isDrawer = false}) => {
   const onEnterPress = (e) => {
     if (e.keyCode === 13 && e.shiftKey === false) {
       e.preventDefault()
-      sendMessage()
+      sendMessageIO()
     }
   }
 
@@ -170,7 +193,7 @@ const ChatInner = ({isDrawer = false}) => {
                           href='#'
                           className='fs-5 fw-bolder text-gray-900 text-hover-primary me-1'
                         >
-                          {userInfo.name}
+                          {Data.name}
                         </a>
                         <span className='text-muted fs-7 mb-1'>{message.time}</span>
                       </div>

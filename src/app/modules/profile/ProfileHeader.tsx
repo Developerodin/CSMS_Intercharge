@@ -7,6 +7,7 @@ import {useLocation} from 'react-router-dom'
 
 const ProfileHeader: React.FC = () => {
   const location = useLocation()
+  const user=JSON.parse(localStorage.getItem('User') || '{}');
 
   return (
     <div className='card mb-5 mb-xl-10'>
@@ -24,7 +25,7 @@ const ProfileHeader: React.FC = () => {
               <div className='d-flex flex-column'>
                 <div className='d-flex align-items-center mb-2'>
                   <a href='#' className='text-gray-800 text-hover-primary fs-2 fw-bolder me-1'>
-                    Admin
+                    {user.name}
                   </a>
                   <a href='#'>
                     <KTSVG

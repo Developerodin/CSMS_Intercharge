@@ -163,7 +163,7 @@ export function Login() {
       ) : (
         <div className='mb-10 bg-light-info p-8 rounded'>
           <div className='text-info'>
-            Use account <strong>testingApi@gmail.com</strong> and password <strong>Akshay@0111</strong> to
+            Use account <strong>admin@demo.com</strong> and password <strong>admin@123</strong> to
             continue.
           </div>
         </div>
