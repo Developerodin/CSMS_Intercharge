@@ -5,7 +5,7 @@ import {Dropdown1, ChatInner} from '../../../../../_metronic/partials'
 import { socket } from '../../../../../socket';
 import { Box, Modal, Typography,TextField,Button  } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
-
+import RadioButtonCheckedIcon from '@mui/icons-material/RadioButtonChecked';
 
 const Private = () => {
   const style = {
@@ -31,13 +31,15 @@ const Private = () => {
     email: ''
   });
   const [ContactData, setContactData] = React.useState([]);
+  const [previousMessageData, setpreviousMessageData] = React.useState([]);
   const [ClickedContact, setClickedContact] = React.useState({});
+  const [MessageMenueOpen, setMessageMenueOpen] = React.useState(false);
   useEffect(() => {
     // no-op if the socket is already connected
     console.log('Connect socket')
     socket.connect();
     socket.emit("new-user-joined", userId, username);
-    console.log('Soceket id',socket.id);
+    // console.log('Soceket id',socket.id);
     // ContectList();
     socket.emit("userData", { userId });
     socket.on('contactsError', ({ msg }) => {
@@ -53,9 +55,9 @@ const Private = () => {
     });
 
     socket.on('contactsLists', ({ contacts }) => {
-      console.log('Contact===>', contacts);
+      // console.log('Contact===>', contacts);
       setContactData(contacts);
-      setClickedContact(contacts[0])
+     
     });
    
 
@@ -83,8 +85,8 @@ const Private = () => {
  
 
     socket.on('contactInfo', ({ contacts }) => {
-      console.log("Contact info ===> " + contacts)
-      CharacterData(ClickedContact.user_id,ClickedContact.name)
+      // console.log("Contact info ===> " , contacts)
+      CharacterData(contacts[0].user_id,contacts[0].name)
       // contacts.forEach(contact => {
       //   receiver_Id = contact.user_id;
       //   const time = new Date(contact.createdAt);
@@ -107,6 +109,10 @@ const Private = () => {
       // });
     });
 
+    socket.on('onlineUser', ({ online }) => {
+     console.log('onlineUser====>', online);
+    });
+
    
 
     return () => {
@@ -115,6 +121,14 @@ const Private = () => {
 
     };
   }, []);
+
+  const handelMessageMenu=()=>{
+    setMessageMenueOpen(true);
+    setTimeout(()=>{
+      setMessageMenueOpen(false);
+    },5000)
+  }
+
 
   function singleChat(id) {
   
@@ -128,20 +142,22 @@ const Private = () => {
     socket.emit("userClick", { id, userId, startm });
   
     socket.on("userMessage", ({ users, msgno }) => {
-      console.log("userMessage",users, msgno)
-      let msgtno = msgno
-      // messageBox.innerHTML = "";
-      // $('.messages__history').html('')
-      // adduchat(users, receiverName)
-      startm = 10
+      // console.log("userMessage",users, msgno)
+      let msgtno = msgno;
+      if(users.length > 0) {
+        // console.log("Adding previous conversation---")
+        setpreviousMessageData(users);
+      }
+     
+      
     });
   
   }
  
   const handelClickedContact=(el)=>{
-    console.log("handelClickedContact==>",el)
+    // console.log("handelClickedContact==>",el)
     setClickedContact(el);
-    singleChat(el._id);
+    singleChat(el.user_id);
   }
 
   const HandelAddContect=()=>{
@@ -150,9 +166,9 @@ const Private = () => {
     const name=addContactData.username;
     const email=addContactData.email;
    
-    console.log("Data",name, email, userEmail, created_by, username)
+    // console.log("Data",name, email, userEmail, created_by, username)
     socket.emit('contactList', { name, email, userEmail, created_by, username });
-
+    setAddContactopen(false);
   
   }
   
@@ -194,7 +210,7 @@ const Private = () => {
   return (
     <div className='d-flex flex-column flex-lg-row'>
       
-      <div className='flex-column flex-lg-row-auto w-100 w-lg-300px w-xl-400px mb-10 mb-lg-0'>
+      <div  className='flex-column flex-lg-row-auto w-100 w-lg-300px w-xl-400px mb-10 mb-lg-0'>
         <div className='card card-flush'>
           <div className='card-header pt-7' id='kt_chat_contacts_header' style={{display:"flex",justifyContent:"space-between",alignItems:"center"}}>
             <form className=' position-relative' autoComplete='off'>
@@ -211,11 +227,11 @@ const Private = () => {
               />
             </form>
             <Box >
-       <AddIcon fontSize='large' onClick={()=>setAddContactopen(true)}/>
-      </Box>
+         <AddIcon fontSize='large' onClick={()=>setAddContactopen(true)}/>
+            </Box>
           </div>
 
-          <div className='card-body pt-5' id='kt_chat_contacts_body'>
+          <div style={{height:"80vh",overflow:"auto"}} className='card-body pt-5' id='kt_chat_contacts_body'>
             <div
               className='scroll-y me-n5 pe-5 h-200px h-lg-auto'
               data-kt-scroll='true'
@@ -248,6 +264,7 @@ const Private = () => {
                   <span className='text-muted fs-7 mb-1'>20 hrs</span>
                 </div>
               </div>
+              
 
                  <div className='separator separator-dashed d-none'></div>
                       </div>
@@ -266,41 +283,59 @@ const Private = () => {
       </div>
 
       <div className='flex-lg-row-fluid ms-lg-7 ms-xl-10'>
-        <div className='card' id='kt_chat_messenger'>
-          <div className='card-header' id='kt_chat_messenger_header'>
-            <div className='card-title'>
-              <div className='symbol-group symbol-hover'></div>
-              <div className='d-flex justify-content-center flex-column me-3'>
-                <a
-                  href='#'
-                  className='fs-4 fw-bolder text-gray-900 text-hover-primary me-1 mb-2 lh-1'
-                >
-                  {ClickedContact && ClickedContact.name}
-                </a>
+       
+        {
+            Object.keys(ClickedContact).length > 0 ?  
+            <div className='card' id='kt_chat_messenger'>
+            <div className='card-header' id='kt_chat_messenger_header'>
+              <div className='card-title'>
+                <div className='symbol-group symbol-hover'></div>
+                <div className='d-flex justify-content-center flex-column me-3'>
+                  <a
+                    href='#'
+                    className='fs-4 fw-bolder text-gray-900 text-hover-primary me-1 mb-2 lh-1'
+                  >
+                    {ClickedContact && ClickedContact.name}
+                  </a>
+  
+                  <div className='mb-0 lh-1'>
+                    <span className='badge badge-success badge-circle w-10px h-10px me-1'></span>
+                    <span className='fs-7 fw-bold text-gray-400'>Active</span>
+                  </div>
+                </div>
+              </div>
+  
+              <div className='card-toolbar'>
+                <div className='me-n3'>
+                <RadioButtonCheckedIcon fontSize='small'  onClick={handelMessageMenu}/>
 
-                <div className='mb-0 lh-1'>
-                  <span className='badge badge-success badge-circle w-10px h-10px me-1'></span>
-                  <span className='fs-7 fw-bold text-gray-400'>Active</span>
+                  <button
+                    className='btn btn-sm btn-icon btn-active-light-primary'
+                    data-kt-menu-trigger='click'
+                    data-kt-menu-placement='bottom-end'
+                    data-kt-menu-flip='top-end'
+                  >
+                    <i className='bi bi-three-dots fs-2'></i>
+                   
+                  </button>
+                  <Dropdown1 />
                 </div>
               </div>
             </div>
-
-            <div className='card-toolbar'>
-              <div className='me-n3'>
-                <button
-                  className='btn btn-sm btn-icon btn-active-light-primary'
-                  data-kt-menu-trigger='click'
-                  data-kt-menu-placement='bottom-end'
-                  data-kt-menu-flip='top-end'
-                >
-                  <i className='bi bi-three-dots fs-2'></i>
-                </button>
-                <Dropdown1 />
-              </div>
-            </div>
+            <ChatInner Data={ClickedContact} MessageData={previousMessageData} MessageMenueOpen={MessageMenueOpen} />
+          
           </div>
-         {ClickedContact && <ChatInner Data={ClickedContact} /> } 
-        </div>
+            :
+            <div style={{height:"80vh",display:"flex",justifyContent:"center",alignItems:"center"}}> 
+              <div style={{textAlign:"center"}}>
+              <img src="https://cdn.dribbble.com/users/665029/screenshots/16162764/media/3ea69cb1655fba401acc6c4328d38633.gif"
+               alt="gif"/>
+              <h1 style={{color:"#302A4E",fontSize:"35px",marginTop:"-80px"}}>Select  User To Chat</h1>
+
+              </div>
+             
+            </div>
+          }
       </div>
       <Modal
         open={AddContactopen}

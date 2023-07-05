@@ -436,12 +436,12 @@ const SidebarMenuMain = () => {
     fontIcon='bi-layers'
   />
 
-<SidebarMenuItem
+{/* <SidebarMenuItem
     to='/chats/group-chat/'
     icon='/media/icons/duotune/abstract/abs027.svg'
     title='Group Chart'
     fontIcon='bi-layers'
-  />
+  /> */}
 
 
       {/* <SidebarMenuItemWithSub to='/crafted/pages/profile' title='Overview' hasBullet={false} icon='/media/icons/duotune/communication/com012.svg'>
