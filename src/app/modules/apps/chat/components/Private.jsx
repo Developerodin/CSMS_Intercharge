@@ -1,12 +1,18 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import React, {FC, useEffect} from 'react'
+import React, {FC, useEffect,useContext} from 'react'
 import {KTSVG, toAbsoluteUrl} from '../../../../../_metronic/helpers'
 import {Dropdown1, ChatInner} from '../../../../../_metronic/partials'
 import { socket } from '../../../../../socket';
 import { Box, Modal, Typography,TextField,Button  } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import RadioButtonCheckedIcon from '@mui/icons-material/RadioButtonChecked';
-
+import ChatContext from '../../../../../Context/ChatContext';
+import CallIcon from '@mui/icons-material/Call';
+import VideoCallIcon from '@mui/icons-material/VideoCall';
+import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
+import CancelIcon from '@mui/icons-material/Cancel';
+import { Call } from '../../../../../_metronic/partials/chat/Call';
+import { VideoCall } from '../../../../../_metronic/partials/chat/VideoCall';
 const Private = () => {
   const style = {
     textalign: 'center',
@@ -20,18 +26,33 @@ const Private = () => {
     boxShadow: 24,
     p: 4,
   };
+  const callStyle = {
+    textalign: 'center',
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width: '100%',
+    height:"100%",
+    bgcolor: '#FAF0E4',
+    border: '2px solid #000',
+    boxShadow: 24,
+    p: 4,
+  };
   const userData=JSON.parse(localStorage.getItem('User'))
   const userEmail=userData.email;
   const created_by=userData._id;
   const username=userData.name;
   const userId = userData._id;
   const [AddContactopen, setAddContactopen] = React.useState(false);
+  const [ConnectCallOpen, setConnectCallOpen] = React.useState(false);
+  const [ConnectVideoCallOpen, setConnectVideoCallOpen] = React.useState(false);
   const [addContactData, setAddContactData] = React.useState({
     username: '',
     email: ''
   });
   const [ContactData, setContactData] = React.useState([]);
-  const [previousMessageData, setpreviousMessageData] = React.useState([]);
+  const {previousMessageData, setpreviousMessageData} =useContext(ChatContext);
   const [ClickedContact, setClickedContact] = React.useState({});
   const [MessageMenueOpen, setMessageMenueOpen] = React.useState(false);
   useEffect(() => {
@@ -307,9 +328,20 @@ const Private = () => {
   
               <div className='card-toolbar'>
                 <div className='me-n3'>
-                <RadioButtonCheckedIcon fontSize='small'  onClick={handelMessageMenu}/>
+                  <Box sx={{width:"200px",display:"flex",justifyContent:"space-around",alignItems:"center"}}>
+                  <CallIcon style={{fontSize:"24px"}} onClick={()=>setConnectCallOpen(true)} />
 
-                  <button
+                  
+                  <VideoCallIcon style={{fontSize:"26px"}} onClick={()=>setConnectVideoCallOpen(true)} />
+                
+                  <MoreHorizIcon style={{fontSize:"28px"}}  onClick={handelMessageMenu}/>
+
+                  </Box>
+               
+                
+
+
+                  {/* <button
                     className='btn btn-sm btn-icon btn-active-light-primary'
                     data-kt-menu-trigger='click'
                     data-kt-menu-placement='bottom-end'
@@ -317,7 +349,7 @@ const Private = () => {
                   >
                     <i className='bi bi-three-dots fs-2'></i>
                    
-                  </button>
+                  </button> */}
                   <Dropdown1 />
                 </div>
               </div>
@@ -351,6 +383,57 @@ const Private = () => {
             <Box style={{display:"flex",justifyContent:"center",alignItems:"center",marginTop:"20px"}}>
             <Button variant="contained" size='large' onClick={HandelAddContect}>ADD</Button>
             </Box>
+        
+        </Box>
+      </Modal>
+
+      
+      <Modal
+        open={ConnectCallOpen}
+        onClose={()=>setConnectCallOpen(false)}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box sx={callStyle}>
+          <Box  textAlign="right">
+          
+          <CancelIcon style={{fontSize:"34px"}} onClick={()=>setConnectCallOpen(false)} />
+          </Box>
+
+          <Box>
+            <Call/>
+          </Box>
+          {/* <Typography variant="h6" style={{textAlign:"center",fontWeight:"bold"}} >Call</Typography>
+       
+            
+            <Box style={{display:"flex",justifyContent:"center",alignItems:"center",marginTop:"20px"}}>
+            <Button variant="contained" size='large' onClick={HandelAddContect}>ADD</Button>
+            </Box> */}
+        
+        </Box>
+      </Modal>
+
+      <Modal
+        open={ConnectVideoCallOpen}
+        onClose={()=>setConnectVideoCallOpen(false)}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box sx={callStyle}>
+        <Box  textAlign="right">
+          
+          <CancelIcon style={{fontSize:"34px"}} onClick={()=>setConnectVideoCallOpen(false)} />
+          </Box>
+
+          <Box>
+            <VideoCall />
+          </Box>
+          {/* <Typography variant="h6" style={{textAlign:"center",fontWeight:"bold"}} >Video Call</Typography>
+       
+            
+            <Box style={{display:"flex",justifyContent:"center",alignItems:"center",marginTop:"20px"}}>
+            <Button variant="contained" size='large' onClick={HandelAddContect}>ADD</Button>
+            </Box> */}
         
         </Box>
       </Modal>

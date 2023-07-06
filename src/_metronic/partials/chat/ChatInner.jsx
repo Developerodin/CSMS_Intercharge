@@ -1,5 +1,5 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import {FC, useState,useEffect, useRef} from 'react'
+import {FC, useState,useEffect, useRef,useContext} from 'react'
 import clsx from 'clsx'
 import {
   toAbsoluteUrl,
@@ -15,6 +15,7 @@ import ViewStreamIcon from '@mui/icons-material/ViewStream';
 import RadioButtonCheckedIcon from '@mui/icons-material/RadioButtonChecked';
 import DeleteIcon from '@mui/icons-material/Delete';
 import SendIcon from '@mui/icons-material/Send';
+import ChatContext from '../../../Context/ChatContext'
 const bufferMessages = []
 
 const ChatInner = ({isDrawer = false,Data,MessageData,MessageMenueOpen}) => {
@@ -30,21 +31,24 @@ const ChatInner = ({isDrawer = false,Data,MessageData,MessageMenueOpen}) => {
   const [Sendmessage, setSendMessage] = useState('');
   const [IncomingMessage, setIncomingMessage] = useState('')
   const [SenderisTyping, setSenderisTyping] = useState(false);
-  
+  const [MessageDelete,setMessageDelete]=useState(0);
+  const {previousMessageData} =useContext(ChatContext);
   const scrollableDivRef = useRef(null);
   const inputFieldRef = useRef(null);
+  const {sharedData} = useContext(ChatContext)
   useEffect(() => {
     if(Object.keys(Data).length > 0 ){
       const scrollableDiv = scrollableDivRef.current;
       scrollableDiv.scrollTop = scrollableDiv.scrollHeight;
     }
+    console.log("working fine ===>",sharedData)
    
   }, [messages]);
 
   useEffect(()=>{
-    console.log("MessageData=====>",MessageData)
+    // console.log("MessageData=====>",MessageData)
     
-    const transformedMessages = MessageData.map(message => {
+    const transformedMessages = previousMessageData.map(message => {
       const messageId=message._id;
       const createdAt = new Date(message.createdAt);
       const now = new Date();
@@ -67,7 +71,8 @@ const ChatInner = ({isDrawer = false,Data,MessageData,MessageMenueOpen}) => {
         text: message.message,
         time,
         createdAt: message.createdAt,
-        messageId:messageId // Include the original createdAt value
+        messageId:messageId,
+        flag:message.flag // Include the original createdAt value
       };
     });
     
@@ -76,10 +81,14 @@ const ChatInner = ({isDrawer = false,Data,MessageData,MessageMenueOpen}) => {
       const timeB = new Date(b.createdAt);
       return timeA - timeB;
     });
+
+  
+     
+   
     // console.log("Message Data after sturcture=====>",sortedMessages)
     setMessages(sortedMessages);
     
-  },[MessageData,Data])
+  },[previousMessageData,Data,MessageDelete])
 
   useEffect(() => {
    
@@ -106,7 +115,13 @@ const ChatInner = ({isDrawer = false,Data,MessageData,MessageMenueOpen}) => {
     }
 
     const messageDelete=({ message_id, receiverId, userId })=>{
-       console.log("Delete Message",message_id)
+       console.log("Delete Message",message_id);
+       const updatedMessages = messages.filter((message) => message.messageId !== message_id);
+       setMessages(updatedMessages);
+      //  setMessageDelete((prev)=>prev+1);
+
+      //  setMessages()
+
     }
   
     socket.on('chat message', handleChatMessage);
@@ -120,10 +135,14 @@ const ChatInner = ({isDrawer = false,Data,MessageData,MessageMenueOpen}) => {
  
 
   const singleMessageDelete=(message)=> {
-    const message_id = message.id;
+    
+    const message_id = message.messageId;
+    const receiverId=Data.user_id;
     let flag = '2';
-    // socket.emit("message_delete", { message_id, receiverId, userId, flag });
-    console.log("Delete Message fun call",message_id)
+    socket.emit("message_delete", { message_id, receiverId, userId, flag });
+    const updatedMessages = messages.filter((message) => message.messageId !== message_id);
+    setMessages(updatedMessages);
+    // console.log("Delete Message fun call",messages)
   }
 
   const handleKeyUp = () => {
@@ -257,84 +276,91 @@ style={{height:"80vh"}}
       const contentClass = `${isDrawer ? '' : 'd-flex'} justify-content-${
         message.type === 'in' ? 'start' : 'end'
       } mb-10`
-      return (
-        <div
-          key={`message${index}`}
-          className={clsx('d-flex', contentClass, 'mb-10', {'d-none': message.template})}
-          {...templateAttr}
-        >
-          
-          <div
-            className={clsx(
-              'd-flex flex-column align-items',
-              `align-items-${message.type === 'in' ? 'start' : 'end'}`
-            )}
-          >
-            <div className='d-flex align-items-center mb-2'>
-              {message.type === 'in' ? (
-                <>
-                  <div className='symbol  symbol-35px symbol-circle '>
-                    <img alt='Pic' src={toAbsoluteUrl(`/media/${userInfo.avatar}`)} />
-                  </div>
-                  <div className='ms-3'>
-                    <a
-                      href='#'
-                      className='fs-5 fw-bolder text-gray-900 text-hover-primary me-1'
-                    >
-                      {Data.name}
-                    </a>
-                    <span className='text-muted fs-7 mb-1'>{message.time}</span>
-                  </div>
-                </>
-              ) : (
-                <>
-                  <div className='me-3'>
-                    <span className='text-muted fs-7 mb-1'>{message.time}</span>
-                    <a
-                      href='#'
-                      className='fs-5 fw-bolder text-gray-900 text-hover-primary ms-1'
-                    >
-                      You
-                    </a>
-                  </div>
-                  <div className='symbol  symbol-35px symbol-circle '>
-                    <img alt='Pic' src={toAbsoluteUrl(`/media/${userInfo.avatar}`)} />
-                  </div>
-                </>
-              )}
-            </div>
-            
+      if(message.flag === "2"){
+        return;
+      }
+      else{
+        return (
 
+          <div
+            key={`message${index}`}
+            className={clsx('d-flex', contentClass, 'mb-10', {'d-none': message.template})}
+            {...templateAttr}
+          >
+            
             <div
               className={clsx(
-                'p-5 rounded',
-                `bg-light-${state}`,
-                'text-dark fw-bold mw-lg-400px',
-                `text-${message.type === 'in' ? 'start' : 'end'}`
+                'd-flex flex-column align-items',
+                `align-items-${message.type === 'in' ? 'start' : 'end'}`
               )}
-              data-kt-element='message-text'
-              dangerouslySetInnerHTML={{__html: message.text}}
             >
-         
-            </div>
-            <Box  display={message.type === 'in' ? "none": "block"}>
-
-              <Box  display={MessageMenueOpen ? "block": "none"}    >
-             
-             <Box width="100px" height="50px" display="flex" justifyContent="space-around" alignItems="center">
-             <DeleteIcon  onClick={()=>{singleMessageDelete(message)}}  />
-            
-            <SendIcon  />
-             </Box>
+              <div className='d-flex align-items-center mb-2'>
+                {message.type === 'in' ? (
+                  <>
+                    <div className='symbol  symbol-35px symbol-circle '>
+                      <img alt='Pic' src={toAbsoluteUrl(`/media/${userInfo.avatar}`)} />
+                    </div>
+                    <div className='ms-3'>
+                      <a
+                        href='#'
+                        className='fs-5 fw-bolder text-gray-900 text-hover-primary me-1'
+                      >
+                        {Data.name}
+                      </a>
+                      <span className='text-muted fs-7 mb-1'>{message.time}</span>
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <div className='me-3'>
+                      <span className='text-muted fs-7 mb-1'>{message.time}</span>
+                      <a
+                        href='#'
+                        className='fs-5 fw-bolder text-gray-900 text-hover-primary ms-1'
+                      >
+                        You
+                      </a>
+                    </div>
+                    <div className='symbol  symbol-35px symbol-circle '>
+                      <img alt='Pic' src={toAbsoluteUrl(`/media/${userInfo.avatar}`)} />
+                    </div>
+                  </>
+                )}
+              </div>
               
-              </Box>
-            </Box>
-          
-
+  
+              <div
+                className={clsx(
+                  'p-5 rounded',
+                  `bg-light-${state}`,
+                  'text-dark fw-bold mw-lg-400px',
+                  `text-${message.type === 'in' ? 'start' : 'end'}`
+                )}
+                data-kt-element='message-text'
+                dangerouslySetInnerHTML={{__html: message.text}}
+              >
            
+              </div>
+              <Box  display={message.type === 'in' ? "none": "block"}>
+  
+                <Box  display={MessageMenueOpen ? "block": "none"}    >
+               
+               <Box width="100px" height="50px" display="flex" justifyContent="space-around" alignItems="center">
+               <DeleteIcon  onClick={()=>{singleMessageDelete(message)}}  />
+              
+              <SendIcon  />
+               </Box>
+                
+                </Box>
+              </Box>
+            
+  
+             
+            </div>
           </div>
-        </div>
-      )
+        )
+      }
+      
     })}
      <div>
               {SenderisTyping && 

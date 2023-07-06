@@ -12,6 +12,7 @@ import {ErrorsPage} from '../modules/errors/ErrorsPage'
 // import {Logout, AuthPage, useAuth} from '../modules/auth'
 import {App} from '../App'
 import { AuthPage, Logout } from '../modules/auth'
+import { ChatContextProvider } from '../../Context/ChatContext'
 
 /**
  * Base URL of the website.
@@ -35,7 +36,8 @@ const AppRoutes: FC = () => {
   }
   
   return (
-    <BrowserRouter >
+    
+<BrowserRouter >
       <Routes>
         <Route element={<App />}>
           <Route path='error/*' element={<ErrorsPage />} />
@@ -55,6 +57,8 @@ const AppRoutes: FC = () => {
         </Route>
       </Routes>
     </BrowserRouter>
+    
+    
   )
 }
 

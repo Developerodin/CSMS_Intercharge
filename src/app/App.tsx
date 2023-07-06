@@ -6,6 +6,7 @@ import {MasterInit} from '../_metronic/layout/MasterInit'
 import {AuthInit} from './modules/auth'
 import axios from 'axios'
 import { BASE_URL } from './Config/BaseUrl'
+import { ChatContextProvider } from '../Context/ChatContext'
 
 const App = () => {
   const GetToken=async()=>{
@@ -26,12 +27,15 @@ const App = () => {
   return (
     <Suspense fallback={<LayoutSplashScreen />}>
       <I18nProvider>
+        
         <LayoutProvider>
           <AuthInit>
             <Outlet />
             <MasterInit />
           </AuthInit>
         </LayoutProvider>
+        
+       
       </I18nProvider>
     </Suspense>
   )
