@@ -18,7 +18,7 @@ import SendIcon from '@mui/icons-material/Send';
 import ChatContext from '../../../Context/ChatContext'
 const bufferMessages = []
 
-const ChatInner = ({isDrawer = false,Data,MessageData,MessageMenueOpen}) => {
+const ChatInner = ({isDrawer = false,Data,MessageDeleteId,MessageMenueOpen,previousMessageData}) => {
   const userData=JSON.parse(localStorage.getItem('User'))
   const userEmail=userData.email;
   const created_by=userData._id;
@@ -32,7 +32,7 @@ const ChatInner = ({isDrawer = false,Data,MessageData,MessageMenueOpen}) => {
   const [IncomingMessage, setIncomingMessage] = useState('')
   const [SenderisTyping, setSenderisTyping] = useState(false);
   const [MessageDelete,setMessageDelete]=useState(0);
-  const {previousMessageData} =useContext(ChatContext);
+  // const {previousMessageData,setpreviousMessageData} =useContext(ChatContext);
   const scrollableDivRef = useRef(null);
   const inputFieldRef = useRef(null);
   const {sharedData} = useContext(ChatContext)
@@ -46,7 +46,7 @@ const ChatInner = ({isDrawer = false,Data,MessageData,MessageMenueOpen}) => {
   }, [messages]);
 
   useEffect(()=>{
-    // console.log("MessageData=====>",MessageData)
+    console.log("MessageData=====>",previousMessageData);
     
     const transformedMessages = previousMessageData.map(message => {
       const messageId=message._id;
@@ -82,13 +82,13 @@ const ChatInner = ({isDrawer = false,Data,MessageData,MessageMenueOpen}) => {
       return timeA - timeB;
     });
 
-  
+    
      
    
-    // console.log("Message Data after sturcture=====>",sortedMessages)
+    console.log("Message Data after sturcture=====>",sortedMessages)
     setMessages(sortedMessages);
     
-  },[previousMessageData,Data,MessageDelete])
+  },[previousMessageData,Data])
 
   useEffect(() => {
    
@@ -101,6 +101,9 @@ const ChatInner = ({isDrawer = false,Data,MessageData,MessageMenueOpen}) => {
           type: 'in',
           text: message,
           time: 'Just now',
+          createdAt:createdAt,
+          messageId:id,
+          flag:flag 
         };
   
         setMessages(prevMessages => [...prevMessages, newMessage]);
@@ -114,35 +117,54 @@ const ChatInner = ({isDrawer = false,Data,MessageData,MessageMenueOpen}) => {
       setSenderisTyping(isTyping);
     }
 
-    const messageDelete=({ message_id, receiverId, userId })=>{
-       console.log("Delete Message",message_id);
-       const updatedMessages = messages.filter((message) => message.messageId !== message_id);
-       setMessages(updatedMessages);
-      //  setMessageDelete((prev)=>prev+1);
-
-      //  setMessages()
-
-    }
+    
   
     socket.on('chat message', handleChatMessage);
 
     socket.on("typing", handelTyping);
     
-    socket.on("message_delete",messageDelete );
+  //   socket.on("message_delete",({ message_id, receiverId, userId })=>{
+  //     console.log("Delete Message",message_id);
+  //     console.log(" Messages in messageDelete ==>",previousMessageData)
+  //     setMessageDelete((prev)=>prev+1);
+  //     if(message_id && messages.length>0){
+      
+  //        console.log("Updated Message oolu==>",messages)
+  //        const updatedMessages = messages.filter((message) => message.messageId !== message_id);
+         
+  //        setMessages(updatedMessages);
+      
+      
+  //      // setpreviousMessageData(updatedMessages);
+  //     }
+     
+      
+
+  //    //  setMessages()
+
+  //  } );
    
+      
   }, []);
 
+  useEffect(()=>{
+    if(MessageDeleteId !== " "){
+      console.log("Delete Message:====> " + MessageDeleteId);
+      const updatedMessages = messages.filter((message) => message.messageId !== MessageDeleteId);
+      setMessages(updatedMessages);
+     }
+  },[MessageDeleteId])
  
 
   const singleMessageDelete=(message)=> {
-    
+    console.log(" Messages singleMessageDelete==>",message)
     const message_id = message.messageId;
     const receiverId=Data.user_id;
     let flag = '2';
     socket.emit("message_delete", { message_id, receiverId, userId, flag });
     const updatedMessages = messages.filter((message) => message.messageId !== message_id);
     setMessages(updatedMessages);
-    // console.log("Delete Message fun call",messages)
+    console.log("Delete Message fun call",updatedMessages)
   }
 
   const handleKeyUp = () => {
@@ -208,7 +230,10 @@ const ChatInner = ({isDrawer = false,Data,MessageData,MessageMenueOpen}) => {
       time: 'Just now',
     }
 
-    setMessages(prevMessages => [...prevMessages, newMessage]);
+    let id=Data.user_id;
+    let startm=0;
+    socket.emit("userClick", { id, userId, startm });
+    // setMessages(prevMessages => [...prevMessages, newMessage]);
     setMessage("");
     // bufferMessages.push(newMessage)
     // setMessages(bufferMessages)

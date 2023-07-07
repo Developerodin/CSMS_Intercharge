@@ -55,6 +55,7 @@ const Private = () => {
   const {previousMessageData, setpreviousMessageData} =useContext(ChatContext);
   const [ClickedContact, setClickedContact] = React.useState({});
   const [MessageMenueOpen, setMessageMenueOpen] = React.useState(false);
+  const [MessageDeleteId, setMessageDeleteId] =React.useState("");
   useEffect(() => {
     // no-op if the socket is already connected
     console.log('Connect socket')
@@ -133,6 +134,14 @@ const Private = () => {
     socket.on('onlineUser', ({ online }) => {
      console.log('onlineUser====>', online);
     });
+
+    socket.on("message_delete",({ message_id, receiverId, userId })=>{
+      console.log("Delete Message",message_id);
+      if(message_id){
+        setMessageDeleteId(message_id)
+      }
+
+   } );
 
    
 
@@ -354,7 +363,7 @@ const Private = () => {
                 </div>
               </div>
             </div>
-            <ChatInner Data={ClickedContact} MessageData={previousMessageData} MessageMenueOpen={MessageMenueOpen} />
+            <ChatInner Data={ClickedContact} MessageDeleteId={MessageDeleteId} MessageMenueOpen={MessageMenueOpen} previousMessageData={previousMessageData}  />
           
           </div>
             :

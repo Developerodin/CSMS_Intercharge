@@ -49,7 +49,7 @@ const DrawerMessenger: FC = () => (
         </div>
       </div>
 
-      <ChatInner isDrawer={true} Data={{}} MessageData={[]} MessageMenueOpen={"false"}/>
+      {/* <ChatInner isDrawer={true} Data={{}} MessageData={[]} MessageMenueOpen={"false"}/> */}
     </div>
   </div>
 )
