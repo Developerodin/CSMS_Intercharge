@@ -41,12 +41,12 @@ const ChatInner = ({isDrawer = false,Data,MessageDeleteId,MessageMenueOpen,previ
       const scrollableDiv = scrollableDivRef.current;
       scrollableDiv.scrollTop = scrollableDiv.scrollHeight;
     }
-    console.log("working fine ===>",sharedData)
+    // console.log("working fine ===>",sharedData)
    
   }, [messages]);
 
   useEffect(()=>{
-    console.log("MessageData=====>",previousMessageData);
+    // console.log("MessageData=====>",previousMessageData);
     
     const transformedMessages = previousMessageData.map(message => {
       const messageId=message._id;
@@ -85,7 +85,7 @@ const ChatInner = ({isDrawer = false,Data,MessageDeleteId,MessageMenueOpen,previ
     
      
    
-    console.log("Message Data after sturcture=====>",sortedMessages)
+    // console.log("Message Data after sturcture=====>",sortedMessages)
     setMessages(sortedMessages);
     
   },[previousMessageData,Data])
@@ -149,7 +149,7 @@ const ChatInner = ({isDrawer = false,Data,MessageDeleteId,MessageMenueOpen,previ
 
   useEffect(()=>{
     if(MessageDeleteId !== " "){
-      console.log("Delete Message:====> " + MessageDeleteId);
+      // console.log("Delete Message:====> " + MessageDeleteId);
       const updatedMessages = messages.filter((message) => message.messageId !== MessageDeleteId);
       setMessages(updatedMessages);
      }
@@ -157,14 +157,14 @@ const ChatInner = ({isDrawer = false,Data,MessageDeleteId,MessageMenueOpen,previ
  
 
   const singleMessageDelete=(message)=> {
-    console.log(" Messages singleMessageDelete==>",message)
+    // console.log(" Messages singleMessageDelete==>",message)
     const message_id = message.messageId;
     const receiverId=Data.user_id;
     let flag = '2';
     socket.emit("message_delete", { message_id, receiverId, userId, flag });
     const updatedMessages = messages.filter((message) => message.messageId !== message_id);
     setMessages(updatedMessages);
-    console.log("Delete Message fun call",updatedMessages)
+    // console.log("Delete Message fun call",updatedMessages)
   }
 
   const handleKeyUp = () => {
@@ -200,7 +200,7 @@ const ChatInner = ({isDrawer = false,Data,MessageDeleteId,MessageMenueOpen,previ
     socket.emit("receiverId", { receiver_id });
     socket.on("receiver_data", function ({ users }) {
       receiverName = users.name;
-      console.log("receiverName==>",users.name)
+      // console.log("receiverName==>",users.name)
     });
   
   };
@@ -250,14 +250,7 @@ const ChatInner = ({isDrawer = false,Data,MessageDeleteId,MessageMenueOpen,previ
     }
   }
 
-  const handleFileChange = (e) => {
-    // Handle file change event
-  };
 
-  const handleFormSubmit = (e) => {
-    e.preventDefault();
-    // Handle form submission
-  };
 
   return (
 

@@ -13,6 +13,12 @@ import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import CancelIcon from '@mui/icons-material/Cancel';
 import { Call } from '../../../../../_metronic/partials/chat/Call';
 import { VideoCall } from '../../../../../_metronic/partials/chat/VideoCall';
+import { Howl } from 'howler';
+import busyring from './notification/busy.mp3';
+import callerring from './notification/call-ring.mp3'
+import audioring from './notification/callertune.mp3'
+import { IncommingCall } from '../../../../../_metronic/partials/chat/IncommingCall';
+
 const Private = () => {
   const style = {
     textalign: 'center',
@@ -32,13 +38,22 @@ const Private = () => {
     top: '50%',
     left: '50%',
     transform: 'translate(-50%, -50%)',
-    width: '100%',
-    height:"100%",
+   
     bgcolor: '#FAF0E4',
     border: '2px solid #000',
     boxShadow: 24,
     p: 4,
   };
+//   const audioring = new Audio('./notification/callertune.mp3');
+// const callerring = new Audio('./notification/call-ring.mp3');
+// const busyring = new Audio('./notification/busy.mp3');
+let isactive = false;
+let vausername
+let localStream
+let peerConn
+let isAudio = true
+let isVideo = true
+let cutingphone
   const userData=JSON.parse(localStorage.getItem('User'))
   const userEmail=userData.email;
   const created_by=userData._id;
@@ -46,6 +61,7 @@ const Private = () => {
   const userId = userData._id;
   const [AddContactopen, setAddContactopen] = React.useState(false);
   const [ConnectCallOpen, setConnectCallOpen] = React.useState(false);
+  const [ConnectIncommingCallOpen, setConnectIncommingCallOpen] = React.useState(false);
   const [ConnectVideoCallOpen, setConnectVideoCallOpen] = React.useState(false);
   const [addContactData, setAddContactData] = React.useState({
     username: '',
@@ -56,6 +72,9 @@ const Private = () => {
   const [ClickedContact, setClickedContact] = React.useState({});
   const [MessageMenueOpen, setMessageMenueOpen] = React.useState(false);
   const [MessageDeleteId, setMessageDeleteId] =React.useState("");
+  let rspid="";
+  let sameid="";
+  let vaid="";
   useEffect(() => {
     // no-op if the socket is already connected
     console.log('Connect socket')
@@ -108,7 +127,8 @@ const Private = () => {
 
     socket.on('contactInfo', ({ contacts }) => {
       // console.log("Contact info ===> " , contacts)
-      CharacterData(contacts[0].user_id,contacts[0].name)
+      CharacterData(contacts[0].user_id,contacts[0].name);
+      vaid=contacts[0].user_id;
       // contacts.forEach(contact => {
       //   receiver_Id = contact.user_id;
       //   const time = new Date(contact.createdAt);
@@ -143,6 +163,135 @@ const Private = () => {
 
    } );
 
+   socket.on('itbusy', () => {
+    console.log("Pesrosn is busy .....")
+    playAudio(audioring,"pause");
+    // audioring.pause();
+    // audioring.currentTime = 0;
+    // busyring.play();
+    playAudio(busyring,"play");
+    // endvcall();
+    setTimeout(function () {
+      // busyring.pause();
+      playAudio(busyring,"pause");
+      // busyring.currentTime = 0;
+      // document.getElementById(`closevcmodel`).click();
+      // document.getElementById(`audiotext`).innerHTML = "Calling...";
+      // document.getElementById(`calltext`).innerHTML = "Calling...";
+      // document.getElementById(`callvideomodel`).style.display = "block";
+      // document.getElementById(`callaudiomodel`).style.display = "block";
+      // document.getElementById(`audiotext`).style.display = "none";
+      // document.getElementById(`calltext`).style.display = "none"; b
+      // document.getElementById(`closeaudiomodel`).click();
+      setConnectCallOpen(false);
+    }, 3500)
+  
+  })
+  socket.on('cutphoness', () => {
+    console.log("cutphoness=====>")
+    cutingphone = true;
+    setConnectCallOpen(false)
+    // document.getElementById(`cutincomingmodel`).click();
+    // callerring.pause();
+    playAudio(callerring,"pause")
+    // callerring.currentTime = 0;
+  
+  })
+  socket.on('cutpeeranswer', () => {
+    console.log('cutpeeranswer.......')
+    // document.getElementById(`audiotext`).innerHTML = "The person is busy";
+    // document.getElementById(`calltext`).innerHTML = "The person is busy";
+    // document.getElementById(`callvideomodel`).style.display = "none";
+    // document.getElementById(`callaudiomodel`).style.display = "none";
+    // audioring.pause();
+    playAudio(audioring,"pause")
+    // audioring.currentTime = 0;
+    // busyring.play();
+    playAudio(busyring,"play")
+    // endvcall();
+    setTimeout(function () {
+      // busyring.pause();
+      playAudio(busyring,"pause")
+      // busyring.currentTime = 0;
+      setConnectCallOpen(false);
+      // document.getElementById(`closevcmodel`).click();
+      // document.getElementById(`callvideomodel`).style.display = "block";
+      // document.getElementById(`callaudiomodel`).style.display = "block";
+      // document.getElementById(`audiotext`).style.display = "none";
+      // document.getElementById(`calltext`).style.display = "none";
+      // document.getElementById(`closeaudiomodel`).click();
+    }, 3500)
+  })
+  socket.on("ringcalling", (uid, icid, name, image, ctype) => {
+    if (!isactive) {
+      console.log("ringcalling")
+      cutingphone = false;
+      rspid=icid;
+      sameid=icid;
+      handelInncomingCallModelOpen();
+      // const user_img1 = `<img src="assets/images/users/${image}" class="avatar-title rounded-circle bg-soft-primary text-primary" alt="">`;
+      // document.getElementById(`incomingimg`).innerHTML = user_img1;
+      // document.getElementById('callimg').innerHTML = `<img src="assets/images/users/${image}" alt="" style="width: 500px; border-radius: 50%;">`;
+      // document.getElementById('headerimg').setAttribute('src', `assets/images/users/${image}`);
+      // document.getElementById(`icvid`).innerHTML = icid;
+      // document.getElementById(`sameid`).innerHTML = icid;
+      // document.getElementById(`icmname`).innerHTML = name;
+      // document.getElementById(`samename`).innerHTML = name;
+      // document.getElementById(`calltype`).innerHTML = 'video';
+      // document.getElementById(`callicon`).innerHTML = ' <i class="ri-vidicon-fill"></i>';
+      // document.getElementById(`calltypetext`).innerHTML = 'Incoming Video Call';
+      if (ctype == 'audio') {
+        console.log("ringcalling call type audio")
+        // document.getElementById(`calltype`).innerHTML = 'audio';
+        // document.getElementById(`callicon`).innerHTML = ' <i class="ri-phone-fill"></i>';
+        // document.getElementById(`calltypetext`).innerHTML = 'Incoming Audio Call';
+      }
+      setTimeout(function () {
+        if (!cutingphone) {
+          
+          // callerring.play();
+          playAudio(callerring,"play");
+          requestNotificationPermissions();
+          var instance = new Notification(
+            name, {
+            body: `Incoming ${ctype} Call`,
+            icon: `assets/images/users/${image}`
+          });
+          // document.getElementById(`openincoming_${uid}`).click();
+          console.log("open incoming call model....")
+        }
+      }, 2500);
+    } else {
+      socket.emit('isbusy', icid);
+    }
+  })
+  socket.on('answered', (rspid, ctype) => {
+    // document.getElementById(`calltext`).style.display = 'none';
+    if (ctype == 'video') {
+      console.log("answered c type video")
+      // document.getElementById("video-call-div")
+      //   .style.display = "block";
+    } else {
+      // document.getElementById("video-call-div")
+      //   .style.display = "none";
+    }
+    // audioring.pause();
+    playAudio(audioring,"pause")
+    // audioring.currentTime = 0;
+    console.log("open call video model");
+    // document.getElementById(`opencallvideomodel`).click();
+    // document.getElementById(`closevcmodel`).click();
+    // document.getElementById(`closeaudiomodel`).click();
+  
+  })
+  socket.on('cutvc', (ctype) => {
+    endvcall();
+    console.log("end video call")
+  })
+  socket.on('getingonmsgs', (event) => {
+    handleSignallingData(JSON.parse(event))
+  })
+
    
 
     return () => {
@@ -151,6 +300,257 @@ const Private = () => {
 
     };
   }, []);
+
+  function playAudio(audio,action) {
+ 
+   
+    const sound = new Howl({
+      src:audio,
+      volume: 1.0,
+      onend: function() {
+        // Do something when the audio finishes playing
+      }
+    });
+    if(action === "play" || action === "resume"){
+      sound.play();
+    }
+    else{
+      sound.pause();
+    }
+  }
+
+  // const IncommingCallModelClose=(callType)=>{
+  //   callerring.pause();
+  //   callerring.currentTime = 0;
+  //   socket.emit('cutanswerd', rspid, callType);
+  // }
+  // function requestNotificationPermissions() {
+  //   if (Notification.permission !== "denied") {
+  //     Notification.requestPermission(function (permission) { });
+  //   }
+  // }
+
+  // function cutphones() {
+  //   console.log("cut phone ...........")
+  //   // if (document.getElementById(`audiotext`).style.display == 'block' || document.getElementById(`calltext`).style.display == 'block') {
+  //   //   vaid = document.getElementById("vausername-input").value;
+  //   //   socket.emit('cutphone', vaid);
+  //   //   document.getElementById(`audiotext`).style.display = 'none';
+  //   //   document.getElementById(`calltext`).style.display = 'none';
+  //   //   setTimeout(() => {
+  //   //     endvcall();
+  //   //   }, 2000);
+  //   // }
+  // }
+  // function handleSignallingData(data) {
+  //   switch (data.type) {
+  //     case "answer":
+  //       peerConn.setRemoteDescription(data.answer)
+  //       break
+  //     case "candidate":
+  //       peerConn.addIceCandidate(data.candidate)
+  //       break
+  //     case "offer":
+  //       peerConn.setRemoteDescription(data.offer)
+  //       createAndSendAnswer()
+  //   }
+  // }
+  // function sendUsername(ctype) {
+  //   console.log("sendUsername")
+  //   // let users_id = document.getElementById("vausername-input").value
+  //   // vausername = document.getElementById("vausername-input").value + '_' + userId;
+  //   // socket.emit('ringcall', users_id, userId, globalusername, image, ctype)
+  //   sendData({
+  //     type: "store_user"
+  //   })
+  // }
+  // function sendData(data) {
+  //   data.username = vausername
+  //   socket.emit('vccallmsg', JSON.stringify(data))
+  // }
+  // function createAndSendAnswer() {
+  //   peerConn.createAnswer((answer) => {
+  //     peerConn.setLocalDescription(answer)
+  //     sendData({
+  //       type: "send_answer",
+  //       answer: answer
+  //     })
+  //   }, error => {
+  //     console.log(error)
+  //   })
+  // }
+  // function createAndSendOffer() {
+  //   peerConn.createOffer((offer) => {
+  //     sendData({
+  //       type: "store_offer",
+  //       offer: offer
+  //     })
+  //     peerConn.setLocalDescription(offer)
+  //   }, (error) => {
+  //     console.log(error)
+  //   })
+  // }
+  // function startCall(ctype) {
+  //   isactive = true;
+  //   audioring.play();
+  //   if (ctype == 'audio') {
+  //     ctype = false
+  //   } else {
+  //     ctype = {
+  //       frameRate: 24,
+  //       width: {
+  //         min: 480,
+  //         ideal: 720,
+  //         max: 1280
+  //       },
+  //       aspectRatio: 1.33333
+  //     };
+  //     // document.getElementById("video-call-div")
+  //     //   .style.display = "inline";
+  //   }
+  
+  //   navigator.getUserMedia({
+  //     video: ctype,
+  //     audio: true
+  //   }, (stream) => {
+  //     localStream = stream
+  //     let configuration;
+  //     if (ctype != false) {
+  //       // document.getElementById("local-video").srcObject = localStream;
+  //       configuration = {
+  //         iceServers: [{
+  //           "urls": ["stun:stun.l.google.com:19302",
+  //             "stun:stun1.l.google.com:19302",
+  //             "stun:stun2.l.google.com:19302"
+  //           ]
+  //         }]
+  //       }
+  //     }
+  //     peerConn = new RTCPeerConnection(configuration)
+  //     peerConn.addStream(localStream)
+  
+  //     peerConn.onaddstream = (e) => {
+  //       // document.getElementById("remote-video")
+  //       //   .srcObject = e.stream
+  //     }
+  
+  //     peerConn.onicecandidate = ((e) => {
+  //       if (e.candidate == null)
+  //         return
+  //       sendData({
+  //         type: "store_candidate",
+  //         candidate: e.candidate
+  //       })
+  //     })
+  
+  //     createAndSendOffer()
+  //   }, (error) => {
+  //     console.error('Device not found', 'Error');
+  //     // document.getElementById(`cutincomingmodel`).click();
+  //     cutphones();
+  //   setTimeout(function () {
+  //     // document.getElementById(`closevcmodel`).click();
+  //     // document.getElementById(`closeaudiomodel`).click();
+  //   }, 1500)
+  //   })
+  // }
+  // function joinCall(jctype, userId, rspid) {
+  //   isactive = true;
+  //   if (jctype == 'audio') {
+  //     jctype = false
+  //   } else {
+  //     jctype = {
+  //       frameRate: 24,
+  //       width: {
+  //         min: 480,
+  //         ideal: 720,
+  //         max: 1280
+  //       },
+  //       aspectRatio: 1.33333
+  //     };
+  //     // document.getElementById("video-call-div")
+  //     //   .style.display = "inline";
+  //   }
+  //   let vausername = userId + '_' + rspid
+  
+  //   navigator.getUserMedia({
+  //     video: jctype,
+  //     audio: true
+  //   }, (stream) => {
+  //     localStream = stream
+  //     let configuration
+  //     if (jctype != false) {
+  //       // document.getElementById("local-video").srcObject = localStream
+  //       configuration = {
+  //         iceServers: [{
+  //           "urls": ["stun:stun.l.google.com:19302",
+  //             "stun:stun1.l.google.com:19302",
+  //             "stun:stun2.l.google.com:19302"
+  //           ]
+  //         }]
+  //       }
+  //     }
+  //     peerConn = new RTCPeerConnection(configuration)
+  //     peerConn.addStream(localStream)
+  //     peerConn.onaddstream = (e) => {
+  //       document.getElementById("remote-video")
+  //         .srcObject = e.stream
+  //     }
+  //     peerConn.onicecandidate = ((e) => {
+  //       if (e.candidate == null)
+  //         return
+  
+  //       sendData({
+  //         type: "send_candidate",
+  //         candidate: e.candidate
+  //       })
+  //     })
+  //     sendData({
+  //       type: "join_call"
+  //     })
+  
+  //   }, (error) => {
+  //     console.log(error)
+  //   })
+  // }
+  // function endvcall() {
+  //   console.log("endvcall")
+  //   isactive = false;
+  //   // $('#video i').attr('class', 'ri-camera-fill');
+  //   // $('#audio i').attr('class', 'ri-mic-fill');
+  //   isAudio = true
+  //   isVideo = true
+  //   audioring.pause();
+  //   audioring.currentTime = 0;
+  //   document.getElementById(`closevideomodel`).click();
+  //   // if (localStream.getTracks != undefined) {
+  //   //   localStream.getTracks().forEach(function (track) {
+  //   //     if (track.readyState == 'live') {
+  //   //       track.stop();
+  //   //     }
+  //   //   });
+  //   // }
+  //   if (peerConn.close !== undefined) peerConn.close();
+  // }
+  // function muteAudio() {
+  //   if (isAudio == true) console.log('Muted Audio')
+  //     // $('#audio i').attr('class', 'ri-mic-off-fill');
+  //   else
+  //     // $('#audio i').attr('class', 'ri-mic-fill');
+  //     console.log('unMuted Audio')
+  //   isAudio = !isAudio
+  //   // localStream.getAudioTracks()[0].enabled = isAudio
+  // }
+  // function muteVideo() {
+  //   if (isVideo == true)
+  //     // $('#video i').attr('class', 'ri-camera-off-fill');
+  //     console.log('Muted video isVideo',isVideo)
+  //   else
+  //     // $('#video i').attr('class', 'ri-camera-fill');
+  //     console.log('Muted video else  isVideo',isVideo)
+  //   isVideo = !isVideo
+  //   localStream.getVideoTracks()[0].enabled = isVideo
+  // }
 
   const handelMessageMenu=()=>{
     setMessageMenueOpen(true);
@@ -235,6 +635,280 @@ const Private = () => {
     // document.getElementById("userProfileBar").style.display = "none";
     // document.getElementsByClassName("chat-welcome-section")[0].style.display = "flex";
   
+  }
+
+  const handelCallModelOpen=()=>{
+    setConnectCallOpen(true);
+    sendUsername('audio');
+    startCall('audio');
+    
+     
+   
+   
+  }
+  const handelCallModelClose=()=>{
+    setConnectCallOpen(false);
+    cutphones()
+    playAudio(audioring,"pause")
+    
+     
+   
+   
+  }
+
+  const handelInncomingCallModelOpen=()=>{
+    setConnectIncommingCallOpen(true);
+    sendUsername('audio');
+    startCall('audio');
+    
+     
+   
+   
+  }
+  const handelInncomingCallModelClose=()=>{
+    setConnectIncommingCallOpen(false);
+    
+     
+   
+   
+  }
+
+  const handelReciveCall=()=>{
+    playAudio(callerring,"pause")
+    console.log("Reciving call...")
+    socket.emit('answerd', rspid, 'audio');
+
+    joinCall("audio", userId, rspid);
+  }
+
+  function cutphones() {
+    // if (document.getElementById(`audiotext`).style.display == 'block' || document.getElementById(`calltext`).style.display == 'block') {
+      
+      socket.emit('cutphone', vaid);
+      document.getElementById(`audiotext`).style.display = 'none';
+      document.getElementById(`calltext`).style.display = 'none';
+      setTimeout(() => {
+        endvcall();
+      }, 2000);
+    
+  }
+
+  function handleSignallingData(data) {
+    switch (data.type) {
+      case "answer":
+        peerConn.setRemoteDescription(data.answer)
+        break
+      case "candidate":
+        peerConn.addIceCandidate(data.candidate)
+        break
+      case "offer":
+        peerConn.setRemoteDescription(data.offer)
+        createAndSendAnswer()
+    }
+  }
+  function sendUsername(ctype) {
+    console.log("in sendUsername", ctype)
+    let image=""
+    // let users_id = document.getElementById("vausername-input").value
+    vausername = username + '_' + userId;
+    socket.emit('ringcall', ClickedContact.user_id, userId, username, image, ctype)
+    sendData({
+      type: "store_user"
+    })
+  }
+  function sendData(data) {
+    data.username = vausername
+    socket.emit('vccallmsg', JSON.stringify(data))
+  }
+  function createAndSendAnswer() {
+    peerConn.createAnswer((answer) => {
+      peerConn.setLocalDescription(answer)
+      sendData({
+        type: "send_answer",
+        answer: answer
+      })
+    }, error => {
+      console.log(error)
+    })
+  }
+  function createAndSendOffer() {
+    peerConn.createOffer((offer) => {
+      sendData({
+        type: "store_offer",
+        offer: offer
+      })
+      peerConn.setLocalDescription(offer)
+    }, (error) => {
+      console.log(error)
+    })
+  }
+  function startCall(ctype) {
+    console.log("in start calling...");
+    isactive = true;
+    // audioring.play();
+    playAudio(audioring,"play")
+    if (ctype == 'audio') {
+      ctype = false
+    } else {
+      ctype = {
+        frameRate: 24,
+        width: {
+          min: 480,
+          ideal: 720,
+          max: 1280
+        },
+        aspectRatio: 1.33333
+      };
+     
+    }
+  
+    navigator.getUserMedia({
+      video: ctype,
+      audio: true
+    }, (stream) => {
+      localStream = stream
+      let configuration;
+      if (ctype != false) {
+        // document.getElementById("local-video").srcObject = localStream;
+        configuration = {
+          iceServers: [{
+            "urls": ["stun:stun.l.google.com:19302",
+              "stun:stun1.l.google.com:19302",
+              "stun:stun2.l.google.com:19302"
+            ]
+          }]
+        }
+      }
+      peerConn = new RTCPeerConnection(configuration)
+      console.log("peer connection", peerConn)
+      peerConn.addStream(localStream)
+  
+      peerConn.onaddstream = (e) => {
+        document.getElementById("remote-video")
+          .srcObject = e.stream
+      }
+  
+      peerConn.onicecandidate = ((e) => {
+        if (e.candidate == null)
+          return
+        sendData({
+          type: "store_candidate",
+          candidate: e.candidate
+        })
+      })
+  
+      createAndSendOffer()
+    }, (error) => {
+     console.log('Device not found', 'Error');
+      // document.getElementById(`cutincomingmodel`).click();
+      cutphones();
+    setTimeout(function () {
+      // document.getElementById(`closevcmodel`).click();
+      // document.getElementById(`closeaudiomodel`).click();
+    }, 1500)
+    })
+  }
+  function joinCall(jctype, userId, rspid) {
+    console.log('join call  ==>',jctype, userId, rspid)
+    isactive = true;
+    if (jctype == 'audio') {
+      jctype = false
+    } else {
+      jctype = {
+        frameRate: 24,
+        width: {
+          min: 480,
+          ideal: 720,
+          max: 1280
+        },
+        aspectRatio: 1.33333
+      };
+      // document.getElementById("video-call-div")
+      //   .style.display = "inline";
+    }
+    vausername = userId + '_' + rspid
+  
+    navigator.getUserMedia({
+      video: jctype,
+      audio: true
+    }, (stream) => {
+      localStream = stream
+      let configuration
+      if (jctype != false) {
+        // document.getElementById("local-video").srcObject = localStream
+        configuration = {
+          iceServers: [{
+            "urls": ["stun:stun.l.google.com:19302",
+              "stun:stun1.l.google.com:19302",
+              "stun:stun2.l.google.com:19302"
+            ]
+          }]
+        }
+      }
+      peerConn = new RTCPeerConnection(configuration)
+      peerConn.addStream(localStream)
+      peerConn.onaddstream = (e) => {
+        // document.getElementById("remote-video")
+        //   .srcObject = e.stream
+      }
+      peerConn.onicecandidate = ((e) => {
+        if (e.candidate == null)
+          return
+  
+        sendData({
+          type: "send_candidate",
+          candidate: e.candidate
+        })
+      })
+      sendData({
+        type: "join_call"
+      })
+  
+    }, (error) => {
+      console.log(error)
+    })
+  }
+  function endvcall() {
+    isactive = false;
+    // $('#video i').attr('class', 'ri-camera-fill');
+    // $('#audio i').attr('class', 'ri-mic-fill');
+    isAudio = true
+    isVideo = true
+    audioring.pause();
+    audioring.currentTime = 0;
+    document.getElementById(`closevideomodel`).click();
+    if (localStream.getTracks != undefined) {
+      localStream.getTracks().forEach(function (track) {
+        if (track.readyState == 'live') {
+          track.stop();
+        }
+      });
+    }
+    if (peerConn.close !== undefined) peerConn.close();
+  }
+  function muteAudio() {
+    if (isAudio == true)
+    console.log("Muted Audio")
+      // $('#audio i').attr('class', 'ri-mic-off-fill');
+    else
+      // $('#audio i').attr('class', 'ri-mic-fill');
+    isAudio = !isAudio
+    localStream.getAudioTracks()[0].enabled = isAudio
+  }
+  function muteVideo() {
+    if (isVideo == true)
+      // $('#video i').attr('class', 'ri-camera-off-fill');\
+      console.log("Muted video")
+    else
+      // $('#video i').attr('class', 'ri-camera-fill');
+    isVideo = !isVideo
+    localStream.getVideoTracks()[0].enabled = isVideo
+  }
+
+  function requestNotificationPermissions() {
+    if (Notification.permission !== "denied") {
+      Notification.requestPermission(function (permission) { });
+    }
   }
 
   return (
@@ -338,7 +1012,7 @@ const Private = () => {
               <div className='card-toolbar'>
                 <div className='me-n3'>
                   <Box sx={{width:"200px",display:"flex",justifyContent:"space-around",alignItems:"center"}}>
-                  <CallIcon style={{fontSize:"24px"}} onClick={()=>setConnectCallOpen(true)} />
+                  <CallIcon style={{fontSize:"24px"}} onClick={()=>handelCallModelOpen()} />
 
                   
                   <VideoCallIcon style={{fontSize:"26px"}} onClick={()=>setConnectVideoCallOpen(true)} />
@@ -399,18 +1073,44 @@ const Private = () => {
       
       <Modal
         open={ConnectCallOpen}
-        onClose={()=>setConnectCallOpen(false)}
+        onClose={()=>handelCallModelClose()}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
         <Box sx={callStyle}>
           <Box  textAlign="right">
           
-          <CancelIcon style={{fontSize:"34px"}} onClick={()=>setConnectCallOpen(false)} />
+          <CancelIcon style={{fontSize:"34px"}} onClick={()=>handelCallModelClose()} />
           </Box>
 
           <Box>
             <Call/>
+          </Box>
+          {/* <Typography variant="h6" style={{textAlign:"center",fontWeight:"bold"}} >Call</Typography>
+       
+            
+            <Box style={{display:"flex",justifyContent:"center",alignItems:"center",marginTop:"20px"}}>
+            <Button variant="contained" size='large' onClick={HandelAddContect}>ADD</Button>
+            </Box> */}
+        
+        </Box>
+      </Modal>
+
+
+      <Modal
+        open={ConnectIncommingCallOpen}
+        onClose={()=>handelInncomingCallModelClose()}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box sx={callStyle}>
+          <Box  textAlign="right">
+          
+          <CancelIcon style={{fontSize:"34px"}} onClick={()=>handelInncomingCallModelClose()} />
+          </Box>
+
+          <Box>
+            <IncommingCall handelReciveCall={handelReciveCall} />
           </Box>
           {/* <Typography variant="h6" style={{textAlign:"center",fontWeight:"bold"}} >Call</Typography>
        
