@@ -27,13 +27,13 @@ export function register(
   lastname: string,
   password: string,
   password_confirmation: string,
-  location: string
+  role: string
 ) {
   return axios.post(REGISTER_URL, {
     email:email,
     name: firstname+" "+lastname,
     password:password,
-    location:location,
+    role:role,
   },{ headers: { "Authorization": `${token}` } })
 }
 

@@ -9,6 +9,8 @@ import {Link, useNavigate} from 'react-router-dom'
 import {toAbsoluteUrl} from '../../../../_metronic/helpers'
 import {PasswordMeterComponent} from '../../../../_metronic/assets/ts/components'
 import {useAuth} from '../core/Auth'
+import axios from 'axios'
+import { BASE_URL } from '../../../Config/BaseUrl'
 
 const initialValues = {
   firstname: '',
@@ -16,7 +18,7 @@ const initialValues = {
   email: '',
   password: '',
   changepassword: '',
-  location:'',
+  role:'',
   acceptTerms: false,
 }
 
@@ -41,18 +43,20 @@ const registrationSchema = Yup.object().shape({
   changepassword: Yup.string()
     .required('Password confirmation is required')
     .when('password', {
-      is: (val: string) => (val && val.length > 0 ? true : false),
+      is: (val) => (val && val.length > 0 ? true : false),
       then: Yup.string().oneOf([Yup.ref('password')], "Password and Confirm Password didn't match"),
     }),
-    location: Yup.string()
+    role: Yup.string()
     .min(3, 'Minimum 3 symbols')
     .max(50, 'Maximum 50 symbols')
-    .required('location is required'),
+    .required('role is required'),
   acceptTerms: Yup.bool().required('You must accept the terms and conditions'),
 })
 
-export function Registration() {
+export function Registration({handleClose,setUpdated}) {
+  const token =localStorage.getItem('token');
   const [loading, setLoading] = useState(false)
+  const [roles, setRoles] = useState([]);
   const {saveAuth, setCurrentUser} = useAuth()
   const navigate = useNavigate();
   const formik = useFormik({
@@ -60,6 +64,7 @@ export function Registration() {
     validationSchema: registrationSchema,
     onSubmit: async (values, {setStatus, setSubmitting}) => {
       setLoading(true)
+      console.log("Values of role: " + values.role)
       try {
         const {data: RegisterResposne} = await register(
           values.email,
@@ -67,14 +72,15 @@ export function Registration() {
           values.lastname,
           values.password,
           values.changepassword,
-          values.location,
+          values.role,
         )
         console.log("register Data res =====>",RegisterResposne);
 
         if(RegisterResposne && RegisterResposne.status === "success") {
           setStatus(RegisterResposne.message);
           setLoading(false);
-          navigate("/auth");
+          setUpdated((prev)=>prev+1);
+          handleClose()
 
         }
         else{
@@ -98,6 +104,20 @@ export function Registration() {
     PasswordMeterComponent.bootstrap()
   }, [])
 
+  useEffect(() => {
+    const fetchRoles = async () => {
+      try {
+        const response = await axios.get(`${BASE_URL}/roles`,{ headers: { "Authorization": `${token}` } });
+        setRoles(response.data);
+      } catch (error) {
+        console.log('Error fetching roles:', error);
+        // Handle error case
+      }
+    };
+
+    fetchRoles();
+  }, []);
+
   return (
     <form
       className='form w-100 fv-plugins-bootstrap5 fv-plugins-framework'
@@ -108,61 +128,26 @@ export function Registration() {
       {/* begin::Heading */}
       <div className='text-center mb-11'>
         {/* begin::Title */}
-        <h1 className='text-dark fw-bolder mb-3'>Sign Up</h1>
+        <h1 className='text-dark fw-bolder mb-3'>Add New User</h1>
         {/* end::Title */}
 
-        <div className='text-gray-500 fw-semibold fs-6'>Your Social Campaigns</div>
+        {/* <div className='text-gray-500 fw-semibold fs-6'>Your Social Campaigns</div> */}
       </div>
       {/* end::Heading */}
 
       {/* begin::Login options */}
       <div className='row g-3 mb-9'>
         {/* begin::Col */}
-        <div className='col-md-6'>
-          {/* begin::Google link */}
-          <a
-            href='#'
-            className='btn btn-flex btn-outline btn-text-gray-700 btn-active-color-primary bg-state-light flex-center text-nowrap w-100'
-          >
-            <img
-              alt='Logo'
-              src={toAbsoluteUrl('/media/svg/brand-logos/google-icon.svg')}
-              className='h-15px me-3'
-            />
-            Sign in with Google
-          </a>
-          {/* end::Google link */}
-        </div>
+        
         {/* end::Col */}
 
         {/* begin::Col */}
-        <div className='col-md-6'>
-          {/* begin::Google link */}
-          <a
-            href='#'
-            className='btn btn-flex btn-outline btn-text-gray-700 btn-active-color-primary bg-state-light flex-center text-nowrap w-100'
-          >
-            <img
-              alt='Logo'
-              src={toAbsoluteUrl('/media/svg/brand-logos/apple-black.svg')}
-              className='theme-light-show h-15px me-3'
-            />
-            <img
-              alt='Logo'
-              src={toAbsoluteUrl('/media/svg/brand-logos/apple-black-dark.svg')}
-              className='theme-dark-show h-15px me-3'
-            />
-            Sign in with Apple
-          </a>
-          {/* end::Google link */}
-        </div>
+       
         {/* end::Col */}
       </div>
       {/* end::Login options */}
 
-      <div className='separator separator-content my-14'>
-        <span className='w-125px text-gray-500 fw-semibold fs-7'>Or with email</span>
-      </div>
+      
 
       {formik.status && (
         <div className='mb-lg-15 alert alert-danger'>
@@ -325,27 +310,31 @@ export function Registration() {
       </div>
 
 
-      <div className='fv-row mb-5'>
-        <label className='form-label fw-bolder text-dark fs-6'>Location</label>
-        <input
-          type='text'
-          placeholder='location'
-          autoComplete='off'
-          {...formik.getFieldProps('location')}
+      <div className="fv-row mb-5">
+        <label className="form-label fw-bolder text-dark fs-6">Role</label>
+        <select
+          {...formik.getFieldProps('role')}
           className={clsx(
-            'form-control bg-transparent',
+            'form-select bg-transparent',
             {
-              'is-invalid': formik.touched.location && formik.errors.location,
+              'is-invalid': formik.touched.role && formik.errors.role,
             },
             {
-              'is-valid': formik.touched.location && !formik.errors.location,
+              'is-valid': formik.touched.role && !formik.errors.role,
             }
           )}
-        />
-        {formik.touched.location && formik.errors.location && (
-          <div className='fv-plugins-message-container'>
-            <div className='fv-help-block'>
-              <span role='alert'>{formik.errors.location}</span>
+        >
+          <option value="">Select a role</option>
+          {roles.map((role) => (
+            <option key={role._id} value={role._id}>
+              {role.name}
+            </option>
+          ))}
+        </select>
+        {formik.touched.role && formik.errors.role && (
+          <div className="fv-plugins-message-container">
+            <div className="fv-help-block">
+              <span role="alert">{formik.errors.role}</span>
             </div>
           </div>
         )}
@@ -399,15 +388,16 @@ export function Registration() {
             </span>
           )}
         </button>
-        <Link to='/auth/login'>
+        
           <button
             type='button'
             id='kt_login_signup_form_cancel_button'
+            onClick={handleClose}
             className='btn btn-lg btn-light-primary w-100 mb-5'
           >
             Cancel
           </button>
-        </Link>
+        
       </div>
       {/* end::Form group */}
     </form>

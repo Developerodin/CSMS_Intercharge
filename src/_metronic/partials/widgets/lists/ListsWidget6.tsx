@@ -12,7 +12,7 @@ const ListsWidget6: React.FC<Props> = ({className}) => {
     <div className='card card-xl-stretch mb-5 mb-xl-8'>
       {/* begin::Header */}
       <div className='card-header border-0'>
-        <h3 className='card-title fw-bold text-dark'>Notifications</h3>
+        <h3 className='card-title fw-bold text-dark'>Access Management</h3>
         <div className='card-toolbar'>
           {/* begin::Menu */}
           <button

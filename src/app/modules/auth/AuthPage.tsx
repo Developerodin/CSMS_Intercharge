@@ -10,7 +10,7 @@ const AuthPage = () => (
   <Routes>
     <Route element={<AuthLayout />}>
       <Route path='login' element={<Login />} />
-      <Route path='registration' element={<Registration />} />
+      {/* <Route path='registration' element={<Registration />} /> */}
       <Route path='forgot-password' element={<ForgotPassword />} />
       <Route path='reset_Password/:token' element={<ResetPassword />} />
       <Route index element={<Login />} />
