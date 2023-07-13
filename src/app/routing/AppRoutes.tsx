@@ -26,7 +26,7 @@ const AppRoutes: FC = () => {
   // const {currentUser} = useAuth()
   let currentUser=false;
   
-  var AuthValue = localStorage.getItem("authValue");
+  var AuthValue = sessionStorage.getItem("authValue");
 
   if(AuthValue==="true"){
     currentUser=true;

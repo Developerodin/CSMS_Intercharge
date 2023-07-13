@@ -1,163 +1,165 @@
-import {useState, useEffect, useContext} from 'react'
-import {useFormik} from 'formik'
+import React, {useContext, useEffect, useState} from 'react'
+import {toAbsoluteUrl} from '../../../../../../_metronic/helpers'
+import {IProfileDetails, profileDetailsInitValues as initialValues} from '../SettingsModel'
 import * as Yup from 'yup'
+import {useFormik} from 'formik'
+import { EditUser } from '../../../../auth/components/EditUser'
+import UserContext from '../../../../../../Context/UserContext'
 import clsx from 'clsx'
-import {getUserByToken, register} from '../core/_requests'
-import {Link, useNavigate} from 'react-router-dom'
-import {toAbsoluteUrl} from '../../../../_metronic/helpers'
-import {PasswordMeterComponent} from '../../../../_metronic/assets/ts/components'
-import {useAuth} from '../core/Auth'
+import { BASE_URL } from '../../../../../Config/BaseUrl'
 import axios from 'axios'
-import { BASE_URL } from '../../../Config/BaseUrl'
-import UserContext from '../../../../Context/UserContext'
-
-const initialValues = {
-  firstname: '',
-  lastname: '',
-  email: '',
-  password: '',
-  changepassword: '',
-  role:'',
-  acceptTerms: false,
-}
-
-const registrationSchema = Yup.object().shape({
-  firstname: Yup.string()
-    .min(3, 'Minimum 3 symbols')
-    .max(50, 'Maximum 50 symbols')
-    .required('First name is required'),
-  email: Yup.string()
-    .email('Wrong email format')
-    .min(3, 'Minimum 3 symbols')
-    .max(50, 'Maximum 50 symbols')
-    .required('Email is required'),
-  lastname: Yup.string()
-    .min(3, 'Minimum 3 symbols')
-    .max(50, 'Maximum 50 symbols')
-    .required('Last name is required'),
-  password: Yup.string()
-    .min(3, 'Minimum 3 symbols')
-    .max(50, 'Maximum 50 symbols')
-    .required('Password is required'),
-  changepassword: Yup.string()
-    .required('Password confirmation is required')
-    .when('password', {
-      is: (val) => (val && val.length > 0 ? true : false),
-      then: Yup.string().oneOf([Yup.ref('password')], "Password and Confirm Password didn't match"),
-    }),
-    role: Yup.string()
-    .min(3, 'Minimum 3 symbols')
-    .max(50, 'Maximum 50 symbols')
-    .required('role is required'),
-  acceptTerms: Yup.bool().required('You must accept the terms and conditions'),
+import Alert from '@mui/material/Alert';
+import { Box, Modal } from '@mui/material'
+import { Button } from 'react-bootstrap'
+const profileDetailsSchema = Yup.object().shape({
+  fName: Yup.string().required('First name is required'),
+  lName: Yup.string().required('Last name is required'),
+  company: Yup.string().required('Company name is required'),
+  contactPhone: Yup.string().required('Contact phone is required'),
+  companySite: Yup.string().required('Company site is required'),
+  country: Yup.string().required('Country is required'),
+  language: Yup.string().required('Language is required'),
+  timeZone: Yup.string().required('Time zone is required'),
+  currency: Yup.string().required('Currency is required'),
 })
+const style = {
+  position: 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  bgcolor: 'background.paper',
+  border: '2px solid #000',
+  boxShadow: 24,
+  width:"40%",
+  p: 4,
+  overflow:"auto"
+};
+const ProfileDetails= () => {
+  const user=JSON.parse(sessionStorage.getItem('User')) || '{}';
+  const [data, setData] = useState(initialValues)
+  const {setUpdated,userToken,userRole}=useContext(UserContext)
+  const token = sessionStorage.getItem('token');
+  const [loading, setLoading] = useState(false);
+  const[open,setOpen] = useState(false);
+  const [userData, setUserData] = useState(null);
+  const [userStatus, setUserStatus] = useState(false);
 
-export const EditUser = ({handleClose,userId,setUpdated}) => {
-  const {userToken}=useContext(UserContext);
-  const token =userToken;
-    const [loading, setLoading] = useState(false);
-    const [roles, setRoles] = useState([]);
-    const [userData, setUserData] = useState(null);
-    const [userStatus, setUserStatus] = useState(false);
-
-    const formik = useFormik({
-        initialValues: {
-            firstname: '',
-            lastname: '',
-            email: '',
-            password: '',
-            changepassword: '',
-            role: '',
-            acceptTerms: false,
-            userStatus: false, // Add the userStatus field
-          },
-      validationSchema: Yup.object({
-        firstname: Yup.string().required('First name is required'),
-        lastname: Yup.string().required('Last name is required'),
-        email: Yup.string().email('Invalid email').required('Email is required'),
-        password: Yup.string().min(8, 'Password must be at least 8 characters').required('Password is required'),
-        changepassword: Yup.string().oneOf([Yup.ref('password'), null], 'Passwords must match'),
-        role: Yup.string().required('Role is required'),
-        acceptTerms: Yup.bool().required('You must accept the terms and conditions'),
-      }),
-      onSubmit: async (values, { setStatus, setSubmitting }) => {
-        
-        const requestData = {
-            email: values.email,
-            name: values.firstname + ' ' + values.lastname,
-            password: values.password,
-            role: values.role,
-            status: userStatus, // Add the userStatus field
-          };
-          
-          
-          
-          console.log("VAlues", requestData)
-        setLoading(true);
-        try {
-          const response = await axios.put(`${BASE_URL}/users/${userId}`, requestData, { headers: { Authorization: token } });
-          console.log('User edit response:', response.data);
-          setLoading(false);
-          setUpdated((prev)=>prev+1);
-          handleClose();
-        } catch (error) {
-          console.error('Error editing user:', error);
-          setLoading(false);
-          setStatus('Failed to edit user');
-        }
-        setSubmitting(false);
+  const formik = useFormik({
+    initialValues: {
+        firstname: '',
+        lastname: '',
+        email: '',
+        password: '',
+        changepassword: '',
+        role:userRole ,
+        acceptTerms: false,
+        userStatus:user.status, // Add the userStatus field
       },
-    });
-  
-    useEffect(() => {
-      const fetchRoles = async () => {
-        try {
-          const response = await axios.get(`${BASE_URL}/roles`, { headers: { Authorization: token } });
-          setRoles(response.data);
-        } catch (error) {
-          console.log('Error fetching roles:', error);
-        }
-      };
-  
-      const fetchUserData = async () => {
-        try {
-          const response = await axios.get(`${BASE_URL}/users/${userId}`, { headers: { Authorization: token } });
-          setUserData(response.data);
-          setUserStatus(response.data.status); // Set the user status
-        } catch (error) {
-          console.log('Error fetching user data:', error);
-        }
-      };
-  
-      fetchRoles();
-      fetchUserData();
-    }, []);
-  
-    useEffect(() => {
-        if (userData) {
-          // Split the name into first name and last name based on space
-          const [firstName, ...lastNameArr] = userData.name.split(' ');
-          const lastName = lastNameArr.join(' ');
+  validationSchema: Yup.object({
+    firstname: Yup.string().required('First name is required'),
+    lastname: Yup.string().required('Last name is required'),
+    email: Yup.string().email('Invalid email').required('Email is required'),
+    password: Yup.string().min(8, 'Password must be at least 8 characters').required('Password is required'),
+    changepassword: Yup.string().oneOf([Yup.ref('password'), null], 'Passwords must match'),
+    role: Yup.string().required('Role is required'),
+    acceptTerms: Yup.bool().required('You must accept the terms and conditions'),
+  }),
+  onSubmit: async (values, { setStatus, setSubmitting }) => {
     
-          formik.setValues({
-            firstname: firstName,
-            lastname: lastName,
-            email: userData.email,
-            password: '',
-            changepassword: '',
-            role: userData.role,
-          });
-        }
-      }, [userData]);
+    const requestData = {
+        email: values.email,
+        name: values.firstname + ' ' + values.lastname,
+        password: values.password,
+        role: values.role,
+        status: userStatus, // Add the userStatus field
+      };
+      
+      
+      
+      console.log("VAlues", requestData)
+    setLoading(true);
+    try {
+      const response = await axios.put(`${BASE_URL}/users/${user._id}`, requestData, { headers: { Authorization: token } });
+      console.log('User edit response:', response.data);
+      if(response.data){
+        sessionStorage.setItem('User', JSON.stringify(response.data));
+        setOpen(true);
+        setLoading(false);
+        setUpdated((prev)=>prev+1);
+        setTimeout(()=>{
+          setOpen(false)
+        },2000)
+      }
+      
+     
+    } catch (error) {
+      console.error('Error editing user:', error);
+      setLoading(false);
+      setStatus('Failed to edit user');
+    }
+    setSubmitting(false);
+  },
+});
+
+useEffect(() => {
   
-    useEffect(() => {
-      PasswordMeterComponent.bootstrap()
-    }, [])
+
+  const fetchUserData = async () => {
+    try {
+      const response = await axios.get(`${BASE_URL}/users/${user._id}`, { headers: { Authorization: token } });
+      setUserData(response.data);
+      setUserStatus(response.data.status); // Set the user status
+    } catch (error) {
+      console.log('Error fetching user data:', error);
+    }
+  };
+
   
-    
-  
-    return (
-      <form
+  fetchUserData();
+}, []);
+
+useEffect(() => {
+    if (userData) {
+      // Split the name into first name and last name based on space
+      const [firstName, ...lastNameArr] = userData.name.split(' ');
+      const lastName = lastNameArr.join(' ');
+
+      formik.setValues({
+        firstname: firstName,
+        lastname: lastName,
+        email: userData.email,
+        password: '',
+        changepassword: '',
+        role: userData.role,
+      });
+    }
+  }, [userData]);
+
+
+
+  return (
+    <div className='card mb-5 mb-xl-10'>
+      {
+        user && 
+        <div> 
+        <div
+        className='card-header border-0 cursor-pointer'
+        role='button'
+        data-bs-toggle='collapse'
+        data-bs-target='#kt_account_profile_details'
+        aria-expanded='true'
+        aria-controls='kt_account_profile_details'
+      >
+        <div className='card-title m-0'>
+          <h3 className='fw-bolder m-0'>Profile Details</h3>
+        </div>
+      </div>
+
+      <div id='kt_account_profile_details' className='collapse show'>
+
+        
+
+        <form
         className='form w-100 fv-plugins-bootstrap5 fv-plugins-framework'
         noValidate
         id='kt_login_signup_form'
@@ -166,7 +168,7 @@ export const EditUser = ({handleClose,userId,setUpdated}) => {
         {/* begin::Heading */}
         <div className='text-center mb-11'>
           {/* begin::Title */}
-          <h1 className='text-dark fw-bolder mb-3'>EDIT  USER</h1>
+          
           {/* end::Title */}
   
           {/* <div className='text-gray-500 fw-semibold fs-6'>Your Social Campaigns</div> */}
@@ -176,7 +178,22 @@ export const EditUser = ({handleClose,userId,setUpdated}) => {
         {/* begin::Login options */}
         
         {/* end::Login options */}
-  
+        <div >
+              <label className='col-lg-4 col-form-label fw-bold fs-6'>Avatar</label>
+              <div className='col-lg-8'>
+                <div
+                  className='image-input image-input-outline'
+                  data-kt-image-input='true'
+                  style={{backgroundImage: `url(${toAbsoluteUrl('/media/avatars/blank.png')})`}}
+                >
+                  <input type='file' />
+                  <div
+                    className='image-input-wrapper w-125px h-125px'
+                    style={{backgroundImage: `url(${toAbsoluteUrl(data.avatar)})`}}
+                  ></div>
+                </div>
+              </div>
+            </div>
         
   
         {formik.status && (
@@ -340,52 +357,11 @@ export const EditUser = ({handleClose,userId,setUpdated}) => {
         </div>
   
   
-        <div className="fv-row mb-5">
-          <label className="form-label fw-bolder text-dark fs-6">Role</label>
-          <select
-            {...formik.getFieldProps('role')}
-            className={clsx(
-              'form-select bg-transparent',
-              {
-                'is-invalid': formik.touched.role && formik.errors.role,
-              },
-              {
-                'is-valid': formik.touched.role && !formik.errors.role,
-              }
-            )}
-          >
-            <option value="">Select a role</option>
-            {roles.map((role) => (
-              <option key={role._id} value={role._id}>
-                {role.name}
-              </option>
-            ))}
-          </select>
-          {formik.touched.role && formik.errors.role && (
-            <div className="fv-plugins-message-container">
-              <div className="fv-help-block">
-                <span role="alert">{formik.errors.role}</span>
-              </div>
-            </div>
-          )}
-        </div>
+        
 
 
 
-        <div className="fv-row mb-8">
-  <div className="form-check form-switch form-switch-sm">
-    <input
-      className="form-check-input"
-      type="checkbox"
-      id="userStatus"
-      checked={userStatus} // Set the checked value based on the userStatus state
-      onChange={(e) => setUserStatus(e.target.checked)} // Update the userStatus state when the checkbox is toggled
-    />
-    <label className="form-check-label" htmlFor="userStatus">
-      Enable User
-    </label>
-  </div>
-</div>
+   
 
         {/* end::Form group */}
   
@@ -425,10 +401,10 @@ export const EditUser = ({handleClose,userId,setUpdated}) => {
           <button
             type='submit'
             id='kt_sign_up_submit'
-            className='btn btn-lg btn-primary w-100 mb-5'
+            className='btn btn-lg btn-primary w-50 mb-5'
             disabled={formik.isSubmitting || !formik.isValid || !formik.values.acceptTerms}
           >
-            {!loading && <span className='indicator-label'>Submit</span>}
+            {!loading && <span className='indicator-label'>Save</span>}
             {loading && (
               <span className='indicator-progress' style={{display: 'block'}}>
                 Please wait...{' '}
@@ -437,17 +413,37 @@ export const EditUser = ({handleClose,userId,setUpdated}) => {
             )}
           </button>
           
-            <button
-              type='button'
-              id='kt_login_signup_form_cancel_button'
-              onClick={handleClose}
-              className='btn btn-lg btn-light-primary w-100 mb-5'
-            >
-              Cancel
-            </button>
+            
           
         </div>
         {/* end::Form group */}
       </form>
+      </div>
+
+      <Modal
+        open={open}
+        onClose={()=>setOpen(false)}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box sx={style}>
+            
+
+        <Alert severity="success">User Updated</Alert>
+
+      
+
+
+
+
+        </Box>
+      </Modal>
+      </div>
+      }
+      
+         
+    </div>
   )
 }
+
+export {ProfileDetails}

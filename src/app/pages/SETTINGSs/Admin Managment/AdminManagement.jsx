@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Box, Typography ,Modal,TextField,Checkbox,Button } from "@mui/material";
 import { styled } from '@mui/material/styles';
 import Table from '@mui/material/Table';
@@ -19,6 +19,7 @@ import { EditUser } from "../../../modules/auth/components/EditUser";
 import { EngageWidget1, EngageWidget2, EngageWidget3, FeedsWidget2, FeedsWidget3, ListsWidget1, ListsWidget26, ListsWidget9, TablesWidget1, TablesWidget2, TablesWidget3, TablesWidget5, TablesWidget6, TablesWidget7 } from "../../../../_metronic/partials/widgets";
 import { KTSVG, toAbsoluteUrl } from "../../../../_metronic/helpers";
 import DeleteIcon from '@mui/icons-material/Delete';
+import UserContext from "../../../../Context/UserContext";
 
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -73,7 +74,8 @@ const style = {
 };
 
 const AdminManagement = () => {
-  const token =localStorage.getItem('token');
+  const {userToken}=useContext(UserContext);
+  const token = sessionStorage.getItem('token');
   const [open, setOpen] = React.useState(false);
   const [Editopen, setEditOpen] = React.useState(false);
   const [users, setUsers] = React.useState([]);

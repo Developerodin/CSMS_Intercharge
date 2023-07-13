@@ -13,7 +13,7 @@ const HeaderUserMenu: FC = () => {
 
   const handelLogout=()=>{
     localStorage.setItem("authValue", "false");
- 
+    sessionStorage.clear();
     window.location.reload();
   }
   return (

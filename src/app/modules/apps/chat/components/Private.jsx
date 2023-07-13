@@ -54,7 +54,7 @@ let peerConn
 let isAudio = true
 let isVideo = true
 let cutingphone
-  const userData=JSON.parse(localStorage.getItem('User'))
+  const userData=JSON.parse(sessionStorage.getItem('User'));
   const userEmail=userData.email;
   const created_by=userData._id;
   const username=userData.name;

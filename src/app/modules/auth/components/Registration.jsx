@@ -1,6 +1,6 @@
 /* eslint-disable react/jsx-no-target-blank */
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import {useState, useEffect} from 'react'
+import {useState, useEffect, useContext} from 'react'
 import {useFormik} from 'formik'
 import * as Yup from 'yup'
 import clsx from 'clsx'
@@ -11,6 +11,7 @@ import {PasswordMeterComponent} from '../../../../_metronic/assets/ts/components
 import {useAuth} from '../core/Auth'
 import axios from 'axios'
 import { BASE_URL } from '../../../Config/BaseUrl'
+import UserContext from '../../../../Context/UserContext'
 
 const initialValues = {
   firstname: '',
@@ -54,7 +55,8 @@ const registrationSchema = Yup.object().shape({
 })
 
 export function Registration({handleClose,setUpdated}) {
-  const token =localStorage.getItem('token');
+  const {userToken}=useContext(UserContext);
+  const token =userToken;
   const [loading, setLoading] = useState(false)
   const [roles, setRoles] = useState([]);
   const {saveAuth, setCurrentUser} = useAuth()

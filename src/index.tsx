@@ -17,6 +17,7 @@ import './_metronic/assets/sass/style.react.scss'
 import {AppRoutes} from './app/routing/AppRoutes'
 import {AuthProvider, setupAxios} from './app/modules/auth'
 import { ChatContextProvider } from './Context/ChatContext'
+import { UserContextProvider } from './Context/UserContext'
 /**
  * Creates `axios-mock-adapter` instance for provided `axios` instance, add
  * basic Metronic mocks and returns it.
@@ -37,11 +38,13 @@ if (container) {
   createRoot(container).render(
     <QueryClientProvider client={queryClient}>
       <MetronicI18nProvider>
+        <UserContextProvider>
       <ChatContextProvider>
         {/* <AuthProvider> */}
           <AppRoutes />
         {/* </AuthProvider> */}
         </ChatContextProvider>
+        </UserContextProvider>
       </MetronicI18nProvider>
       <ReactQueryDevtools initialIsOpen={false} />
     </QueryClientProvider>

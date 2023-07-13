@@ -9,6 +9,7 @@ import {toAbsoluteUrl} from '../../../../_metronic/helpers'
 import {useAuth} from '../core/Auth'
 import { useNavigate,Navigate } from 'react-router-dom'
 import { Button } from '@mui/material'
+import Cookies from 'js-cookie';
 
 const loginSchema = Yup.object().shape({
   email: Yup.string()
@@ -40,9 +41,10 @@ export function Login() {
 
 
   const handelDashboard =()=>{
-    var AuthValue = localStorage.getItem("authValue");
-    console.log("AuthValue",AuthValue)
-    if(AuthValue === "true"){
+    // var AuthValue = localStorage.getItem("authValue");
+    const AuthValue = sessionStorage.getItem("authValue");
+    console.log("storedAuthValue",AuthValue)
+    if(AuthValue === 'true'){
       // window.location.reload();
       navigate("/dashboard");
       console.log("hii from navigate")
@@ -68,14 +70,19 @@ export function Login() {
         
         if(userData && userData.status === "success"){
           setCurrentUser(userData.data.user);
-          localStorage.setItem("authValue", "true");
-          localStorage.setItem("User",JSON.stringify(userData.data.user));
+          // localStorage.setItem("authValue", "true");
+          // localStorage.setItem("User",JSON.stringify(userData.data.user));
+          sessionStorage.setItem("authValue", "true");
+          sessionStorage.setItem('User', JSON.stringify(userData.data.user));
+          // expires in 7 days
+          
            setLoading(false)
             window.location.reload();
         }
         else{
             setStatus('The login details are incorrect')
-            localStorage.setItem("authValue", "false");
+            // localStorage.setItem("authValue", "false");
+            sessionStorage.setItem('authValue', 'false');
             setSubmitting(false)
           setLoading(false)
           }

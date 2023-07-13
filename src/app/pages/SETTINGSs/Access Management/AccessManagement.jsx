@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Box, Typography ,Modal,TextField,Checkbox,Button, Card, CardContent } from "@mui/material";
 import { styled } from '@mui/material/styles';
 import Table from '@mui/material/Table';
@@ -15,6 +15,7 @@ import axios from "axios";
 import { BASE_URL } from "../../../Config/BaseUrl";
 import { ListsWidget1, ListsWidget2, ListsWidget3, ListsWidget4, ListsWidget5, ListsWidget6, ListsWidget7, ListsWidget8, ListsWidget9 } from "../../../../_metronic/partials/widgets";
 import { KTSVG } from "../../../../_metronic/helpers";
+import UserContext from "../../../../Context/UserContext";
 
 
 
@@ -69,6 +70,7 @@ const initialPermission={
   Dashboard: false,
   Overview: false,
   Cpos: false,
+  Chargers:false,
   ChargingStations: false,
   StationLogs: false,
   ChargerMap: false,
@@ -91,7 +93,8 @@ const initialEditState={
 }
 
 const AccessManagement = () => {
-  const token =localStorage.getItem('token');
+  const {userToken,setRefresh}=useContext(UserContext);
+  const token = sessionStorage.getItem('token');
   const [open, setOpen] = React.useState(false);
   const [Editopen, setEditOpen] = React.useState(false);
   const [roleName, setRoleName] = React.useState('');
@@ -101,6 +104,7 @@ const AccessManagement = () => {
   const [editedRole, setEditedRole] = React.useState(initialEditState);
   const [updatedRole, setUpdatedRole] = React.useState(0);
   const [allChecked, setAllChecked] = React.useState(false);
+  
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const handleEditOpen = (role) =>{
@@ -151,6 +155,7 @@ const AccessManagement = () => {
       setPermissions(initialPermission);
       setAllChecked(false)
       setUpdatedRole((prev)=>prev+1);
+      setRefresh((prev)=>prev+1);
       handleClose();
       // Perform any additional actions after role creation
     } catch (error) {
@@ -186,6 +191,7 @@ const AccessManagement = () => {
       setSelectedRole(null);
       setEditedRole(initialEditState);
       setUpdatedRole((prev)=>prev+1);
+      setRefresh((prev)=>prev+1);
       handleEditClose();
 
       // Perform any additional actions after role update
@@ -200,6 +206,7 @@ const AccessManagement = () => {
       const response = await axios.delete(`${BASE_URL}/roles/${roleId}`,{ headers: { "Authorization": `${token}` } });
       // console.log('Role deleted:', response.data);
       setUpdatedRole((prev)=>prev+1);
+      setRefresh((prev)=>prev+1);
       // Perform any additional actions after role deletion
       // For example, you could refresh the roles list
       

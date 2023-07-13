@@ -3,7 +3,7 @@ import {AuthModel, UserModel} from './_models'
 import { BASE_URL } from '../../../Config/BaseUrl'
 
 const API_URL = process.env.REACT_APP_API_URL
-const token =localStorage.getItem('token');
+const token =sessionStorage.getItem('token');
 
 export const GET_USER_BY_ACCESSTOKEN_URL = `${BASE_URL}/verify_token`
 export const LOGIN_URL = `${BASE_URL}/signin`
