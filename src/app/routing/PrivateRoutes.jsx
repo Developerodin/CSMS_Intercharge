@@ -62,8 +62,8 @@ import UserContext from '../../Context/UserContext'
 
 
 const PrivateRoutes = () => {
-  // const {userPermisson}=useContext(UserContext);
-const userPermisson=JSON.parse(sessionStorage.getItem('userPermisson'))
+  const {userPermisson}=useContext(UserContext);
+// const userPermisson=JSON.parse(sessionStorage.getItem('userPermisson'))
   return (
     <Routes>
       <Route element={<MasterLayout />}>
@@ -286,8 +286,9 @@ const userPermisson=JSON.parse(sessionStorage.getItem('userPermisson'))
 {/* Settings End */}
 
 
+
 {
-          userPermisson.Overview && (
+    userPermisson && userPermisson.Overview && (
             <Route
           path='manage-cpos/overview/*'
           element={
@@ -654,7 +655,8 @@ const userPermisson=JSON.parse(sessionStorage.getItem('userPermisson'))
 
  {/* Reports End */}
 
-        {/* Page Not Found */}
+        {/* Page Not Found /error/404 */}
+
         <Route path='*' element={<Navigate to='/' />} />
       </Route>
     </Routes>

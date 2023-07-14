@@ -43,15 +43,22 @@ export function Login() {
   const handelDashboard =()=>{
     // var AuthValue = localStorage.getItem("authValue");
     const AuthValue = sessionStorage.getItem("authValue");
+    const user=JSON.parse(sessionStorage.getItem('User')) || null;
     console.log("storedAuthValue",AuthValue)
-    if(AuthValue === 'true'){
-      // window.location.reload();
-      navigate("/dashboard");
-      console.log("hii from navigate")
+    if(user && user.status === true){
+      if(AuthValue === 'true'){
+        // window.location.reload();
+        navigate("/dashboard");
+        console.log("hii from navigate")
+      }
+      else{
+        navigate("/auth");
+      }
     }
     else{
-      navigate("/auth");
+      navigate("/error/404");
     }
+    
   }
 
 

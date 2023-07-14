@@ -82,9 +82,7 @@ const initialPermission={
   AllTransactions: false,
   CompanyPayouts: false,
   DiscountCoupons: false,
-  AdminManagment: false,
-  AccessManagment: false,
-  SystemMasters: false,
+  
 }
 
 const initialEditState={
@@ -281,8 +279,8 @@ const AccessManagement = () => {
           
           <Box sx={{display:"flex",justifyContent:"end",alignItems:"center"}}>
                   <Box sx={{display:"flex",justifyContent:"space-between",alignItems:"center",width:"80px"}}>
-                  <EditIcon onClick={()=>handleEditOpen(role)} sx={{color:"#302A4E"}}  color="primary"/>
-                  <DeleteIcon onClick={() => handleDelete(role._id)} sx={{color:"crimson"}}  />
+                  <EditIcon  onClick={()=>handleEditOpen(role)} sx={{color:"#302A4E",display:`${role.name==="Admin" ? "none" :"block"}`}}  color="primary"/>
+                  <DeleteIcon onClick={() => handleDelete(role._id)} sx={{color:"crimson",display:`${role.name==="Admin" ? "none" :"block"}`}}  />
                   
                   
                   </Box>
