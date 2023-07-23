@@ -49,7 +49,7 @@ const AppRoutes= () => {
 <BrowserRouter >
       <Routes>
         <Route element={<App />}>
-          <Route path='error/*' element={<ErrorsPage />} />
+          {/* <Route path='error/*' element={<ErrorsPage />} /> */}
           <Route path='logout' element={<Logout />} />
           {currentUser ? (
             <>
