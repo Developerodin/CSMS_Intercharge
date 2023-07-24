@@ -18,6 +18,7 @@ import {AppRoutes} from './app/routing/AppRoutes'
 import {AuthProvider, setupAxios} from './app/modules/auth'
 import { ChatContextProvider } from './Context/ChatContext'
 import { UserContextProvider } from './Context/UserContext'
+import { CpoContextProvider } from './Context/CposContext'
 /**
  * Creates `axios-mock-adapter` instance for provided `axios` instance, add
  * basic Metronic mocks and returns it.
@@ -40,8 +41,11 @@ if (container) {
       <MetronicI18nProvider>
         <UserContextProvider>
       <ChatContextProvider>
+        <CpoContextProvider>
+        <AppRoutes />
+        </CpoContextProvider>
         {/* <AuthProvider> */}
-          <AppRoutes />
+          
         {/* </AuthProvider> */}
         </ChatContextProvider>
         </UserContextProvider>

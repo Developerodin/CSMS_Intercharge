@@ -1,11 +1,28 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { KTSVG } from "../../../../../_metronic/helpers";
 import { useFormik } from "formik";
 import { Checkbox } from "@mui/material";
 import BorderColorIcon from "@mui/icons-material/BorderColor";
+import { useParams } from "react-router-dom";
+import { BASE_URL } from "../../../../Config/BaseUrl";
+import axios from "axios";
 const label = { inputProps: { "aria-label": "Checkbox demo" } };
 
-const UserModal2 = () => {
+const UserModal2 = (props) => {
+  const { id } = props;
+  const token =sessionStorage.getItem('token');
+  const fetchUserData = async () => {
+    try {
+      const response = await axios.get(`${BASE_URL}/cpo/users/${id}`
+      ,{ headers: { "Authorization": `${token}` } }
+      );
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching user data:', error);
+      return null;
+    }
+  };
+
   const module = [
     { name: "Charger Management" },
     { name: "User Management" },
@@ -22,39 +39,92 @@ const UserModal2 = () => {
     marginTop: "10px",
   };
 
-  const initialValues = {
-    Register_Name: "Townhall",
-    Brand_Name: "Townhall-1",
-    GST_No: "45673GGh123456",
-    MID: "2345432",
-    Registered_Address:"216, Ganesh Marg, C-Block, Mahesh Nagar, Gopal Pura Mode, Jaipur, Rajasthan 302015",
-    state:"Rajasthan",
-    regional: "true",
-    National: "",
-    Initial_Balance: "1000",
-    Admin_Name: "Intercharge",
-    Number: "+91 8875343434",
-    Email: "intercharge@gmail.com",
-    Assign_Role: "Admin",
-    ABB_TestCharger: "3",
-    Select_Price: "30,000",
-    Fixed_Rent: "12,000",
-    Company_Share: "none",
-  };
+  const initialValues = async ()=>{
+
+    const userData = await fetchUserData();
+    console.log(userData);
+    if (userData) {
+     
+        // Assuming userData has properties like "name", "email", etc.
+        return {
+          Register_Name: userData.name,
+          Brand_Name:userData.Brand_Name ,
+          GST_No:userData.GST_No ,
+          MID: userData.MID,
+          Registered_Address:userData.Registered_Address,
+          state:userData.state,
+          regional: userData.regional,
+          National:userData.National,
+          Initial_Balance: userData.Initial_Balance,
+          
+          Number: userData.Number,
+          Email: userData.email,
+          ABB_TestCharger: userData.ABB_TestCharger,
+          Select_Price: userData.Select_Price,
+          Fixed_Rent: userData.Fixed_Rent,
+          Company_Share: userData.Company_Share,
+        
+        
+      }
+        // Add more fields as needed
+      
+    }
+
+
+
+    return {
+      Register_Name: "Townhall",
+      Brand_Name: "Townhall-1",
+      GST_No: "45673GGh123456",
+      MID: "2345432",
+      Registered_Address:"216, Ganesh Marg, C-Block, Mahesh Nagar, Gopal Pura Mode, Jaipur, Rajasthan 302015",
+      state:"Rajasthan",
+      regional: "true",
+      National: "",
+      Initial_Balance: "1000",
+      Admin_Name: "Intercharge",
+      Number: "+91 8875343434",
+      Email: "intercharge@gmail.com",
+      Assign_Role: "Admin",
+      ABB_TestCharger: "3",
+      Select_Price: "30,000",
+      Fixed_Rent: "12,000",
+      Company_Share: "none",
+    
+    
+  }
+  }
+
+  
 
   const { values, errors, handleSubmit, handleChange, handelBlur } = useFormik({
     initialValues: initialValues,
-    onSubmit: (values, { resetForm }) => {
+    onSubmit: async (values, { resetForm }) => {
       console.log("🚀 ~ file: UserModal.jsx:27 ~ UserModal ~ values:", values);
+      // try {
+      //   // Send a PATCH request with the updated data
+      //   await axios.patch(`/api/cpo/users/${id}`, values);
+      //   console.log('User data updated successfully!');
+      //   // You can perform any success actions here, like showing a success message
+      // } catch (error) {
+      //   console.error('Error updating user data:', error);
+      //   // Handle the error and display an error message if needed
+      // }
       resetForm();
     },
   });
+
+
+  useEffect(()=>{
+  console.log("id of cpo",id);
+  
+  },[])
   return (
     <>
       <button
         type="button"
         data-bs-toggle="modal"
-        data-bs-target="#exampleModal3"
+        data-bs-target="#exampleModal31"
         style={{ border: "none", backgroundColor: "#fff" }}
       >
         <BorderColorIcon />
@@ -62,7 +132,7 @@ const UserModal2 = () => {
 
       <div
         className="modal fade"
-        id="exampleModal3"
+        id="exampleModal31"
         tabindex="-1"
         role="dialog"
         aria-labelledby="exampleModalLabel"

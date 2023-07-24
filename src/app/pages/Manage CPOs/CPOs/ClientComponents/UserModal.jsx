@@ -1,9 +1,14 @@
-import React from "react";
+import React, { useContext } from "react";
 import { KTSVG } from "../../../../../_metronic/helpers";
 import { useFormik } from "formik";
 import { Checkbox } from "@mui/material";
+import { BASE_URL } from "../../../../Config/BaseUrl";
+import axios from "axios";
+import CposContext from "../../../../../Context/CposContext";
 const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
 const UserModal = () => {
+  const token =sessionStorage.getItem('token');
+  const {updated, setUpdated} =useContext(CposContext);
   const module=[
     {name:"Charger Management"},
     {name:"User Management"},
@@ -22,7 +27,9 @@ const UserModal = () => {
 
 
   const initialValues={
-  Register_Name:"",
+  name:"",
+  email:"",
+  password:"",
   Brand_Name:"",
   GST_No:"",
   MID:"",
@@ -31,22 +38,29 @@ const UserModal = () => {
   regional:"",
   National:"",
   Initial_Balance:"",
-  Admin_Name:"",
   Number:"",
-  Email:"",
-  Assign_Role:"",
   ABB_TestCharger:"",
   Select_Price:"",
   Fixed_Rent:"",
-  Company_Share:""
-
+  Company_Share:"",
+  image:""
 }
 
 
   const {values,errors,handleSubmit,handleChange,handelBlur}=useFormik({
     initialValues:initialValues,
-    onSubmit:(values,{resetForm}) => {
-      console.log("🚀 ~ file: UserModal.jsx:27 ~ UserModal ~ values:", values)
+    onSubmit:async(values,{resetForm}) => {
+      console.log("🚀 ~ file: UserModal.jsx:27 ~ UserModal ~ values:", values);
+      try{
+        const res =await axios.post(`${BASE_URL}/cpo/signup`, 
+        values  
+        ,{ headers: { "Authorization": `${token}` } })
+        setUpdated((prev)=>prev+1)
+        console.log("res cpo add ==>",res)
+      }
+      catch(err){
+        console.log("error: ", err);
+      }
       resetForm()
     }
   })
@@ -96,8 +110,8 @@ const UserModal = () => {
                     <input
                       type="text"
                       style={design}
-                      name="Register_Name"
-                      value={values.Register_Name}
+                      name="name"
+                      value={values.name}
                       onChange={handleChange}
                     placeholder="Register Name"
                     />
@@ -118,7 +132,7 @@ const UserModal = () => {
                       onChange={handleChange} />
                   </div>
                   <div className="col-md-3 d-flex justify-content-start design">
-                    <input type="text" style={design} placeholder="Initial Balance" name="Initial_Balance"
+                    <input type="number" style={design} placeholder="Initial Balance" name="Initial_Balance"
                       value={values.Initial_Balance}
                       onChange={handleChange}/>
                   </div>
@@ -162,15 +176,17 @@ const UserModal = () => {
 
                   <div className="col-md-3 d-flex justify-content-start design mt-5">
                     <div className="form-check d-flex align-items-center">
-                      {/* <input
+                    <input
                         className="form-check-input"
-                        type="radio"
+                        type="checkbox"
+                       
+                        id="flexCheckDefault"
                         name="regional"
-                        id="flexRadioDefault1"
                       value={values.regional}
                       onChange={handleChange}
-                      /> */}
-                       <Checkbox {...label}  />
+                      />
+                      
+                       {/* <Checkbox {...label}  /> */}
                       <label
                         className="form-check-label"
                         for="flexRadioDefault1"
@@ -180,16 +196,17 @@ const UserModal = () => {
                       </label>
                     </div>
                     <div className="form-check d-flex align-items-center">
-                      {/* <input
+                    <input
                         className="form-check-input"
-                        type="radio"
-                        name="National"
-                        id="flexRadioDefault1"
+                        type="checkbox"
                        
+                        id="flexCheckDefault"
+                        name="National"
                       value={values.National}
                       onChange={handleChange}
-                      /> */}
-                       <Checkbox {...label}  />
+                      />
+                      
+                       {/* <Checkbox {...label}  /> */}
                       <label
                         className="form-check-label"
                         for="flexRadioDefault1"
@@ -205,72 +222,47 @@ const UserModal = () => {
               <div className="container-fluid">
                 <div className="row">
                   <div className="col-12 mt-5">
-                    <h3> Add Admin</h3>
+                    <h3> Add Credentials</h3>
+                  </div>
+                  
+                  <div className="col-md-4 d-flex justify-content-start">
+                  Email
                   </div>
                   <div className="col-md-4 d-flex justify-content-start">
-                    Name
+                   Password
                   </div>
+
                   <div className="col-md-4 d-flex justify-content-start">
-                    Phone
-                  </div>
-                  <div className="col-md-4 d-flex justify-content-start">
-                    Email
+                    Number
                   </div>
                   
                   
 
+                  
                   <div className="col-md-4 d-flex justify-content-start">
-                    <input type="text" style={design} placeholder="Name" name="Admin_Name"
-                      value={values.Admin_Name}
-                      onChange={handleChange}/>
-                  </div>
-                  <div className="col-md-4 d-flex justify-content-start">
-                    <input type="text" style={design} placeholder="Number" name="Number"
-                      value={values.Number}
+                  <input type="Email" style={design} placeholder="Email" name="email"
+                      value={values.email}
                       onChange={handleChange}/>
                   </div>
                   <div className="col-md-4 d-flex justify-content-start design">
-                    <input type="Email" style={design} placeholder="Email" name="Email"
-                      value={values.Email}
+                    
+
+                     <input type="text" style={design} placeholder="Password" name="password"
+                      value={values.password}
+                      onChange={handleChange}/>
+                  </div>
+
+                  <div className="col-md-4 d-flex justify-content-start">
+                    <input type="number" style={design} placeholder="Number" name="Number"
+                      value={values.Number}
                       onChange={handleChange}/>
                   </div>
                  
-                  <div className="col-md-4 mt-3 d-flex justify-content-start design">
-                    <span> Assign Role</span>
-                    <div
-                      className="d-flex justify-content-end"
-                      style={{ minWidth: "70%" }}
-                    >
-                      {" "}
-                      <span
-                        style={{
-                          fontSize: "10px",
-                          borderBottom: "1px solid black",
-                        }}
-                        type="button"
-                        className=""
-                        data-bs-toggle="modal"
-                        data-bs-target="#exampleModal2"
-                      >
-                        {" "}
-                        Add Role
-                      </span>
-                    </div>
-                  </div>
-                  <div className="col-md-8"></div>
-                  <div className="col-md-4 mb-5 d-flex justify-content-start design">
-                    <input
-                      type="Email"
-                      style={design}
-                      placeholder="Assign Role"
-                      name="Assign_Role"
-                      value={values.Assign_Role}
-                      onChange={handleChange}
-                    />
-                  </div>
+                  
+                  
                 </div>
               </div>
-              <div className="container-fluid">
+              <div className="container-fluid mt-20">
                 <h3 className="mb-5">Charger Mapping</h3>
                 <div
                   className="row pt-5 pb-5 "
@@ -305,8 +297,8 @@ const UserModal = () => {
                         type="checkbox"
                        
                         id="flexCheckDefault"
-                        name="Select_Price"
-                      value={values.Select_Price}
+                        name="ABB_TestCharger"
+                      value={values.ABB_TestCharger}
                       onChange={handleChange}
                       />
                       <label className="form-check-label" for="flexCheckDefault">
@@ -317,7 +309,7 @@ const UserModal = () => {
                   <div className="col-2">
                     <input
                       type="text"
-                      name="ABB_TestCharger"
+                      name="Select_Price"
                       id=""
                       style={{
                         maxWidth: "50%",
@@ -325,7 +317,7 @@ const UserModal = () => {
                         border: "none",
                       }}
                     
-                      value={values.ABB_TestCharger}
+                      value={values.Select_Price}
                       onChange={handleChange}
                     />
                   </div>
