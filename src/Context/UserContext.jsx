@@ -40,9 +40,10 @@ export const UserContextProvider = ({ children }) => {
     }
     
     const fetchuserRole=async()=>{
+      const token =sessionStorage.getItem('token');
         // console.log("ROle id",userData.role,userToken)
         try {
-            const response = await axios.get(`${BASE_URL}/roles/${userData.role}`, { headers: { Authorization: userToken } });
+            const response = await axios.get(`${BASE_URL}/roles/${userData.role}`, { headers: { Authorization: token } });
             
             const data=await response.data
             console.log('User role:',data.permissions,data.name);
@@ -72,7 +73,7 @@ export const UserContextProvider = ({ children }) => {
     
     
     useEffect(()=>{
-        GetToken();
+        // GetToken();
         UserDetailsSet();
     },[update])
 
@@ -81,7 +82,7 @@ export const UserContextProvider = ({ children }) => {
     },[userToken])
 
     useEffect(() => {
-        if (userData && userData.role && userToken) {
+        if (userData && userData.role) {
             fetchuserRole();
             
         }

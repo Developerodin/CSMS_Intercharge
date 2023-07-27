@@ -1,5 +1,5 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import {useState} from 'react'
+import {useContext, useState} from 'react'
 import * as Yup from 'yup'
 import clsx from 'clsx'
 import {Link} from 'react-router-dom'
@@ -10,6 +10,7 @@ import {useAuth} from '../core/Auth'
 import { useNavigate,Navigate } from 'react-router-dom'
 import { Button } from '@mui/material'
 import Cookies from 'js-cookie';
+import UserContext from '../../../../Context/UserContext'
 
 const loginSchema = Yup.object().shape({
   email: Yup.string()
@@ -38,6 +39,7 @@ export function Login() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false)
   const {saveAuth, setCurrentUser} = useAuth()
+  const {setUserToken}=useContext(UserContext)
 
 
   const handelDashboard =()=>{
@@ -81,6 +83,8 @@ export function Login() {
           // localStorage.setItem("User",JSON.stringify(userData.data.user));
           sessionStorage.setItem("authValue", "true");
           sessionStorage.setItem('User', JSON.stringify(userData.data.user));
+          sessionStorage.setItem('token',userData.token);
+          
           // expires in 7 days
           
            setLoading(false)
