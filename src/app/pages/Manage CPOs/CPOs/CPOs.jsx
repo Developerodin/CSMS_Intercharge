@@ -54,7 +54,7 @@ const CPOs = () => {
   const [formValues, setFormValues] = useState(initialValues);
   
   const [open, setOpen] = React.useState(false);
-  const {updated, setUpdated} =useContext(CposContext);
+  const [update, setUpdate] = useState(0);
   const handleOpen = (Data) => {
     setFormValues(Data);
     setOpen(true);
@@ -119,7 +119,7 @@ const CPOs = () => {
       await axios.put(`${BASE_URL}/cpo/users/${formValues._id}`, formValues, {
         headers: { Authorization: `${token}` },
       });
-      setUpdated((prev)=>prev+1);
+      setUpdate((prev)=>prev+1);
       handleClose();
       console.log("User data updated successfully!");
       // You can perform any success actions here, like showing a success message
@@ -136,7 +136,7 @@ const CPOs = () => {
       await axios.delete(`${BASE_URL}/cpo/users/${id}`, {
         headers: { Authorization: `${token}` },
       });
-      setUpdated((prev)=>prev+1);
+      setUpdate((prev)=>prev+1);
     
       console.log("User delete updated successfully!");
       // You can perform any success actions here, like showing a success message
@@ -175,12 +175,12 @@ const CPOs = () => {
     };
 
     fetchData();
-  }, [updated]);
+  }, [update]);
 
   return (
     <div>
       <KTCard>
-        <UsersListHeader />
+        <UsersListHeader  state={setUpdate}/>
 
         <GenralTabel rows={rows} column={column} />
       </KTCard>

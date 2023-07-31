@@ -6,9 +6,9 @@ import { BASE_URL } from "../../../../Config/BaseUrl";
 import axios from "axios";
 import CposContext from "../../../../../Context/CposContext";
 const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
-const UserModal = () => {
+const UserModal = ({setUpdate}) => {
   const token =sessionStorage.getItem('token');
-  const {updated, setUpdated} =useContext(CposContext);
+
   const module=[
     {name:"Charger Management"},
     {name:"User Management"},
@@ -35,14 +35,14 @@ const UserModal = () => {
   MID:"",
   Registered_Address:"",
   state:"",
-  regional:"",
-  National:"",
-  Initial_Balance:"",
-  Number:"",
-  ABB_TestCharger:"",
-  Select_Price:"",
-  Fixed_Rent:"",
-  Company_Share:"",
+  regional:false,
+  National:false,
+  Initial_Balance:0,
+  Number:0,
+  ABB_TestCharger:false,
+  Select_Price:0,
+  Fixed_Rent:0,
+  Company_Share:0,
   image:""
 }
 
@@ -55,7 +55,7 @@ const UserModal = () => {
         const res =await axios.post(`${BASE_URL}/cpo/signup`, 
         values  
         ,{ headers: { "Authorization": `${token}` } })
-        setUpdated((prev)=>prev+1)
+        setUpdate((prev)=>prev+1)
         console.log("res cpo add ==>",res)
       }
       catch(err){
@@ -308,9 +308,9 @@ const UserModal = () => {
                   </div>
                   <div className="col-2">
                     <input
-                      type="text"
+                      type="number"
                       name="Select_Price"
-                      id=""
+                      id="Select_Price"
                       style={{
                         maxWidth: "50%",
                         background: "#f4f5f7",
@@ -323,9 +323,9 @@ const UserModal = () => {
                   </div>
                   <div className="col-2">
                     <input
-                      type="text"
+                      type="number"
                       name="Fixed_Rent"
-                      id=""
+                      id="Fixed_Rent"
                       style={{
                         maxWidth: "50%",
                         background: "#f4f5f7",
@@ -338,9 +338,9 @@ const UserModal = () => {
                   </div>
                   <div className="col-2">
                     <input
-                      type="text"
+                      type="number"
                       name="Company_Share"
-                      id=""
+                      id="Company_Share"
                       style={{
                         maxWidth: "40%",
                         border: "none",
@@ -351,19 +351,7 @@ const UserModal = () => {
                       value={values.Company_Share}
                       onChange={handleChange}
                     />
-                    <input
-                      type="text"
-                      name="Company_Share2"
-                      id=""
-                      style={{
-                        maxWidth: "40%",
-                        border: "none",
-                        background: "#f4f5f7",
-                      }}
-                      
-                      value={values.Company_Share2}
-                      onChange={handleChange}
-                    />
+                    
                   </div>
                 </div>
               </div>
