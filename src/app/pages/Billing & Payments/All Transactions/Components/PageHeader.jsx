@@ -14,6 +14,9 @@ const PageHeader = () => {
   const handelComapnyPayments=()=>{
     navigate("/billing/companypayments/", {state:{_id:"akshay"}});
   }
+  const handelRoamingRecon=()=>{
+    navigate("/billing/roaming_recon/", {state:{_id:"akshay"}});
+  }
   return (
   
     <Box sx={{padding:"10px"}}>
@@ -21,7 +24,7 @@ const PageHeader = () => {
              <Button variant="contained" sx={{color:"#fff" , backgroundColor:"crimson","&:hover": { backgroundColor: "#E21818"}}} onClick={handelChargingSession} >Charging Sessions</Button>
              <Button variant="contained" sx={{color:"#fff" , backgroundColor:"crimson","&:hover": { backgroundColor: "#E21818"}}}  onClick={handelUserPayments} >User Payments</Button>
              <Button variant="contained"sx={{color:"#fff" , backgroundColor:"crimson","&:hover": { backgroundColor: "#E21818"}}} onClick={handelComapnyPayments} >Company Payments</Button>
-             
+             <Button variant="contained"sx={{color:"#fff" , backgroundColor:"crimson","&:hover": { backgroundColor: "#E21818"}}} onClick={handelRoamingRecon} >Roaming Recon</Button>
        </Box>
     </Box>
    

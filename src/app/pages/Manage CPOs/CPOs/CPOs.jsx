@@ -9,17 +9,25 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { WalletModel } from "./Modal/WalletModal";
 import UserModal from "./ClientComponents/UserModal";
 import UserModal2 from "./ClientComponents/UserModal2";
+
 import { BASE_URL } from "../../../Config/BaseUrl";
 import axios from "axios";
 import { useFormik } from "formik";
-import Modal from "@mui/material/Modal";
-import Box from "@mui/material/Box";
 import CposContext from "../../../../Context/CposContext";
+import { Button,SwipeableDrawer,Box,Modal,Typography,TextField,Dialog,Slide  } from "@mui/material";
+import { useNavigate } from "react-router-dom";
+import { TransitionProps } from '@mui/material/transitions';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
+import { styled } from '@mui/system';
+
 const column = [
   { name: "CPOs" },
   { name: "State" },
-  // {name: "Category"},
-  // {name: "Total Admins"},
+  {name: "Number of Chargers"},
+  {name: "Roaming Agreements"},
   // {name: "Total Chargers"},
   { name: "Available Credits" },
   { name: "Company Wallet" },
@@ -27,6 +35,20 @@ const column = [
   { name: "Update" },
   { name: "Delete" },
 ];
+const MyBox = styled('Button')({
+  width:'100%',
+  color: '#fff',
+  backgroundColor: '#009ef7',
+  padding: 8,
+  borderRadius: 4,
+  border:"none",
+  fontWeight: 'bold',
+  margin:"10px"
+});
+
+const Transition = React.forwardRef(function Transition(props, ref) {
+  return <Slide direction="up" ref={ref} {...props} />;
+});
 
 const CPOs = () => {
   const token = sessionStorage.getItem("token");
@@ -49,10 +71,22 @@ const CPOs = () => {
     Company_Share: "",
     image: "",
   };
+  const [state, setState] = React.useState({
+    top: false,
+    left: false,
+    bottom: false,
+    right: false,
+  });
+  const [Cpostate, setCpoState] = React.useState({
+    top: false,
+    left: false,
+    bottom: false,
+    right: false,
+  });
   const [rows, setRows] = useState([]);
   const [selectedCpo, setselectedCpo] = useState({});
   const [formValues, setFormValues] = useState(initialValues);
-  
+  const [Dilogopen, setDilogOpen] = React.useState(false);
   const [open, setOpen] = React.useState(false);
   const [update, setUpdate] = useState(0);
   const handleOpen = (Data) => {
@@ -62,6 +96,15 @@ const CPOs = () => {
   const handleClose = () => {
     setOpen(false);
     setFormValues(initialValues);
+  };
+
+  const handleDilogOpen = (Data) => {
+    // setFormValues(Data);
+    setDilogOpen(true);
+  };
+  const handleDilogClose = () => {
+    setDilogOpen(false);
+    // setFormValues(initialValues);
   };
   const style = {
     position: "absolute",
@@ -74,6 +117,7 @@ const CPOs = () => {
     boxShadow: 24,
     p: 4,
   };
+  const navigate = useNavigate();
 
   const fetchUserData = async () => {
     // try {
@@ -146,6 +190,154 @@ const CPOs = () => {
     }
   }
 
+  const handelRoamingClick=(e) => {
+    console.log("🚀 ~ file: Chargers.jsx:22 ~ handelClick ~ e:", e.target)
+     navigate("/roaming_agreements/", {state:{_id:"akshay"}});
+    //  <Navigate to="/chargerdetails" state={{todos:[]}} replace={true}/>
+  
+  }
+
+  const toggleDrawer = (anchor, open) => (event) => {
+    setState({ ...state, [anchor]: open });
+  };
+
+  const toggleDrawerCpo = (anchor, open) => (event) => {
+    setCpoState({ ...state, [anchor]: open });
+  };
+
+  const handelWalletClose = (id,data)=>{
+    setState({ ...state, 'right': false });
+    // setUserWalletValues(initialValuesWallet)
+
+  }
+
+  const handelCpoClose = (id,data)=>{
+    setCpoState({ ...state, 'right': false });
+    
+
+  }
+
+
+  const handelCpoClick=(id,data)=>{
+    // fetchUserWalletData(id);
+    // handelWalletHistory(id)
+    console.log('handelCpoClick',data)
+    setselectedCpo(data)
+    setCpoState({ ...state, 'right': true });
+    
+  }
+
+  const list = (anchor) => (
+    <Box
+      sx={{ width: anchor === 'top' || anchor === 'bottom' ? 'auto' : 400 , padding:"10px"}}
+      role="presentation"
+      
+    >
+
+
+      hii
+
+
+    </Box>
+  );
+
+  const listCpoDetails = (anchor) => (
+    <Box
+      sx={{ width: anchor === 'top' || anchor === 'bottom' ? 'auto' : 400 , padding:"10px"}}
+      role="presentation"
+      
+    >
+
+
+        <Box sx={{padding:"5px"}}>
+        <Box sx={{display:"flex",justifyContent:"space-between",backgroundColor:"#f4f5f7",padding:"10px",borderRadius:"10px"}}>
+            <Typography sx={{color:"crimson"}} variant="h6" component="h6">CPO Details</Typography>
+         
+            </Box>
+          <Box sx={{margin:"20px"}}>
+            
+            <Box sx={{display:"flex",justifyContent:"space-between"}}>
+            <Typography sx={{color:"gray",fontWeight:"bold"}}variant="subtitle1" component="h2">User Name</Typography>
+          <Typography sx={{color:"#00af06"}}variant="subtitle1" component="h2">{selectedCpo.name}</Typography>
+          
+            </Box>
+            <Box sx={{display:"flex",justifyContent:"space-between"}}>
+            <Typography sx={{color:"gray",fontWeight:"bold"}}variant="subtitle1" component="h2">User Number</Typography>
+          <Typography sx={{color:"black"}}variant="subtitle1" component="h2">{selectedCpo.Number}</Typography>
+            </Box>
+
+            <Box sx={{display:"flex",justifyContent:"space-between"}}>
+            <Typography sx={{color:"gray",fontWeight:"bold"}}variant="subtitle1" component="h2">Initial Balance</Typography>
+          <Typography sx={{color:"black"}}variant="subtitle1" component="h2">{selectedCpo.Initial_Balance}</Typography>
+            </Box>
+
+            <Box sx={{display:"flex",justifyContent:"space-between"}}>
+            <Typography sx={{color:"gray",fontWeight:"bold"}}variant="subtitle1" component="h2">User Email</Typography>
+          <Typography sx={{color:"black"}}variant="subtitle1" component="h2">{selectedCpo.email}</Typography>
+            </Box>
+
+            
+          </Box>
+        </Box>
+     <hr/>
+      
+      
+        <Box sx={{padding:"5px"}}>
+            <Box sx={{display:"flex",justifyContent:"space-between",backgroundColor:"#f4f5f7",padding:"10px",borderRadius:"10px"}}>
+            <Typography sx={{color:"crimson"}} variant="h6" component="h6">Company Details</Typography>
+         
+            </Box>
+
+            <Box sx={{margin:"20px"}}>
+            <Box sx={{display:"flex",justifyContent:"space-between",marginTop:"10px"}}>
+            <Typography sx={{color:"gray",fontWeight:"bold"}}variant="subtitle1" component="h2">Brand Name</Typography>
+            <Typography sx={{color:"black"}}variant="subtitle1" component="h2">{selectedCpo.Brand_Name}</Typography>
+            </Box>
+
+            <Box sx={{display:"flex",justifyContent:"space-between",marginTop:"10px"}}>
+            <Typography sx={{color:"gray",fontWeight:"bold"}}variant="subtitle1" component="h2">Registered_Address</Typography>
+            <Typography sx={{color:"black"}}variant="subtitle1" component="h2">{selectedCpo.Registered_Address}</Typography>
+            </Box>
+
+            <Box sx={{display:"flex",justifyContent:"space-between",marginTop:"10px"}}>
+            <Typography sx={{color:"gray",fontWeight:"bold"}}variant="subtitle1" component="h2">State</Typography>
+          <Typography sx={{color:"black"}}variant="subtitle1" component="h2">{selectedCpo.state}</Typography>
+            </Box>
+
+            <Box sx={{display:"flex",justifyContent:"space-between",marginTop:"10px"}}>
+            <Typography sx={{color:"gray",fontWeight:"bold"}}variant="subtitle1" component="h2">GST No</Typography>
+          <Typography sx={{color:"black"}}variant="subtitle1" component="h2">{selectedCpo.GST_No}</Typography>
+            </Box>
+           
+            <Box sx={{display:"flex",justifyContent:"space-between",marginTop:"10px"}}>
+            <Typography sx={{color:"gray",fontWeight:"bold"}}variant="subtitle1" component="h2">MID</Typography>
+          <Typography sx={{color:"black"}}variant="subtitle1" component="h2">{selectedCpo.MID}</Typography>
+            </Box>
+            <Box sx={{display:"flex",justifyContent:"space-between",marginTop:"10px"}}>
+            <Typography sx={{color:"gray",fontWeight:"bold"}}variant="subtitle1" component="h2">Company Share</Typography>
+          <Typography sx={{color:"black"}}variant="subtitle1" component="h2">{selectedCpo.Company_Share}</Typography>
+            </Box>
+            <Box sx={{display:"flex",justifyContent:"space-between",marginTop:"10px"}}>
+            <Typography sx={{color:"gray",fontWeight:"bold"}}variant="subtitle1" component="h2">Fixed Rent</Typography>
+          <Typography sx={{color:"black"}}variant="subtitle1" component="h2">{selectedCpo.Fixed_Rent}</Typography>
+            </Box>
+            <Box sx={{display:"flex",justifyContent:"space-between",marginTop:"10px"}}>
+            <Typography sx={{color:"gray",fontWeight:"bold"}}variant="subtitle1" component="h2">Select Price</Typography>
+          <Typography sx={{color:"black"}}variant="subtitle1" component="h2">{selectedCpo.Select_Price}</Typography>
+            </Box>
+          </Box>
+
+           
+        </Box>
+
+        
+
+        
+
+
+    </Box>
+  );
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -156,12 +348,12 @@ const CPOs = () => {
         console.log("response", response);
         const data = response.data;
         const formattedData = data.map((item) => ({
-          "Brand Name": item.Brand_Name,
+          "Brand Name":<Button onClick={()=>handelCpoClick(item._id,item)}>{item.Brand_Name}</Button>,
           State: item.state,
-          // "Category": item.category,
-          // "Total Admins": item.totalAdmins,
+          "NumberOfChargers":<Button onClick={()=>handleDilogOpen()}>40</Button>,
+          "Roaming Agreements": <Button onClick={handelRoamingClick}>Roaming</Button>,
           // "Chargers": item.chargers,
-          Credits: item.Initial_Balance,
+          "Credits": item.Initial_Balance,
           "Company Wallet": <WalletModel />,
           "Add amount": <MonetizationOnIcon />,
           Update: <BorderColorIcon onClick={() => handleOpen(item)} />,
@@ -508,33 +700,48 @@ const CPOs = () => {
         </Box>
       </Modal>
 
-      {/* <div style={{ marginTop: "40px" }}>
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "space-around",
-                  alignItems: "center",
-                  width: "50%",
-                  margin: "auto",
-                }}
-              >
-                <button
-                  type="button"
-                  onClick={handleEditSubmit}
-                  data-bs-dismiss="modal"
-                  className="btn btn-primary"
-                >
-                  Save
-                </button>
-                <button
-                  type="button"
-                  className="btn btn-secondary"
-                  onClick={handleClose}
-                >
-                  Close
-                </button>
-              </div>
-            </div> */}
+      
+            <SwipeableDrawer
+            anchor={'right'}
+            open={state['right']}
+            onClose={handelWalletClose}
+            onOpen={toggleDrawer('right', true)}
+          >
+            {list('right')}
+          </SwipeableDrawer>
+
+
+          <SwipeableDrawer
+            anchor={'right'}
+            open={Cpostate['right']}
+            onClose={handelCpoClose}
+            onOpen={toggleDrawerCpo('right', true)}
+          >
+            {listCpoDetails('right')}
+          </SwipeableDrawer>
+
+          <Dialog
+        open={Dilogopen}
+        TransitionComponent={Transition}
+        keepMounted
+        onClose={handleDilogClose}
+        aria-describedby="alert-dialog-slide-description"
+      >
+       <DialogTitle>{"Total Chargers : 40"}</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-slide-description">
+            <Box display="flex" justifyContent="space-between" alignItems="center" width="500px" >
+              
+            <MyBox>AC (15)
+            </MyBox>
+
+            <MyBox>DC (25)
+            </MyBox>
+            </Box>
+          
+          </DialogContentText>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };

@@ -46,6 +46,7 @@ const AllTransactions = () => {
   return (
     <div>
        <SessionHeader/>
+   
        <KTCard>
       <GenralTabel rows={rows} column={column}/>
       </KTCard>

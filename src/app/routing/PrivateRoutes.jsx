@@ -54,6 +54,9 @@ import ChatPage from '../modules/apps/chat/ChatPage'
 import { Private } from '../modules/apps/chat/components/Private'
 import { Group } from '../modules/apps/chat/components/Group'
 import UserContext from '../../Context/UserContext'
+import { RoamingAgreements } from '../pages/Manage CPOs/CPOs/RoamingAgreements/RoamingAgreements'
+import RoamingRecon from '../pages/Billing & Payments/All Transactions/Pages/RoamingRecon'
+
 
 
 
@@ -316,6 +319,20 @@ const PrivateRoutes = () => {
         
           )
         }
+
+{
+          userPermisson.Cpos && (
+            <Route
+          path='roaming_agreements/'
+          element={
+            <SuspensedView>
+              <RoamingAgreements/>
+            </SuspensedView>
+          }
+        />
+        
+          )
+        }
         
 
 {/* ======================================================================================= */}
@@ -484,7 +501,19 @@ const PrivateRoutes = () => {
 
 
 
-
+{
+          userPermisson.BillingOverview && (
+            <Route
+            path='billing/roaming_recon/*'
+            element={
+              <SuspensedView>
+                <RoamingRecon/>
+              </SuspensedView>
+            }
+          />
+        
+          )
+        }
 
 
 
