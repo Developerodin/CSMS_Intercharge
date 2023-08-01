@@ -1,13 +1,73 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { KTSVG } from "../../../../../_metronic/helpers";
 import { useFormik } from "formik";
-import { Checkbox } from "@mui/material";
+import { Box, Checkbox } from "@mui/material";
 import { BASE_URL } from "../../../../Config/BaseUrl";
 import axios from "axios";
 import CposContext from "../../../../../Context/CposContext";
 const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
 const UserModal = ({setUpdate}) => {
   const token =sessionStorage.getItem('token');
+  const initialValuesChargers = {
+  
+    selectedNumber: 0, 
+    chargerDetails: [], 
+  };
+  const initialValuesRoaming = {
+  
+    selectedNumber: 0, 
+    RoamingDetails: [], 
+  };
+  const [selectedNumber, setSelectedNumber] = useState(initialValuesChargers.selectedNumber);
+  const [chargerDetails, setChargerDetails] = useState(initialValuesChargers.chargerDetails);
+  const [selectedNumberOfRomaing, setSelectedNumberOfRomaing] = useState(initialValuesRoaming.selectedNumber);
+  const [RoamingDetails, setRoamingDetailss] = useState(initialValuesRoaming.RoamingDetails);
+
+  const companyNames = ['Company 1', 'Company 2', 'Company 3', 'Company 4', 'Company 5'];
+
+
+  const handleNumberChange = (event) => {
+    setSelectedNumber(parseInt(event.target.value, 10));
+    setChargerDetails([]); // Reset chargerDetails when the number changes
+  };
+
+  const handleChargerDetailsChange = (index, field, value) => {
+    const updatedChargerDetails = [...chargerDetails];
+    updatedChargerDetails[index][field] = value;
+    setChargerDetails(updatedChargerDetails);
+  };
+
+  const handleAddFields = () => {
+    const newChargerDetails = Array.from({ length: selectedNumber }, () => ({
+      Select_Price: null,
+      Fixed_Rent: null,
+      Company_Share: null,
+      chargerName: "", // Add a field for charger name
+    }));
+    setChargerDetails(newChargerDetails);
+  };
+
+  const handleRoamingNumberChange = (event) => {
+    setSelectedNumberOfRomaing(parseInt(event.target.value, 10));
+    setRoamingDetailss([]); // Reset chargerDetails when the number changes
+  };
+
+  const handleRoamingDetailsChange = (index, field, value) => {
+    const updatedChargerDetails = [...RoamingDetails];
+    updatedChargerDetails[index][field] = value;
+    setRoamingDetailss(updatedChargerDetails);
+  };
+
+  const handleRoamingAddFields = () => {
+    const newRoamingDetails = Array.from({ length: selectedNumberOfRomaing }, () => ({
+      eMsp_Cost: null,
+      Additional_cost: null,
+      Aggrement: "",
+      Company_Name: companyNames[0], // Default to the first company name
+    }));
+    setRoamingDetailss(newRoamingDetails);
+  };
+
 
   const module=[
     {name:"Charger Management"},
@@ -37,12 +97,8 @@ const UserModal = ({setUpdate}) => {
   state:"",
   regional:false,
   National:false,
-  Initial_Balance:0,
-  Number:0,
-  ABB_TestCharger:false,
-  Select_Price:0,
-  Fixed_Rent:0,
-  Company_Share:0,
+  Initial_Balance:null,
+  Number:null,
   image:""
 }
 
@@ -50,10 +106,29 @@ const UserModal = ({setUpdate}) => {
   const {values,errors,handleSubmit,handleChange,handelBlur}=useFormik({
     initialValues:initialValues,
     onSubmit:async(values,{resetForm}) => {
-      console.log("🚀 ~ file: UserModal.jsx:27 ~ UserModal ~ values:", values);
+      const data={
+        name:values.name,
+  email:values.email,
+  password:values.password,
+  Brand_Name:values.Brand_Name,
+  GST_No:values.GST_No,
+  MID:values.MID,
+  Registered_Address:values.Registered_Address,
+  state:values.state,
+  regional:values.regional,
+  National:values.National,
+  Initial_Balance:values.Initial_Balance,
+  Number:values.Number,
+  image:values.image,
+  roamingDetails:RoamingDetails,
+  chargerDetails:chargerDetails
+      }
+      console.log("🚀 ~ file: UserModal.jsx:27 ~ UserModal ~ values:", data);
+      // console.log("Charger Details:",chargerDetails)
+      // console.log("RoamingDetails:",RoamingDetails)
       try{
         const res =await axios.post(`${BASE_URL}/cpo/signup`, 
-        values  
+        data  
         ,{ headers: { "Authorization": `${token}` } })
         setUpdate((prev)=>prev+1)
         console.log("res cpo add ==>",res)
@@ -62,6 +137,10 @@ const UserModal = ({setUpdate}) => {
         console.log("error: ", err);
       }
       resetForm()
+      setRoamingDetailss([]);
+      setChargerDetails([]);
+      setSelectedNumber(0);
+      setSelectedNumberOfRomaing(0);
     }
   })
   return (
@@ -182,6 +261,7 @@ const UserModal = ({setUpdate}) => {
                        
                         id="flexCheckDefault"
                         name="regional"
+                        checked={values.regional}
                       value={values.regional}
                       onChange={handleChange}
                       />
@@ -202,6 +282,7 @@ const UserModal = ({setUpdate}) => {
                        
                         id="flexCheckDefault"
                         name="National"
+                        checked={values.National}
                       value={values.National}
                       onChange={handleChange}
                       />
@@ -262,99 +343,170 @@ const UserModal = ({setUpdate}) => {
                   
                 </div>
               </div>
-              <div className="container-fluid mt-20">
-                <h3 className="mb-5">Charger Mapping</h3>
-                <div
-                  className="row pt-5 pb-5 "
-                  style={{ border: "1px solid #f3f3f3" }}
-                >
-                  <div className="col-6">
-                    <input
-                      className="p-3"
-                      type="text"
-                      style={{ minWidth: "80%", border: "1px solid #f4f5f7" }}
-                      placeholder="Search"
-                      name="Search"
-                     
-                    />
-                  </div>
 
-                  <div className="col-2 d-flex align-items-center">
-                    Select Price
+               <div className="container-fluid mt-20">
+                <h3 className="mb-5">Charger Mapping</h3>
+                {/* Select list for choosing the number of fields */}
+                <div className="row pt-3 pb-3">
+                  <div className="col-6">
+                    <label htmlFor="selectNumber">Select Number of Fields:</label>
+                    <select
+                      id="selectNumber"
+                      className="form-select"
+                      value={selectedNumber}
+                      onChange={handleNumberChange}
+                    >
+                      <option value="0">Choose...</option>
+                      <option value="1">1</option>
+                      <option value="2">2</option>
+                      <option value="3">3</option>
+                      <option value="4">4</option>
+                      <option value="5">5</option>
+                    </select>
                   </div>
-                  <div className="col-2 d-flex align-items-center">
-                    Fixed Rent
-                  </div>
-                  <div className="col-2 d-flex align-items-center">
-                    Company Share
+                  <div className="col-6  ">
+                    <Box style={{marginTop:"16px"}}>
+                    <button
+                      type="button"
+                      className="btn btn-primary"
+                      disabled={!selectedNumber}
+                      onClick={handleAddFields}
+                    >
+                      Add Fields
+                    </button>
+                    </Box>
+                   
                   </div>
                 </div>
-                <div className="row mt-2">
-                  <div className="col-6">
-                    <div className="form-check">
+                {/* Conditionally render charger details fields */}
+                {chargerDetails.map((charger, index) => (
+                  <div className="row mt-2" key={index}>
+                     <div className="col-6">
                       <input
-                        className="form-check-input"
-                        type="checkbox"
-                       
-                        id="flexCheckDefault"
-                        name="ABB_TestCharger"
-                      value={values.ABB_TestCharger}
-                      onChange={handleChange}
+                        type="text"
+                        className="form-control"
+                        placeholder="Charger Name"
+                        value={charger.chargerName}
+                        onChange={(event) => handleChargerDetailsChange(index,"chargerName", event.target.value)}
                       />
-                      <label className="form-check-label" for="flexCheckDefault">
-                        ABB_TestCharger
-                      </label>
+                    </div>
+                    <div className="col-2">
+                      <input
+                        type="number"
+                        placeholder="Select Price" 
+                        name="Select_Price"
+                      
+                        value={charger.Select_Price}
+                        onChange={(event) => handleChargerDetailsChange(index, "Select_Price", event.target.value)}
+                      />
+                    </div>
+                    <div className="col-2">
+                      <input
+                        type="number"
+                        
+                        placeholder="Fixed Rent" 
+                        name="Fixed_Rent"
+                        value={charger.Fixed_Rent}
+                        onChange={(event) => handleChargerDetailsChange(index, "Fixed_Rent", event.target.value)}
+                      />
+                    </div>
+                    <div className="col-2">
+                      <input
+                        type="number"
+                        placeholder="Company Share" 
+                        name="Company_Share"
+                        value={charger.Company_Share}
+                        onChange={(event) => handleChargerDetailsChange(index, "Company_Share", event.target.value)}
+                      />
                     </div>
                   </div>
-                  <div className="col-2">
-                    <input
-                      type="number"
-                      name="Select_Price"
-                      id="Select_Price"
-                      style={{
-                        maxWidth: "50%",
-                        background: "#f4f5f7",
-                        border: "none",
-                      }}
-                    
-                      value={values.Select_Price}
-                      onChange={handleChange}
-                    />
+                ))}
+              </div>
+
+
+
+              <div className="container-fluid mt-20">
+                <h3 className="mb-5">Roaming </h3>
+                {/* Select list for choosing the number of fields */}
+                <div className="row pt-3 pb-3">
+                  <div className="col-6">
+                    <label htmlFor="selectedNumberOfRomaing">Select Number of Fields:</label>
+                    <select
+                      id="selectedNumberOfRomaing"
+                      className="form-select"
+                      value={selectedNumberOfRomaing}
+                      onChange={handleRoamingNumberChange}
+                    >
+                      <option value="0">Choose...</option>
+                      <option value="1">1</option>
+                      <option value="2">2</option>
+                      <option value="3">3</option>
+                      <option value="4">4</option>
+                      <option value="5">5</option>
+                    </select>
                   </div>
-                  <div className="col-2">
-                    <input
-                      type="number"
-                      name="Fixed_Rent"
-                      id="Fixed_Rent"
-                      style={{
-                        maxWidth: "50%",
-                        background: "#f4f5f7",
-                        border: "none",
-                      }}
-                     
-                      value={values.Fixed_Rent}
-                      onChange={handleChange}
-                    />
-                  </div>
-                  <div className="col-2">
-                    <input
-                      type="number"
-                      name="Company_Share"
-                      id="Company_Share"
-                      style={{
-                        maxWidth: "40%",
-                        border: "none",
-                        marginRight: "5px",
-                        background: "#f4f5f7",
-                      }}
-                     
-                      value={values.Company_Share}
-                      onChange={handleChange}
-                    />
-                    
+                  <div className="col-6  ">
+                    <Box style={{marginTop:"16px"}}>
+                    <button
+                      type="button"
+                      className="btn btn-primary"
+                      disabled={!selectedNumberOfRomaing}
+                      onClick={handleRoamingAddFields}
+                    >
+                      Add Fields
+                    </button>
+                    </Box>
+                   
                   </div>
                 </div>
+                {/* Conditionally render charger details fields */}
+                {RoamingDetails.map((Roaming, index) => (
+                  <div className="row mt-2" key={index}>
+                     <div className="col-6">
+                     <select
+        className="form-select"
+        value={Roaming.Company_Name}
+        onChange={(event) => handleRoamingDetailsChange(index, "Company_Name", event.target.value)}
+      >
+        {companyNames.map((name) => (
+          <option key={name} value={name}>{name}</option>
+        ))}
+      </select>
+                    </div>
+                    <div className="col-2">
+                      <input
+                        type="number"
+                        placeholder="eMsp Cost" 
+                        name="eMsp_Cost"
+                      
+                        value={Roaming.eMsp_Cost}
+                        onChange={(event) => handleRoamingDetailsChange(index, "eMsp_Cost", event.target.value)}
+                      />
+                    </div>
+                    <div className="col-2">
+                      <input
+                        type="number"
+                        
+                        placeholder="Additional Cost" 
+                        name="Additional_cost"
+                        value={Roaming.Additional_cost}
+                        onChange={(event) => handleRoamingDetailsChange(index, "Additional_cost", event.target.value)}
+                      />
+                    </div>
+                    <div className="col-2">
+                      <input
+                        type="file"
+                        placeholder="Aggrement" 
+                        name="Aggrement"
+                        value={Roaming.Aggrement}
+                        onChange={(event) => handleRoamingDetailsChange(index, "Aggrement", event.target.value)}
+                      />
+                    </div>
+                  </div>
+                ))}
               </div>
+           
+            
             </div>
 
             <div className="modal-footer">

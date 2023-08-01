@@ -14,7 +14,7 @@ import { BASE_URL } from "../../../Config/BaseUrl";
 import axios from "axios";
 import { useFormik } from "formik";
 import CposContext from "../../../../Context/CposContext";
-import { Button,SwipeableDrawer,Box,Modal,Typography,TextField,Dialog,Slide  } from "@mui/material";
+import { Button,SwipeableDrawer,Box,Modal,Typography,TextField,Dialog,Slide, Grid  } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { TransitionProps } from '@mui/material/transitions';
 import DialogActions from '@mui/material/DialogActions';
@@ -22,16 +22,15 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import { styled } from '@mui/system';
-
+import Paper from '@mui/material/Paper';
 const column = [
   { name: "CPOs" },
   { name: "State" },
   {name: "Number of Chargers"},
   {name: "Roaming Agreements"},
-  // {name: "Total Chargers"},
+  {name: "Category"},
   { name: "Available Credits" },
   { name: "Company Wallet" },
-  { name: "Add Amount" },
   { name: "Update" },
   { name: "Delete" },
 ];
@@ -49,6 +48,10 @@ const MyBox = styled('Button')({
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
+const Item = styled(Paper)(() => ({
+  backgroundColor: '#fff',
+  textAlign: 'center',
+}));
 
 const CPOs = () => {
   const token = sessionStorage.getItem("token");
@@ -89,8 +92,32 @@ const CPOs = () => {
   const [Dilogopen, setDilogOpen] = React.useState(false);
   const [open, setOpen] = React.useState(false);
   const [update, setUpdate] = useState(0);
+  const initialValuesChargers = {
+  
+    selectedNumber: 0, 
+    chargerDetails: [], 
+  };
+  const initialValuesRoaming = {
+  
+    selectedNumber: 0, 
+    RoamingDetails: [], 
+  };
+  const [selectedNumber, setSelectedNumber] = useState(initialValuesChargers.selectedNumber);
+  const [chargerDetails, setChargerDetails] = useState(initialValuesChargers.chargerDetails);
+  const [selectedNumberOfRomaing, setSelectedNumberOfRomaing] = useState(initialValuesRoaming.selectedNumber);
+  const [RoamingDetails, setRoamingDetailss] = useState(initialValuesRoaming.RoamingDetails);
+  const [SelectedCpoChargerDetailsRows, setSelectedCpoChargerDetailsRows] = useState([]);
+  const companyNames = ['Company 1', 'Company 2', 'Company 3', 'Company 4', 'Company 5'];
   const handleOpen = (Data) => {
+    console.log(Data);
+    let Chargerlength=Data.chargerDetails.length;
+    let Romainglength=Data.roamingDetails.length;
+    // console.log("length",length)
     setFormValues(Data);
+    setSelectedNumber(Chargerlength);
+    setSelectedNumberOfRomaing(Romainglength)
+    setChargerDetails(Data.chargerDetails);
+    setRoamingDetailss(Data.roamingDetails)
     setOpen(true);
   };
   const handleClose = () => {
@@ -111,8 +138,9 @@ const CPOs = () => {
     top: "50%",
     left: "50%",
     transform: "translate(-50%, -50%)",
-    width: "80%",
-    height: "80%",
+    width:"90%",
+    height:"90%",
+    overflow: "auto",
     bgcolor: "background.paper",
     boxShadow: 24,
     p: 4,
@@ -147,6 +175,50 @@ const CPOs = () => {
     marginTop: "10px",
   };
 
+  const handleNumberChange = (event) => {
+    setSelectedNumber(parseInt(event.target.value, 10));
+    setChargerDetails([]); // Reset chargerDetails when the number changes
+  };
+
+  const handleChargerDetailsChange = (index, field, value) => {
+    const updatedChargerDetails = [...chargerDetails];
+    updatedChargerDetails[index][field] = value;
+    setChargerDetails(updatedChargerDetails);
+  };
+
+  const handleAddFields = () => {
+    const newChargerDetails = Array.from({ length: selectedNumber }, () => ({
+      Select_Price: null,
+      Fixed_Rent: null,
+      Company_Share: null,
+      chargerName: "", // Add a field for charger name
+    }));
+    setChargerDetails(newChargerDetails);
+  };
+
+  const handleRoamingNumberChange = (event) => {
+    setSelectedNumberOfRomaing(parseInt(event.target.value, 10));
+    setRoamingDetailss([]); // Reset chargerDetails when the number changes
+  };
+
+  const handleRoamingDetailsChange = (index, field, value) => {
+    const updatedChargerDetails = [...RoamingDetails];
+    updatedChargerDetails[index][field] = value;
+    setRoamingDetailss(updatedChargerDetails);
+  };
+
+  const handleRoamingAddFields = () => {
+    const newRoamingDetails = Array.from({ length: selectedNumberOfRomaing }, () => ({
+      eMsp_Cost: null,
+      Additional_cost: null,
+      Aggrement: "",
+      Company_Name: companyNames[0], // Default to the first company name
+    }));
+    setRoamingDetailss(newRoamingDetails);
+  };
+
+
+
   const handleChange = (event) => {
     const { name, value } = event.target;
 
@@ -158,9 +230,26 @@ const CPOs = () => {
 
   const handleEditSubmit = async () => {
     console.log(" Edit Submit", formValues);
+    const data={
+      name:formValues.name,
+email:formValues.email,
+password:formValues.password,
+Brand_Name:formValues.Brand_Name,
+GST_No:formValues.GST_No,
+MID:formValues.MID,
+Registered_Address:formValues.Registered_Address,
+state:formValues.state,
+regional:formValues.regional,
+National:formValues.National,
+Initial_Balance:formValues.Initial_Balance,
+Number:formValues.Number,
+image:formValues.image,
+roamingDetails:RoamingDetails,
+chargerDetails:chargerDetails
+    }
     try {
       // Send a PATCH request with the updated data from the state
-      await axios.put(`${BASE_URL}/cpo/users/${formValues._id}`, formValues, {
+      await axios.put(`${BASE_URL}/cpo/users/${formValues._id}`, data, {
         headers: { Authorization: `${token}` },
       });
       setUpdate((prev)=>prev+1);
@@ -190,9 +279,9 @@ const CPOs = () => {
     }
   }
 
-  const handelRoamingClick=(e) => {
-    console.log("🚀 ~ file: Chargers.jsx:22 ~ handelClick ~ e:", e.target)
-     navigate("/roaming_agreements/", {state:{_id:"akshay"}});
+  const handelRoamingClick=(data) => {
+    // console.log("🚀 ~ file: Chargers.jsx:22 ~ handelClick ~ e:", e.target)
+     navigate("/roaming_agreements/", {state:{data:data}});
     //  <Navigate to="/chargerdetails" state={{todos:[]}} replace={true}/>
   
   }
@@ -212,18 +301,34 @@ const CPOs = () => {
   }
 
   const handelCpoClose = (id,data)=>{
-    setCpoState({ ...state, 'right': false });
+    setCpoState({ ...state, 'top': false });
     
 
   }
 
+  const CpoChargerDetailscolumnData=[
+    {name:"Charger Name"},
+    {name:"Select Price"},
+    {name:"Fixed Rent"},
+    {name:"Company Share"},
+  ]
+
+  
 
   const handelCpoClick=(id,data)=>{
     // fetchUserWalletData(id);
     // handelWalletHistory(id)
     console.log('handelCpoClick',data)
-    setselectedCpo(data)
-    setCpoState({ ...state, 'right': true });
+    setselectedCpo(data);
+    const formattedData = data.chargerDetails.map((item) => ({
+      "chargerName":item.chargerName,
+      "Select_Price": item.Select_Price,
+      "Fixed_Rent":item.Fixed_Rent,
+      "Company_Share": item.Company_Share
+    
+    }));
+    setSelectedCpoChargerDetailsRows(formattedData)
+    setCpoState({ ...state, 'top': true });
     
   }
 
@@ -247,8 +352,10 @@ const CPOs = () => {
       role="presentation"
       
     >
-
-
+      <Grid container spacing={2}>
+        <Grid item xs={6} >
+        <Item>
+       
         <Box sx={{padding:"5px"}}>
         <Box sx={{display:"flex",justifyContent:"space-between",backgroundColor:"#f4f5f7",padding:"10px",borderRadius:"10px"}}>
             <Typography sx={{color:"crimson"}} variant="h6" component="h6">CPO Details</Typography>
@@ -256,32 +363,41 @@ const CPOs = () => {
             </Box>
           <Box sx={{margin:"20px"}}>
             
-            <Box sx={{display:"flex",justifyContent:"space-between"}}>
-            <Typography sx={{color:"gray",fontWeight:"bold"}}variant="subtitle1" component="h2">User Name</Typography>
+            <Box sx={{display:"flex",justifyContent:"space-between",marginTop:"10px"}}>
+            <Typography sx={{color:"gray",fontWeight:"bold"}}variant="subtitle1" component="h2">Name</Typography>
           <Typography sx={{color:"#00af06"}}variant="subtitle1" component="h2">{selectedCpo.name}</Typography>
           
             </Box>
-            <Box sx={{display:"flex",justifyContent:"space-between"}}>
-            <Typography sx={{color:"gray",fontWeight:"bold"}}variant="subtitle1" component="h2">User Number</Typography>
+            <Box sx={{display:"flex",justifyContent:"space-between",marginTop:"10px"}}>
+            <Typography sx={{color:"gray",fontWeight:"bold"}}variant="subtitle1" component="h2">Number</Typography>
           <Typography sx={{color:"black"}}variant="subtitle1" component="h2">{selectedCpo.Number}</Typography>
             </Box>
 
-            <Box sx={{display:"flex",justifyContent:"space-between"}}>
-            <Typography sx={{color:"gray",fontWeight:"bold"}}variant="subtitle1" component="h2">Initial Balance</Typography>
+            <Box sx={{display:"flex",justifyContent:"space-between",marginTop:"10px"}}>
+            <Typography sx={{color:"gray",fontWeight:"bold"}}variant="subtitle1" component="h2">Balance</Typography>
           <Typography sx={{color:"black"}}variant="subtitle1" component="h2">{selectedCpo.Initial_Balance}</Typography>
             </Box>
 
-            <Box sx={{display:"flex",justifyContent:"space-between"}}>
-            <Typography sx={{color:"gray",fontWeight:"bold"}}variant="subtitle1" component="h2">User Email</Typography>
+            <Box sx={{display:"flex",justifyContent:"space-between",marginTop:"10px"}}>
+            <Typography sx={{color:"gray",fontWeight:"bold"}}variant="subtitle1" component="h2">Email</Typography>
           <Typography sx={{color:"black"}}variant="subtitle1" component="h2">{selectedCpo.email}</Typography>
+            </Box>
+
+            <Box sx={{display:"flex",justifyContent:"space-between",marginTop:"10px"}}>
+            <Typography sx={{color:"gray",fontWeight:"bold"}}variant="subtitle1" component="h2">Category</Typography>
+          <Typography sx={{color:"black"}}variant="subtitle1" component="h2">{selectedCpo.National ? "National" : ""} / {selectedCpo.regional ? "Regional" : ""}</Typography>
             </Box>
 
             
           </Box>
         </Box>
-     <hr/>
-      
-      
+
+        </Item>
+        </Grid>
+
+        <Grid item xs={6} >
+        <Item>
+       
         <Box sx={{padding:"5px"}}>
             <Box sx={{display:"flex",justifyContent:"space-between",backgroundColor:"#f4f5f7",padding:"10px",borderRadius:"10px"}}>
             <Typography sx={{color:"crimson"}} variant="h6" component="h6">Company Details</Typography>
@@ -313,22 +429,51 @@ const CPOs = () => {
             <Typography sx={{color:"gray",fontWeight:"bold"}}variant="subtitle1" component="h2">MID</Typography>
           <Typography sx={{color:"black"}}variant="subtitle1" component="h2">{selectedCpo.MID}</Typography>
             </Box>
-            <Box sx={{display:"flex",justifyContent:"space-between",marginTop:"10px"}}>
-            <Typography sx={{color:"gray",fontWeight:"bold"}}variant="subtitle1" component="h2">Company Share</Typography>
-          <Typography sx={{color:"black"}}variant="subtitle1" component="h2">{selectedCpo.Company_Share}</Typography>
-            </Box>
-            <Box sx={{display:"flex",justifyContent:"space-between",marginTop:"10px"}}>
-            <Typography sx={{color:"gray",fontWeight:"bold"}}variant="subtitle1" component="h2">Fixed Rent</Typography>
-          <Typography sx={{color:"black"}}variant="subtitle1" component="h2">{selectedCpo.Fixed_Rent}</Typography>
-            </Box>
-            <Box sx={{display:"flex",justifyContent:"space-between",marginTop:"10px"}}>
-            <Typography sx={{color:"gray",fontWeight:"bold"}}variant="subtitle1" component="h2">Select Price</Typography>
-          <Typography sx={{color:"black"}}variant="subtitle1" component="h2">{selectedCpo.Select_Price}</Typography>
-            </Box>
+            
           </Box>
 
            
         </Box>
+
+        </Item>
+        </Grid>
+
+
+        <Grid item xs={12} >
+        
+       {
+         SelectedCpoChargerDetailsRows.length > 0 && <Box sx={{padding:"5px"}}>
+        <Box sx={{display:"flex",justifyContent:"center",backgroundColor:"#f4f5f7",padding:"10px",borderRadius:"10px"}}>
+        <Typography sx={{color:"crimson"}} variant="h6" component="h6">Charger Details</Typography>
+     
+        </Box>
+
+        <Box sx={{margin:"20px",maxHeight:"500px",overflow:"auto"}}>
+         
+        <GenralTabel column={CpoChargerDetailscolumnData} rows={SelectedCpoChargerDetailsRows} />
+        
+      </Box>
+
+       
+    </Box>
+       }
+        
+
+      
+        </Grid>
+      </Grid>
+
+        
+    
+      
+      <Box sx={{margin:"30px 0px ",display:"flex",justifyContent:"center",alignItems:"center"}}>
+
+<Button variant="contained" size="large" onClick={handelCpoClose}>
+Close
+</Button>
+        
+      </Box>
+       
 
         
 
@@ -351,11 +496,10 @@ const CPOs = () => {
           "Brand Name":<Button onClick={()=>handelCpoClick(item._id,item)}>{item.Brand_Name}</Button>,
           State: item.state,
           "NumberOfChargers":<Button onClick={()=>handleDilogOpen()}>40</Button>,
-          "Roaming Agreements": <Button onClick={handelRoamingClick}>Roaming</Button>,
-          // "Chargers": item.chargers,
-          "Credits": item.Initial_Balance,
+          "Roaming": <Button onClick={()=>handelRoamingClick(item.roamingDetails)}>{item.roamingDetails.length}</Button>,
+          "Category": <Typography>{item.National ? "National" : ""} / {item.regional ? "Regional" : ""}</Typography>,
+          "Credits":<Typography>₹ {item.Initial_Balance}</Typography> ,
           "Company Wallet": <WalletModel />,
-          "Add amount": <MonetizationOnIcon />,
           Update: <BorderColorIcon onClick={() => handleOpen(item)} />,
           Delete: <DeleteIcon  onClick={() => handelDeleteCpo(item._id)}/>
         }));
@@ -479,9 +623,10 @@ const CPOs = () => {
                     <input
                         className="form-check-input"
                         type="checkbox"
-                       
+                        style={{marginRight:"10px"}}
                         id="flexCheckDefault"
                         name="regional"
+                        checked={formValues.regional}
                       value={formValues.regional}
                       onChange={handleChange}
                       />
@@ -490,16 +635,17 @@ const CPOs = () => {
                       <label
                         className="form-check-label"
                         for="flexRadioDefault1"
-                        style={{ fontSize: "15px", marginRight: "5px" }}
+                        style={{ fontSize: "15px", marginRight: "15px" }}
                       >
                         Regional
                       </label>
                     </div>
                     <div className="form-check d-flex align-items-center">
                     <input
+                    style={{marginRight:"10px"}}
                         className="form-check-input"
                         type="checkbox"
-                       
+                        checked={formValues.National}
                         id="flexCheckDefault"
                         name="National"
                       value={formValues.National}
@@ -564,113 +710,169 @@ const CPOs = () => {
               </div>
               <div className="container-fluid mt-20">
                 <h3 className="mb-5">Charger Mapping</h3>
-                <div
-                  className="row pt-5 pb-5 "
-                  style={{ border: "1px solid #f3f3f3" }}
-                >
+                {/* Select list for choosing the number of fields */}
+                <div className="row pt-3 pb-3">
                   <div className="col-6">
-                    <input
-                      className="p-3"
-                      type="text"
-                      style={{ minWidth: "80%", border: "1px solid #f4f5f7" }}
-                      placeholder="Search"
-                      name="Search"
-                     
-                    />
+                    <label htmlFor="selectNumber">Select Number of Fields:</label>
+                    <select
+                      id="selectNumber"
+                      className="form-select"
+                      value={selectedNumber}
+                      onChange={handleNumberChange}
+                    >
+                      <option value="0">Choose...</option>
+                      <option value="1">1</option>
+                      <option value="2">2</option>
+                      <option value="3">3</option>
+                      <option value="4">4</option>
+                      <option value="5">5</option>
+                    </select>
                   </div>
-
-                  <div className="col-2 d-flex align-items-center">
-                    Select Price
-                  </div>
-                  <div className="col-2 d-flex align-items-center">
-                    Fixed Rent
-                  </div>
-                  <div className="col-2 d-flex align-items-center">
-                    Company Share
+                  <div className="col-6  ">
+                    <Box style={{marginTop:"16px"}}>
+                    <button
+                      type="button"
+                      className="btn btn-primary"
+                      disabled={!selectedNumber}
+                      onClick={handleAddFields}
+                    >
+                      Add Fields
+                    </button>
+                    </Box>
+                   
                   </div>
                 </div>
-                <div className="row mt-2">
-                  <div className="col-6">
-                    <div className="form-check">
+                {/* Conditionally render charger details fields */}
+                {chargerDetails.map((charger, index) => (
+                  <div className="row mt-2" key={index}>
+                     <div className="col-6">
                       <input
-                        className="form-check-input"
-                        type="checkbox"
-                       
-                        id="flexCheckDefault"
-                        name="ABB_TestCharger"
-                      value={formValues.ABB_TestCharger}
-                      onChange={handleChange}
+                        type="text"
+                        className="form-control"
+                        placeholder="Charger Name"
+                        value={charger.chargerName}
+                        onChange={(event) => handleChargerDetailsChange(index,"chargerName", event.target.value)}
                       />
-                      <label className="form-check-label" for="flexCheckDefault">
-                        ABB_TestCharger
-                      </label>
+                    </div>
+                    <div className="col-2">
+                      <input
+                        type="number"
+                        placeholder="Select Price" 
+                        name="Select_Price"
+                      
+                        value={charger.Select_Price}
+                        onChange={(event) => handleChargerDetailsChange(index, "Select_Price", event.target.value)}
+                      />
+                    </div>
+                    <div className="col-2">
+                      <input
+                        type="number"
+                        
+                        placeholder="Fixed Rent" 
+                        name="Fixed_Rent"
+                        value={charger.Fixed_Rent}
+                        onChange={(event) => handleChargerDetailsChange(index, "Fixed_Rent", event.target.value)}
+                      />
+                    </div>
+                    <div className="col-2">
+                      <input
+                        type="number"
+                        placeholder="Company Share" 
+                        name="Company_Share"
+                        value={charger.Company_Share}
+                        onChange={(event) => handleChargerDetailsChange(index, "Company_Share", event.target.value)}
+                      />
                     </div>
                   </div>
-                  <div className="col-2">
-                    <input
-                      type="text"
-                      name="Select_Price"
-                      id=""
-                      style={{
-                        maxWidth: "50%",
-                        background: "#f4f5f7",
-                        border: "none",
-                      }}
-                    
-                      value={formValues.Select_Price}
-                      onChange={handleChange}
-                    />
+                ))}
+              </div>
+
+
+
+              <div className="container-fluid mt-20">
+                <h3 className="mb-5">Roaming </h3>
+                {/* Select list for choosing the number of fields */}
+                <div className="row pt-3 pb-3">
+                  <div className="col-6">
+                    <label htmlFor="selectedNumberOfRomaing">Select Number of Fields:</label>
+                    <select
+                      id="selectedNumberOfRomaing"
+                      className="form-select"
+                      value={selectedNumberOfRomaing}
+                      onChange={handleRoamingNumberChange}
+                    >
+                      <option value="0">Choose...</option>
+                      <option value="1">1</option>
+                      <option value="2">2</option>
+                      <option value="3">3</option>
+                      <option value="4">4</option>
+                      <option value="5">5</option>
+                    </select>
                   </div>
-                  <div className="col-2">
-                    <input
-                      type="text"
-                      name="Fixed_Rent"
-                      id=""
-                      style={{
-                        maxWidth: "50%",
-                        background: "#f4f5f7",
-                        border: "none",
-                      }}
-                     
-                      value={formValues.Fixed_Rent}
-                      onChange={handleChange}
-                    />
-                  </div>
-                  <div className="col-2">
-                    <input
-                      type="text"
-                      name="Company_Share"
-                      id=""
-                      style={{
-                        maxWidth: "40%",
-                        border: "none",
-                        marginRight: "5px",
-                        background: "#f4f5f7",
-                      }}
-                     
-                      value={formValues.Company_Share}
-                      onChange={handleChange}
-                    />
-                    <input
-                      type="text"
-                      name="Company_Share2"
-                      id=""
-                      style={{
-                        maxWidth: "40%",
-                        border: "none",
-                        background: "#f4f5f7",
-                      }}
-                      
-                      value={formValues.Company_Share2}
-                      onChange={handleChange}
-                    />
+                  <div className="col-6  ">
+                    <Box style={{marginTop:"16px"}}>
+                    <button
+                      type="button"
+                      className="btn btn-primary"
+                      disabled={!selectedNumberOfRomaing}
+                      onClick={handleRoamingAddFields}
+                    >
+                      Add Fields
+                    </button>
+                    </Box>
+                   
                   </div>
                 </div>
+                {/* Conditionally render charger details fields */}
+                {RoamingDetails.map((Roaming, index) => (
+                  <div className="row mt-2" key={index}>
+                     <div className="col-6">
+                     <select
+        className="form-select"
+        value={Roaming.Company_Name}
+        onChange={(event) => handleRoamingDetailsChange(index, "Company_Name", event.target.value)}
+      >
+        {companyNames.map((name) => (
+          <option key={name} value={name}>{name}</option>
+        ))}
+      </select>
+                    </div>
+                    <div className="col-2">
+                      <input
+                        type="number"
+                        placeholder="eMsp Cost" 
+                        name="eMsp_Cost"
+                      
+                        value={Roaming.eMsp_Cost}
+                        onChange={(event) => handleRoamingDetailsChange(index, "eMsp_Cost", event.target.value)}
+                      />
+                    </div>
+                    <div className="col-2">
+                      <input
+                        type="number"
+                        
+                        placeholder="Additional Cost" 
+                        name="Additional_cost"
+                        value={Roaming.Additional_cost}
+                        onChange={(event) => handleRoamingDetailsChange(index, "Additional_cost", event.target.value)}
+                      />
+                    </div>
+                    <div className="col-2">
+                      <input
+                        type="file"
+                        placeholder="Aggrement" 
+                        name="Aggrement"
+                        // value={Roaming.Aggrement}
+                        onChange={(event) => handleRoamingDetailsChange(index, "Aggrement", event.target.value)}
+                      />
+                    </div>
+                  </div>
+                ))}
               </div>
             </div>
 
              <div style={{ marginTop: "40px" }}>
-              <div
+              {/* <div
                 style={{
                   display: "flex",
                   justifyContent: "space-around",
@@ -694,7 +896,21 @@ const CPOs = () => {
                 >
                   Close
                 </button>
-              </div>
+              </div> */}
+
+              <div className="modal-footer">
+              <button
+                type="button"
+                className="btn btn-secondary"
+              
+                onClick={handleClose}
+              >
+                Close
+              </button>
+              <button type="button" onClick={handleEditSubmit} data-bs-dismiss="modal" className="btn btn-primary">
+                Save
+              </button>
+            </div>
             </div>
           </div>
         </Box>
@@ -712,12 +928,12 @@ const CPOs = () => {
 
 
           <SwipeableDrawer
-            anchor={'right'}
-            open={Cpostate['right']}
+            anchor={'top'}
+            open={Cpostate['top']}
             onClose={handelCpoClose}
-            onOpen={toggleDrawerCpo('right', true)}
+            onOpen={toggleDrawerCpo('top', true)}
           >
-            {listCpoDetails('right')}
+            {listCpoDetails('top')}
           </SwipeableDrawer>
 
           <Dialog

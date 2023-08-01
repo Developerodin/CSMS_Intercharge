@@ -1,13 +1,42 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { useLocation } from 'react-router-dom';
 import { CardsWidget20, ChartsWidget3, ListsWidget1, ListsWidget3, ListsWidget4, ListsWidget6, ListsWidget7, ListsWidget8, ListsWidget9 } from '../../../../../_metronic/partials/widgets';
 import { KTSVG } from '../../../../../_metronic/helpers';
 import { Box, Button, Typography } from '@mui/material';
+import { GenralTabel } from '../../../../TabelComponents/GenralTable';
 
 
 export const RoamingAgreements = () => {
+  const [data,setData]=useState([]);
+  const [rows,setRows]=useState([])
+  const column=[
+    {name:"Comapny Name"},
+    {name:"emps Cost"},
+    {name:"Additional Cost"},
+    {name:"Own"},
+    {name:"Roaming"},
+    {name:"Download"}
+
+  ]
     const location=useLocation();
-    console.log("🚀 ~ file: ChargerDetails.jsx:7 ~ ChargerDetails ~ location:", location.state)
+    
+    useEffect(()=>{
+      console.log("🚀 ~ file: ChargerDetails.jsx:7 ~ ChargerDetails ~ location:", location.state.data)
+      setData(location.state.data);
+
+      const formatedData=location.state.data.map((el)=>({
+       
+         "Comapny_Name":el.Company_Name,
+         "empsCost":el.eMsp_Cost,
+         "Additional_cost":el.Additional_cost,
+         "Own":"4",
+         "Roaming":"25",
+         "Download":<Button variant="contained">Download Aggrement</Button>
+        
+      }))
+      setRows(formatedData);
+
+    },[])
   return (
     <div>
       <div className={`card`}>
@@ -22,41 +51,8 @@ export const RoamingAgreements = () => {
       </div>
       <div className='card-body pt-5'>
        
-        <Box display="flex" justifyContent="space-between" alignItems="center">
-          <Box textAlign="center" width="100px">
-            <Typography>Tata</Typography>
-          </Box>
-
-          <Box textAlign="center">
-            <Typography>5 Own</Typography>
-          </Box>
-
-          <Box textAlign="center">
-            <Typography>11 Roaming</Typography>
-          </Box>
-
-          <Box textAlign="center">
-          <Button variant="contained" >Downlode Aggrement</Button>
-          </Box>
-        </Box>
-
-        <Box display="flex" justifyContent="space-between" alignItems="center" marginTop="30px">
-          <Box textAlign="center" width="100px">
-            <Typography>MG</Typography>
-          </Box>
-
-          <Box textAlign="center">
-            <Typography>9 Own</Typography>
-          </Box>
-
-          <Box textAlign="center">
-            <Typography>15 Roaming</Typography>
-          </Box>
-
-          <Box textAlign="center">
-          <Button variant="contained" >Downlode Aggrement</Button>
-          </Box>
-        </Box>
+       <GenralTabel column={column} rows={rows} />
+        
        
       </div>
 

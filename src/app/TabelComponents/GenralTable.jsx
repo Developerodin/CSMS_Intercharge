@@ -79,7 +79,7 @@ const {rows,column}=props;
             {column.map((el,index)=>{
                return(
                   
-                    <TableCell key={index+123} align="center" sx={{fontWeight:"bold"}}>{el.name}</TableCell>
+                    <TableCell key={index+123} align="center" sx={{fontWeight:"600"}}>{el.name.toUpperCase()}</TableCell>
                     
                )
                })}
