@@ -321,10 +321,10 @@ chargerDetails:chargerDetails
     console.log('handelCpoClick',data)
     setselectedCpo(data);
     const formattedData = data.chargerDetails.map((item) => ({
-      "chargerName":item.chargerName,
-      "Select_Price": item.Select_Price,
-      "Fixed_Rent":item.Fixed_Rent,
-      "Company_Share": item.Company_Share
+      "chargerName":<Typography>{item.chargerName}</Typography>,
+      "Select_Price":<Typography>₹ {item.Select_Price}</Typography> ,
+      "Fixed_Rent":<Typography>₹ {item.Fixed_Rent}</Typography>,
+      "Company_Share":<Typography>{item.Company_Share}</Typography>
     
     }));
     setSelectedCpoChargerDetailsRows(formattedData)
@@ -332,19 +332,7 @@ chargerDetails:chargerDetails
     
   }
 
-  const list = (anchor) => (
-    <Box
-      sx={{ width: anchor === 'top' || anchor === 'bottom' ? 'auto' : 400 , padding:"10px"}}
-      role="presentation"
-      
-    >
-
-
-      hii
-
-
-    </Box>
-  );
+  
 
   const listCpoDetails = (anchor) => (
     <Box
@@ -375,7 +363,7 @@ chargerDetails:chargerDetails
 
             <Box sx={{display:"flex",justifyContent:"space-between",marginTop:"10px"}}>
             <Typography sx={{color:"gray",fontWeight:"bold"}}variant="subtitle1" component="h2">Balance</Typography>
-          <Typography sx={{color:"black"}}variant="subtitle1" component="h2">{selectedCpo.Initial_Balance}</Typography>
+          <Typography sx={{color:"black"}}variant="subtitle1" component="h2">₹ {selectedCpo.Initial_Balance}</Typography>
             </Box>
 
             <Box sx={{display:"flex",justifyContent:"space-between",marginTop:"10px"}}>
@@ -917,14 +905,7 @@ Close
       </Modal>
 
       
-            <SwipeableDrawer
-            anchor={'right'}
-            open={state['right']}
-            onClose={handelWalletClose}
-            onOpen={toggleDrawer('right', true)}
-          >
-            {list('right')}
-          </SwipeableDrawer>
+           
 
 
           <SwipeableDrawer
