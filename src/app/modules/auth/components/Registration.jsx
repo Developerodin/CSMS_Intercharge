@@ -55,12 +55,30 @@ const registrationSchema = Yup.object().shape({
 })
 
 export function Registration({handleClose,setUpdated}) {
+  const userData=JSON.parse(sessionStorage.getItem('User'));
   const {userToken}=useContext(UserContext);
-  const token =userToken;
+  const token =sessionStorage.getItem('token');
   const [loading, setLoading] = useState(false)
   const [roles, setRoles] = useState([]);
   const {saveAuth, setCurrentUser} = useAuth()
   const navigate = useNavigate();
+
+  const AddUserToOtherUsersPrivateChat=async(newUserdata)=>{
+    const data= {
+      userEmail:newUserdata.email,
+      created_by:newUserdata._id,
+      username:newUserdata.name
+    }
+    try{
+      const res =await axios.post(`${BASE_URL}/users/addprivateChat`, data, {
+        headers: { Authorization: `${token}` },
+      })
+      console.log("res HandelAddContect chat",res);
+    }
+    catch(err){
+      console.log("Error",err)
+    }
+  }
   const formik = useFormik({
     initialValues,
     validationSchema: registrationSchema,
@@ -79,10 +97,11 @@ export function Registration({handleClose,setUpdated}) {
         console.log("register Data res =====>",RegisterResposne);
 
         if(RegisterResposne && RegisterResposne.status === "success") {
+          AddUserToOtherUsersPrivateChat(RegisterResposne.data);
           setStatus(RegisterResposne.message);
           setLoading(false);
           setUpdated((prev)=>prev+1);
-          handleClose()
+          handleClose();
 
         }
         else{

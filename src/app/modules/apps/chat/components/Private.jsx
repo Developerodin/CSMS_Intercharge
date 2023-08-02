@@ -18,8 +18,11 @@ import busyring from './notification/busy.mp3';
 import callerring from './notification/call-ring.mp3'
 import audioring from './notification/callertune.mp3'
 import { IncommingCall } from '../../../../../_metronic/partials/chat/IncommingCall';
+import { BASE_URL } from '../../../../Config/BaseUrl';
+import axios from 'axios';
 
 const Private = () => {
+  const token = sessionStorage.getItem("token");
   const style = {
     textalign: 'center',
     position: 'absolute',
@@ -590,13 +593,12 @@ let cutingphone
     singleChat(el.user_id);
   }
 
-  const HandelAddContect=()=>{
-    // console.log("Add new Contect",addContactData);
+  const HandelAddContect=async()=>{
+    // console.log("Add new Contect",userData);
     // setAddContactopen(false);
     const name=addContactData.username;
     const email=addContactData.email;
-   
-    // console.log("Data",name, email, userEmail, created_by, username)
+    
     socket.emit('contactList', { name, email, userEmail, created_by, username });
     setAddContactopen(false);
   
@@ -931,7 +933,7 @@ let cutingphone
               />
             </form>
             <Box >
-         <AddIcon fontSize='large' onClick={()=>setAddContactopen(true)}/>
+         {/* <AddIcon fontSize='large' onClick={()=>setAddContactopen(true)}/> */}
             </Box>
           </div>
 

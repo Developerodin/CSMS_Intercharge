@@ -54,7 +54,7 @@ const registrationSchema = Yup.object().shape({
 
 export const EditUser = ({handleClose,userId,setUpdated}) => {
   const {userToken}=useContext(UserContext);
-  const token =userToken;
+  const token =sessionStorage.getItem('token');
     const [loading, setLoading] = useState(false);
     const [roles, setRoles] = useState([]);
     const [userData, setUserData] = useState(null);

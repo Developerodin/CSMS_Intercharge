@@ -74,6 +74,7 @@ const style = {
 };
 
 const AdminManagement = () => {
+  const userData=JSON.parse(sessionStorage.getItem('User'));
   const {userToken}=useContext(UserContext);
   const token = sessionStorage.getItem('token');
   const [open, setOpen] = React.useState(false);
@@ -140,6 +141,7 @@ const AdminManagement = () => {
       console.error('Error:', error);
     }
   };
+  
   
   
 
@@ -245,7 +247,7 @@ const AdminManagement = () => {
         <Box sx={style}>
           
         
-          <Registration handleClose={handleClose}  setUpdated={setUpdated} />
+          <Registration handleClose={handleClose}  setUpdated={setUpdated}/>
 
       
 
