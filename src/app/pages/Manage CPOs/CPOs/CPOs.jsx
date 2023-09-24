@@ -23,6 +23,7 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import { styled } from '@mui/system';
 import Paper from '@mui/material/Paper';
+import { CpoListHeader } from "./Components/CpoListHeader";
 const column = [
   { name: "CPOs" },
   { name: "State" },
@@ -344,7 +345,7 @@ chargerDetails:chargerDetails
          // Filter the rows based on whether any property contains the search input
     const filteredResults = rows.filter((item) =>
     Object.values(item).some((value) =>
-      String(value).toLowerCase().includes(inputValue)
+      String(value).toLowerCase().includes(inputValue.toLowerCase())
     )
   );
 
@@ -528,7 +529,7 @@ Close
   return (
     <div>
       <KTCard>
-        <UsersListHeader  state={setUpdate}  handleSearchInputChange={handleSearchInputChange}
+        <CpoListHeader  state={setUpdate}  handleSearchInputChange={handleSearchInputChange}
         searchInput={searchInput}/>
 
         <GenralTabel rows={filterRows} column={column} />

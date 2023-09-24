@@ -92,8 +92,8 @@ export const WalletModel=(props)=>{
 
             <Box sx={{display:"flex",justifyContent:"flex-end"}}>
                 <Box sx={{display:"flex",width:"150px" , justifyContent:"space-evenly",marginTop:"20px",marginBottom:"20px"}}>
-                <Button variant="contained" color="success" onClick={handleSubmit}>Add</Button>
-                <Button variant="contained" color="error">Debit</Button>
+                <Button variant="contained" color="success" onClick={()=>setState({['right']: false })}>Add</Button>
+                <Button variant="contained" color="error" onClick={()=>setState({['right']: false })}>Debit</Button>
                 </Box>
            
             </Box>

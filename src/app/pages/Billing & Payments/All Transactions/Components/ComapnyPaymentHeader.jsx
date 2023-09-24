@@ -23,7 +23,7 @@ const MyBox = styled('Button')({
   });
 
 
-const ComapnyPaymentHeader = () => {
+const ComapnyPaymentHeader = ({handleSearchInputChange,searchInput}) => {
   return (
     <KTCard>
       <PageHeader/>
@@ -44,13 +44,15 @@ const ComapnyPaymentHeader = () => {
             {/* <TextField fullWidth label="Search" /> */}
             
             <TextField
-          label="Search"
-          id="outlined-start-adornment"
-          size='small'
-          sx={{ m: 1, width: '100%' }}
-          InputProps={{
-            startAdornment: <InputAdornment position="start"><SearchIcon/></InputAdornment>,
-          }}
+         label="Search"
+         id="outlined-start-adornment"
+         size='small'
+         sx={{ m: 1, width: '100%' }}
+         InputProps={{
+           startAdornment: <InputAdornment position="start"><SearchIcon/></InputAdornment>,
+         }}
+         onChange={handleSearchInputChange}
+        value={searchInput}
         />
             </Box>
 

@@ -1,8 +1,10 @@
 import React from 'react'
+import CompanyPayments from '../All Transactions/Pages/CompanyPayments'
 
 const CompanyPayouts = () => {
   return (
-    <div>CompanyPayouts
+    <div>
+      <CompanyPayments/>
     </div>
   )
 }

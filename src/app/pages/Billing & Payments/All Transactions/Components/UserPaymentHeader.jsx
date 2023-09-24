@@ -23,7 +23,7 @@ const MyBox = styled('Button')({
   });
 
 
-const UserPaymentHeader = () => {
+const UserPaymentHeader = ({handleSearchInputChange,searchInput}) => {
   return (
     <KTCard>
       <PageHeader/>
@@ -44,13 +44,15 @@ const UserPaymentHeader = () => {
             {/* <TextField fullWidth label="Search" /> */}
             
             <TextField
-          label="Search"
-          id="outlined-start-adornment"
-          size='small'
-          sx={{ m: 1, width: '100%' }}
-          InputProps={{
-            startAdornment: <InputAdornment position="start"><SearchIcon/></InputAdornment>,
-          }}
+         label="Search"
+         id="outlined-start-adornment"
+         size='small'
+         sx={{ m: 1, width: '100%' }}
+         InputProps={{
+           startAdornment: <InputAdornment position="start"><SearchIcon/></InputAdornment>,
+         }}
+         onChange={handleSearchInputChange}
+        value={searchInput}
         />
             </Box>
 
@@ -58,7 +60,7 @@ const UserPaymentHeader = () => {
             <Box sx={{display:"flex", alignItems:"center",width:"40%",justifyContent:"space-evenly"}}>
 
                 {/* <StationFilter/> */}
-               <UserPaymentFilter/>
+               {/* <UserPaymentFilter/> */}
             
             
                 <IconButton aria-label="Download" color="primary">

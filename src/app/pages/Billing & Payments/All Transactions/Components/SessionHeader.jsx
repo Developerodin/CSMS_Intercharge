@@ -23,7 +23,7 @@ const MyBox = styled('Button')({
   });
 
 
-const SessionHeader = () => {
+const SessionHeader = ({handleSearchInputChange,searchInput}) => {
   return (
     <KTCard>
       <PageHeader/>
@@ -60,14 +60,17 @@ const SessionHeader = () => {
             <Box sx={{display:"flex", width:"50%",alignItems:"center",justifyContent:"space-between"}}>
             {/* <TextField fullWidth label="Search" /> */}
             <ReplayIcon fontSize='large' sx={{color:"crimson"}}/>
+              
             <TextField
-          label="Search"
-          id="outlined-start-adornment"
-          size='small'
-          sx={{ m: 1, width: '80%' }}
-          InputProps={{
-            startAdornment: <InputAdornment position="start"><SearchIcon/></InputAdornment>,
-          }}
+         label="Search"
+         id="outlined-start-adornment"
+         size='small'
+         sx={{ m: 1, width: '100%' }}
+         InputProps={{
+           startAdornment: <InputAdornment position="start"><SearchIcon/></InputAdornment>,
+         }}
+         onChange={handleSearchInputChange}
+        value={searchInput}
         />
             </Box>
 
