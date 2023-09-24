@@ -107,6 +107,8 @@ const CPOs = () => {
   const [selectedNumberOfRomaing, setSelectedNumberOfRomaing] = useState(initialValuesRoaming.selectedNumber);
   const [RoamingDetails, setRoamingDetailss] = useState(initialValuesRoaming.RoamingDetails);
   const [SelectedCpoChargerDetailsRows, setSelectedCpoChargerDetailsRows] = useState([]);
+  const [filterRows,setFilterRows] = useState([])
+  const [searchInput, setSearchInput] = useState("");
   const companyNames = ['Company 1', 'Company 2', 'Company 3', 'Company 4', 'Company 5'];
   const handleOpen = (Data) => {
     console.log(Data);
@@ -332,7 +334,28 @@ chargerDetails:chargerDetails
     
   }
 
-  
+  const handleSearchInputChange = (event) => {
+    const inputValue = event.target.value.toLowerCase();
+ 
+    if(inputValue === ""){
+      setFilterRows(rows)
+    }
+    else{
+         // Filter the rows based on whether any property contains the search input
+    const filteredResults = rows.filter((item) =>
+    Object.values(item).some((value) =>
+      String(value).toLowerCase().includes(inputValue)
+    )
+  );
+
+  // Update the filteredRows state
+  setFilterRows(filteredResults);
+    }
+   
+
+    // Update the search input state
+    setSearchInput(inputValue);
+  };
 
   const listCpoDetails = (anchor) => (
     <Box
@@ -493,6 +516,7 @@ Close
         }));
 
         setRows(formattedData);
+        setFilterRows(formattedData);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -504,9 +528,10 @@ Close
   return (
     <div>
       <KTCard>
-        <UsersListHeader  state={setUpdate}/>
+        <UsersListHeader  state={setUpdate}  handleSearchInputChange={handleSearchInputChange}
+        searchInput={searchInput}/>
 
-        <GenralTabel rows={rows} column={column} />
+        <GenralTabel rows={filterRows} column={column} />
       </KTCard>
 
       <Modal

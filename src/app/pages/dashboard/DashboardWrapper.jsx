@@ -1,5 +1,5 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import {FC} from 'react'
+import {FC, useEffect, useState} from 'react'
 
 import {useIntl} from 'react-intl'
 // import PieChart from 'react-pie-graph-chart';
@@ -16,8 +16,10 @@ import {
 import { ChartsWidget170 } from './ChartsWidget170'
 import { AllChargersMap } from './AllChargersMap'
 import { PieWidgetDashboard } from './PieWidgetDashboard'
+import { BASE_URL } from '../../Config/BaseUrl'
+import axios from 'axios'
 
-const DashboardPage: FC = () => (
+const DashboardPage = ({users}) => (
   
   <>
 
@@ -55,7 +57,7 @@ const DashboardPage: FC = () => (
           description='Total consumer'
           color='#1B9A8B'
           icon={false}
-          stats={357}
+          stats={users.length}
           labelColor='dark'
           textColor='gray-300'
           />
@@ -116,12 +118,45 @@ const DashboardPage: FC = () => (
   </>
 )
 
-const DashboardWrapper: FC = () => {
+const DashboardWrapper = () => {
   const intl = useIntl()
+  const token =sessionStorage.getItem('token');
+  const [usersrows, setUsersRows] = useState([]);
+  useEffect(()=>{
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(`${BASE_URL}/customers/customers
+        `, {
+          headers: { Authorization: `${token}` },
+        });
+        // Assuming the response data is an array of objects with the required properties
+        
+        const data = response.data;
+        const CustomersData=data.data.users;
+        console.log("response chargers==>", CustomersData);
+        if(data && data.status === 'success'){
+          
+  
+          setUsersRows(CustomersData);
+        }
+        else{
+          setUsersRows([]);
+        }
+        
+      } catch (error) {
+        console.error("Error fetching data:", error);
+        setUsersRows([]);
+      }
+    };
+  
+    // console.log("UserData", userData);
+    fetchData();
+  },[])
+
   return (
     <>
       <PageTitle breadcrumbs={[]}>{intl.formatMessage({id: 'MENU.DASHBOARD'})}</PageTitle>
-      <DashboardPage />
+      <DashboardPage  users={usersrows}/>
     </>
   )
 }

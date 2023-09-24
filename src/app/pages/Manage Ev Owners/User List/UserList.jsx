@@ -56,6 +56,10 @@ const UserList = () => {
   const [selectedCustomerId, setSelectedCustomerId] = useState();
   const [userWallet,setUserWallet]=useState({});
   const [userWalletUserData,setUserWalletUserData]=useState({});
+  const [filterRows,setFilterRows] = useState([])
+  const [searchInput, setSearchInput] = useState("");
+  const [InActiveUsers,setInActiveUsers] = useState([])
+  const [ActiveUsers,setActiveUsers] = useState([])
   const initialValuesWallet={
     Amount:"",
     Description:""
@@ -114,46 +118,111 @@ const UserList = () => {
     }));
   };
 
-  useEffect(()=>{
-    const fetchData = async () => {
-      try {
-        const response = await axios.get(`${BASE_URL}/customers/customers
-        `, {
-          headers: { Authorization: `${token}` },
-        });
-        // Assuming the response data is an array of objects with the required properties
+  const handleSearchInputChange = (event) => {
+    const inputValue = event.target.value.toLowerCase();
+ 
+    if(inputValue === ""){
+      setFilterRows(rows)
+    }
+    else{
+         // Filter the rows based on whether any property contains the search input
+    const filteredResults = rows.filter((item) =>
+    Object.values(item).some((value) =>
+      String(value).toLowerCase().includes(inputValue)
+    )
+  );
+
+  // Update the filteredRows state
+  setFilterRows(filteredResults);
+    }
+   
+
+    // Update the search input state
+    setSearchInput(inputValue);
+  };
+
+  const fetchData = async () => {
+    try {
+      const response = await axios.get(`${BASE_URL}/customers/customers
+      `, {
+        headers: { Authorization: `${token}` },
+      });
+      // Assuming the response data is an array of objects with the required properties
+      
+      const data = response.data;
+      const CustomersData=data.data.users;
+      console.log("response chargers==>", CustomersData);
+      if(data && data.status === 'success'){
+           const formattedData = CustomersData.map((item) => ({
+          "Name":item.name,
+          "Email":item.email,
+          "Phone":item.phone_number,
+          "Charge Duration":"100 hrs",
+          "Status":item.status ? <Button color='success' variant="contained" >Active</Button> : <Button color='error' variant="contained">Inactive</Button>,
+          "Wallet":<Button sx={{color:"black"}}onClick={()=>handelWalletClick(item._id,item)}><AccountBalanceWalletIcon/></Button>,
+          "Vehicles":"tata Ev4",
+          "Active":<Switch checked={item.status}  onChange={(e)=>handleSwitchChange(e,item._id)} />,
+          "Icon":<AddVehicle/>,
+          // "Functional":<Switch checked={item.functional}  onChange={(e)=>handleSwitchChange(e,item._id)} />,
+          
+        Update: <BorderColorIcon onClick={() => handleUpdateCustomerOpen(item._id)} />,
+        Delete: <DeleteIcon  onClick={() => handelDeleteCustomer(item._id)}/>
+      }));
+      const ActiveUsers = CustomersData.filter((item) => {
+        return item.status === true;
+      });
+      const ActiveData = ActiveUsers.map((item) => ({
+        "Name":item.name,
+        "Email":item.email,
+        "Phone":item.phone_number,
+        "Charge Duration":"100 hrs",
+        "Status":item.status ? <Button color='success' variant="contained" >Active</Button> : <Button color='error' variant="contained">Inactive</Button>,
+        "Wallet":<Button sx={{color:"black"}}onClick={()=>handelWalletClick(item._id,item)}><AccountBalanceWalletIcon/></Button>,
+        "Vehicles":"tata Ev4",
+        "Active":<Switch checked={item.status}  onChange={(e)=>handleSwitchChange(e,item._id)} />,
+        "Icon":<AddVehicle/>,
+        // "Functional":<Switch checked={item.functional}  onChange={(e)=>handleSwitchChange(e,item._id)} />,
         
-        const data = response.data;
-        const CustomersData=data.data.users;
-        console.log("response chargers==>", CustomersData);
-        if(data && data.status === 'success'){
-             const formattedData = CustomersData.map((item) => ({
-            "Name":item.name,
-            "Email":item.email,
-            "Phone":item.phone_number,
-            "Charge Duration":"100 hrs",
-            "Status":item.status ? <Button color='success' variant="contained" >Active</Button> : <Button color='error' variant="contained">Inactive</Button>,
-            "Wallet":<Button sx={{color:"black"}}onClick={()=>handelWalletClick(item._id,item)}><AccountBalanceWalletIcon/></Button>,
-            "Vehicles":"tata Ev4",
-            "Active":<Switch checked={item.status}  onChange={(e)=>handleSwitchChange(e,item._id)} />,
-            "Icon":<AddVehicle/>,
-            // "Functional":<Switch checked={item.functional}  onChange={(e)=>handleSwitchChange(e,item._id)} />,
-            
-          Update: <BorderColorIcon onClick={() => handleUpdateCustomerOpen(item._id)} />,
-          Delete: <DeleteIcon  onClick={() => handelDeleteCustomer(item._id)}/>
-        }));
-  
-        setRows(formattedData);
-        }
-        else{
-          setRows([]);
-        }
+      Update: <BorderColorIcon onClick={() => handleUpdateCustomerOpen(item._id)} />,
+      Delete: <DeleteIcon  onClick={() => handelDeleteCustomer(item._id)}/>
+    }));
+
+      const InActiveUsers = CustomersData.filter((item) => {
+        return item.status === false;
+      });
+
+      const InActiveData = InActiveUsers.map((item) => ({
+        "Name":item.name,
+        "Email":item.email,
+        "Phone":item.phone_number,
+        "Charge Duration":"100 hrs",
+        "Status":item.status ? <Button color='success' variant="contained" >Active</Button> : <Button color='error' variant="contained">Inactive</Button>,
+        "Wallet":<Button sx={{color:"black"}}onClick={()=>handelWalletClick(item._id,item)}><AccountBalanceWalletIcon/></Button>,
+        "Vehicles":"tata Ev4",
+        "Active":<Switch checked={item.status}  onChange={(e)=>handleSwitchChange(e,item._id)} />,
+        "Icon":<AddVehicle/>,
+        // "Functional":<Switch checked={item.functional}  onChange={(e)=>handleSwitchChange(e,item._id)} />,
         
-      } catch (error) {
-        console.error("Error fetching data:", error);
+      Update: <BorderColorIcon onClick={() => handleUpdateCustomerOpen(item._id)} />,
+      Delete: <DeleteIcon  onClick={() => handelDeleteCustomer(item._id)}/>
+    }));
+
+      setRows(formattedData);
+      setFilterRows(formattedData);
+      setActiveUsers(ActiveData);
+      setInActiveUsers(InActiveData);
+      }
+      else{
         setRows([]);
       }
-    };
+      
+    } catch (error) {
+      console.error("Error fetching data:", error);
+      setRows([]);
+    }
+  };
+  useEffect(()=>{
+   
   
     // console.log("UserData", userData);
     fetchData();
@@ -448,28 +517,31 @@ const UserList = () => {
     }
   }
 
-  // const initialValuesWallet={
-  //   Amount:"",
-  //   Description:""
+  const handelActiveFilter=()=>{
+    setFilterRows(ActiveUsers)
+  }
 
-  // }
-  // const {values,errors,touched,handleBlur,handleChange,handleSubmit}=useFormik({
-  //   initialValues:initialValuesWallet,
-  //   onSubmit:(values,{resetForm}) => {
-  //     console.log("🚀 ~ file: WalletModal.jsx:52 ~ WalletModel ~ values:", values)
-  //     resetForm();
-             
-  //   }
-  // })
+  const handelInActiveFilter=()=>{
+    setFilterRows(InActiveUsers)
+  }
+
+  const handelAllUsers =()=>{
+    setFilterRows(rows)
+  }
   
 
  const data = "26.509904,75.410153";
   return (
     <div>
-    <UserHeader setUpdate={setupdate}/>
+    <UserHeader setUpdate={setupdate}  handleSearchInputChange={handleSearchInputChange}
+        searchInput={searchInput}
+        handelActiveFilter={handelActiveFilter}
+        handelInActiveFilter={handelInActiveFilter}
+        handelAllUsers={handelAllUsers}
+        />
    <KTCard>
    
-   <GenralTabel rows={rows} column={column}/>
+   <GenralTabel rows={filterRows} column={column}/>
    </KTCard>
    <div className="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
 <div className="modal-dialog modal-dialog-centered" role="document">

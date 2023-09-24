@@ -20,7 +20,7 @@ const MyBox = styled('Button')({
   });
 
 
-const UserHeader = ({setUpdate}) => {
+const UserHeader = ({setUpdate,handleSearchInputChange,searchInput,handelActiveFilter,handelInActiveFilter,handelAllUsers}) => {
   return (
     <KTCard>
         <Box    justifyContent={"space-between"} p={"10px"} display='flex' sx={{display:{xs:"block",sm:"flex",md:"flex",lg:"flex",xl:"flex"}, alignItems:"center"}} >
@@ -30,10 +30,10 @@ const UserHeader = ({setUpdate}) => {
       
 
 
-<Box sx={{display:{xs:"none",md:"flex",lg:"flex",xl:"flex"},  width:"20%"}} >
-
-<Button  sx={{backgroundColor:"gray", color:"#fff","&:hover": { backgroundColor: "gray"}}} variant="contained" >Active</Button>
-<Button  sx={{backgroundColor:"crimson","&:hover": { backgroundColor: "#E21818"}}} variant="contained" >InActive</Button>
+<Box sx={{display:{xs:"none",md:"flex",lg:"flex",xl:"flex"},justifyContent:"space-between"}} >
+<Button onClick={handelAllUsers}  sx={{backgroundColor:"grey","&:hover": { backgroundColor: "orange"},marginRight:2}} variant="contained" >All</Button>
+<Button onClick={handelActiveFilter}  sx={{backgroundColor:"grey","&:hover": { backgroundColor: "green"},marginRight:2}} variant="contained" >Active</Button>
+<Button onClick={handelInActiveFilter}  sx={{backgroundColor:"grey","&:hover": { backgroundColor: "#E21818"},marginRight:2}} variant="contained" >InActive</Button>
 </Box>
 
             
@@ -48,13 +48,15 @@ const UserHeader = ({setUpdate}) => {
             {/* <TextField fullWidth label="Search" /> */}
             
             <TextField
-          label="Search"
-          id="outlined-start-adornment"
-          size='small'
-          sx={{ m: 1, width: '100%' }}
-          InputProps={{
-            startAdornment: <InputAdornment position="start"><SearchIcon/></InputAdornment>,
-          }}
+         label="Search"
+         id="outlined-start-adornment"
+         size='small'
+         sx={{ m: 1, width: '100%' }}
+         InputProps={{
+           startAdornment: <InputAdornment position="start"><SearchIcon/></InputAdornment>,
+         }}
+         onChange={handleSearchInputChange}
+        value={searchInput}
         />
             </Box>
 
@@ -65,9 +67,9 @@ const UserHeader = ({setUpdate}) => {
                
             
             
-                <IconButton aria-label="Download" color="primary">
+                {/* <IconButton aria-label="Download" color="primary">
                 <CloudDownloadIcon  fontSize='large'/> 
-                 </IconButton>
+                 </IconButton> */}
            
                  <Box sx={{ marginLeft:"10px", display:'flex', alignItems:"center"}}>
             <Typography sx={{color:"gray",marginTop:"5px",display:{xs:"none",sm:"none",md:"none",lg:"none",xl:"block"}}}variant="subtitle1" component="h6">Add EV Owner</Typography>

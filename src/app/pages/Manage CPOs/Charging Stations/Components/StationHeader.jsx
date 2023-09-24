@@ -22,7 +22,7 @@ const MyBox = styled('Button')({
   });
 
 
-const StationHeader = ({state}) => {
+const StationHeader = ({state,handleSearchInputChange,searchInput}) => {
   return (
     <KTCard>
         <Box    justifyContent={"space-between"} p={"10px"} display='flex' sx={{display:{xs:"block",sm:"flex",md:"flex",lg:"flex",xl:"flex"}, alignItems:"center"}} >
@@ -42,13 +42,15 @@ const StationHeader = ({state}) => {
             {/* <TextField fullWidth label="Search" /> */}
             
             <TextField
-          label="Search"
-          id="outlined-start-adornment"
-          size='small'
-          sx={{ m: 1, width: '100%' }}
-          InputProps={{
-            startAdornment: <InputAdornment position="start"><SearchIcon/></InputAdornment>,
-          }}
+         label="Search"
+         id="outlined-start-adornment"
+         size='small'
+         sx={{ m: 1, width: '100%' }}
+         InputProps={{
+           startAdornment: <InputAdornment position="start"><SearchIcon/></InputAdornment>,
+         }}
+         onChange={handleSearchInputChange}
+        value={searchInput}
         />
             </Box>
 

@@ -182,13 +182,13 @@ const SidebarMenuMain = () => {
   
   {/* Chats  */}
   
-  <div className='menu-item'>
+  {/* <div className='menu-item'>
           <div className='menu-content'>
             <span className='menu-heading fw-bold  fs-7'>Chats</span>
           </div>
-        </div>
+        </div> */}
   
-        {
+        {/* {
             userPermisson.PrivateChat && (
               <SidebarMenuItem
               to='/chats/private-chat/'
@@ -198,7 +198,7 @@ const SidebarMenuMain = () => {
             />
           
             )
-          }
+          } */}
   
        
   

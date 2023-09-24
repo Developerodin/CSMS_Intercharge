@@ -76,6 +76,13 @@ const Chargers = () => {
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
+  const data = "26.509904,75.410153";
+  const [Mapcords,setMapcords] = useState(data);
+  const [MapModesOpen,setMapModesOpen] = useState(false)
+  const [filterRows,setFilterRows] = useState([])
+  const [DcChargers,setDcChargers] = useState([])
+  const [AcChargers,setAcChargers] = useState([])
+  const [searchInput, setSearchInput] = useState("");
   const handelClick=(e) => {
     console.log("🚀 ~ file: Chargers.jsx:22 ~ handelClick ~ e:", e.target)
      navigate("/chargerdetails/", {state:{_id:"akshay"}});
@@ -88,6 +95,29 @@ const Chargers = () => {
       ...prevValues,
       [name]: value,
     }));
+  };
+
+  const handleSearchInputChange = (event) => {
+    const inputValue = event.target.value.toLowerCase();
+ 
+    if(inputValue === ""){
+      setFilterRows(rows)
+    }
+    else{
+         // Filter the rows based on whether any property contains the search input
+    const filteredResults = rows.filter((item) =>
+    Object.values(item).some((value) =>
+      String(value).toLowerCase().includes(inputValue)
+    )
+  );
+
+  // Update the filteredRows state
+  setFilterRows(filteredResults);
+    }
+   
+
+    // Update the search input state
+    setSearchInput(inputValue);
   };
   const inputs = {
     minWidth: "100%",
@@ -153,8 +183,6 @@ const Chargers = () => {
     
   
   // ]
-
-useEffect(()=>{
   const fetchData = async () => {
     try {
       const response = await axios.get(`${BASE_URL}/chargers/`, {
@@ -169,12 +197,12 @@ useEffect(()=>{
            const formattedData = ChargerData.map((item) => ({
           "Name":<Button variant="text" onClick={handelClick}>{item.ChargerName}</Button>,
           "Station Name":item.ChargerStation,
-          "Location":<Button  data-bs-toggle="modal" data-bs-target="#exampleModalCenter"  variant='text'>{item.Latitude},{item.Longitude}</Button>,
+          "Location":<Button  onClick={()=>{handelMapOpen(`${item.Latitude},${item.Longitude}`)}}  variant='text'>{item.Latitude},{item.Longitude}</Button>,
           "OCPP ID":item.OCPP_ID,
           "Address":<span>{item.street},{item.area},{item.city},{item.Pincode},{item.state}</span>,
           "Status":item.functional ? <Button color='success' variant="contained" >Active</Button> : <Button color='error' variant="contained">Inactive</Button>,
           "City":item.city,
-          "Charger Type":"DC",
+          "ChargerType":item.ChargerType,
           "Power Rating":"60.00KW",
           "Connectors":"CCS / GBT/ TYPE 2",
           "Functional":<Switch checked={item.functional}  onChange={(e)=>handleSwitchChange(e,item._id)} />,
@@ -183,7 +211,18 @@ useEffect(()=>{
         Delete: <DeleteIcon  onClick={() => handelDeleteCharger(item._id)}/>
       }));
 
+      const ChargersDcData = formattedData.filter((item) => {
+        return item.ChargerType.toLowerCase() === "dc"
+      });
+
+      const ChargersAcData = formattedData.filter((item) => {
+        return item.ChargerType.toLowerCase() === "ac"
+      });
+
       setRows(formattedData);
+      setFilterRows(formattedData);
+      setDcChargers(ChargersDcData);
+      setAcChargers(ChargersAcData)
       }
       else{
         setRows([]);
@@ -194,6 +233,8 @@ useEffect(()=>{
       setRows([]);
     }
   };
+useEffect(()=>{
+ 
 
   // console.log("UserData", userData);
   fetchData();
@@ -277,14 +318,41 @@ const handleSubmit = async () => {
   setupdate((prev)=>prev+1)
 };
 
+const handelMapData=(data)=>{
+  setMapcords(data)
+}
 
- const data = "26.509904,75.410153";
+const handelMapClose=()=>{
+  setMapModesOpen(false);
+  setMapcords("")
+}
+
+const handelMapOpen=(data)=>{
+  setMapModesOpen(true);
+  handelMapData(data)
+}
+
+const handelAcFilter=()=>{
+  setFilterRows(AcChargers)
+}
+
+const handelDcFilter=()=>{
+  setFilterRows(DcChargers)
+}
+
+const handelAllFilter=()=>{
+  setFilterRows(rows);
+}
+
+ 
   return (
     <div>
-      <ChargersHeader state={setupdate}/>
+      <ChargersHeader state={setupdate} AcFunc={handelAcFilter} DcFun={handelDcFilter} AllFunc={handelAllFilter} DcLength={DcChargers.length} AcLength={AcChargers.length}
+       handleSearchInputChange={handleSearchInputChange}
+        searchInput={searchInput}/>
       <KTCard>
       
-      <GenralTabel rows={rows} column={column}/>
+      <GenralTabel rows={filterRows} column={column}/>
       </KTCard>
       <div className="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
   <div className="modal-dialog modal-dialog-centered" role="document">
@@ -296,7 +364,7 @@ const handleSubmit = async () => {
       
       </div>
       <div className="modal-body" style={{"height":"400px"}}>
-        <MapLocation data={data}/>
+        <MapLocation data={Mapcords}/>
       </div>
       <div className="modal-footer" >
         <button type="button" className="btn btn-primary mt-5" data-bs-dismiss="modal">Close</button>
@@ -773,6 +841,22 @@ const handleSubmit = async () => {
                 </button>
               </div>
             </div>
+         
+        </Box>
+      </Modal>
+
+      <Modal
+        open={MapModesOpen}
+        onClose={handelMapClose}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+        sx={{ overflowY: "scroll" }}
+      >
+        <Box sx={style}>
+         
+        <div className="modal-body" style={{"height":"400px"}}>
+        <MapLocation data={Mapcords}/>
+      </div>
          
         </Box>
       </Modal>

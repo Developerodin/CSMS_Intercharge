@@ -31,7 +31,7 @@ const CardsWidget7 = ({className, description, icon, stats, labelColor, textColo
     <div className='card-header pt-5'>
       <div className='card-title d-flex flex-column'>
         <div className='card-title d-flex flex-column'>
-          <span className='fs-2hx fw-bold  me-2 lh-1 ls-n2' style={{color:"white"}}>45,345</span>
+          <span className='fs-2hx fw-bold  me-2 lh-1 ls-n2' style={{color:"white"}}>{stats}</span>
           <span className=' pt-1 fw-semibold fs-6' style={{color:"white"}}>{description}</span>
         </div>
       </div>
@@ -65,7 +65,7 @@ const CardsWidget7 = ({className, description, icon, stats, labelColor, textColo
           <span
             className={clsx('symbol-label fs-8 fw-bold', 'bg-' + labelColor, 'text-' + textColor)}
           >
-            +42
+            +2
           </span>
         </a>
       </div>

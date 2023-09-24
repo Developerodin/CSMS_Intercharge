@@ -56,6 +56,7 @@ import { Group } from '../modules/apps/chat/components/Group'
 import UserContext from '../../Context/UserContext'
 import { RoamingAgreements } from '../pages/Manage CPOs/CPOs/RoamingAgreements/RoamingAgreements'
 import RoamingRecon from '../pages/Billing & Payments/All Transactions/Pages/RoamingRecon'
+import DiscountCouponsMain from '../pages/Billing & Payments/Discount Coupons/DiscountCouponsMain'
 
 
 
@@ -577,7 +578,7 @@ const PrivateRoutes = () => {
           path='billing/discountCoupons/*'
           element={
             <SuspensedView>
-              <AddDiscountModel/>
+              <DiscountCouponsMain/>
             </SuspensedView>
           }
         />

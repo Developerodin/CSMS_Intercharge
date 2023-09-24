@@ -9,6 +9,7 @@ import {useThemeMode} from '../../layout/theme-mode/ThemeModeProvider'
 import EvStationIcon from '@mui/icons-material/EvStation';
 import { BASE_URL } from '../../../../app/Config/BaseUrl'
 import axios from 'axios'
+import { Button, Switch } from '@mui/material'
 type Props = {
   className: string
   chartColor: string
@@ -36,6 +37,11 @@ const MixedWidget2: React.FC<Props> = ({className, chartColor, chartHeight, stro
     return chart
   }
   const [CposData,setCposData]=useState<any>(null)
+  const [ChargersfilterRows,setChargersfilterRows] = useState<any>([])
+  const [DcChargers,setDcChargers] = useState([])
+  const [AcChargers,setAcChargers] = useState([])
+  const [ActiveChargers,setActiveChargers] = useState([])
+  const [InActiveChargers,setInActiveChargers] = useState([])
 
   useEffect(() => {
     const chart = refreshChart()
@@ -46,7 +52,60 @@ const MixedWidget2: React.FC<Props> = ({className, chartColor, chartHeight, stro
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [chartRef, mode])
+  const fetchChargerData = async () => {
+    try {
+      const response = await axios.get(`${BASE_URL}/chargers/`, {
+        headers: { Authorization: `${token}` },
+      });
+      // Assuming the response data is an array of objects with the required properties
+      
+      const data = response.data;
+      const ChargerData=data.data.chargers;
+      console.log("response chargers==>", data);
+      if(data && data.status === 'success'){
+           const formattedData = ChargerData.map((item:any) => ({
+          "Name":item.ChargerName,
+          "Station Name":item.ChargerStation,
+          "Location":<span>{item.Latitude},{item.Longitude}</span>,
+          "OCPP ID":item.OCPP_ID,
+          "Address":<span>{item.street},{item.area},{item.city},{item.Pincode},{item.state}</span>,
+          "Status":item.functional,
+          "City":item.city,
+          "ChargerType":item.ChargerType,
+          "Power Rating":"60.00KW",
+          "Connectors":"CCS / GBT/ TYPE 2",
+      }));
 
+      const ChargersDcData = formattedData.filter((item:any) => {
+        return item.ChargerType.toLowerCase() === "dc"
+      });
+
+      const ChargersAcData = formattedData.filter((item:any) => {
+        return item.ChargerType.toLowerCase() === "ac"
+      });
+
+      const ChargersActiveData = formattedData.filter((item:any) => {
+        return item.Status === true
+      });
+
+      const ChargersInActiveData = formattedData.filter((item:any) => {
+        return item.Status === false
+      });
+
+     
+      setChargersfilterRows(formattedData);
+      setDcChargers(ChargersDcData);
+      setAcChargers(ChargersAcData)
+      setActiveChargers(ChargersActiveData)
+      setInActiveChargers(ChargersInActiveData)
+      }
+     
+      
+    } catch (error) {
+      console.error("Error fetching data:", error);
+      
+    }
+  };
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -63,6 +122,7 @@ const MixedWidget2: React.FC<Props> = ({className, chartColor, chartHeight, stro
     };
 
     fetchData();
+    fetchChargerData();
   }, []);
 
   return (
@@ -240,14 +300,14 @@ const MixedWidget2: React.FC<Props> = ({className, chartColor, chartHeight, stro
 
                   <div >
                   <span className="text-gray-700 fw-bolder d-block fs-2qx lh-1 ls-n1 mb-1">
-                  743
+                  {AcChargers.length}
                 </span>
                 <span className="text-gray-500 fw-semibold fs-6">AC</span>
                   </div>
 
                   <div >
                   <span className="text-gray-700 fw-bolder d-block fs-2qx lh-1 ls-n1 mb-1">
-                  300
+                 {DcChargers.length}
                 </span>
                 <span className="text-gray-500 fw-semibold fs-6">DC</span>
                   </div>
@@ -302,7 +362,7 @@ const MixedWidget2: React.FC<Props> = ({className, chartColor, chartHeight, stro
               <div className="m-0">
                 {/*begin::Number*/}
                 <span className="text-gray-700 fw-bolder d-block fs-2qx lh-1 ls-n1 mb-1">
-                  32,140
+                  3,214
                 </span>
                 {/*end::Number*/}
                 {/*begin::Desc*/}
@@ -351,7 +411,7 @@ const MixedWidget2: React.FC<Props> = ({className, chartColor, chartHeight, stro
               <div className="m-0">
                 {/*begin::Number*/}
                 <span className="text-gray-700 fw-bolder d-block fs-2qx lh-1 ls-n1 mb-1">
-                  6,42,800
+                  64,280
                 </span>
                 {/*end::Number*/}
                 {/*begin::Desc*/}
@@ -404,21 +464,21 @@ const MixedWidget2: React.FC<Props> = ({className, chartColor, chartHeight, stro
                 <div className="d-flex justify-content-between">
                 <div >
                   <span className="text-gray-700 fw-bolder d-block fs-2qx lh-1 ls-n1 mb-1">
-                  1043
+                  {ChargersfilterRows.length}
                 </span>
                 <span className="text-gray-500 fw-semibold fs-6">Total Chargers</span>
                   </div>
 
                   <div >
                   <span className="text-gray-700 fw-bolder d-block fs-2qx lh-1 ls-n1 mb-1">
-                  693
+                  {ActiveChargers.length}
                 </span>
                 <span className="text-gray-500 fw-semibold fs-6">Active</span>
                   </div>
 
                   <div >
                   <span className="text-gray-700 fw-bolder d-block fs-2qx lh-1 ls-n1 mb-1">
-                  350
+                  {InActiveChargers.length}
                 </span>
                 <span className="text-gray-500 fw-semibold fs-6">Inactive</span>
                   </div>

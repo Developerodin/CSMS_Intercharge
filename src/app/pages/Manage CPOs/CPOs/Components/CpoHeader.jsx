@@ -23,7 +23,7 @@ const MyBox = styled('Button')({
 
 
 
-const ChargersHeader = ({state,AcFunc,DcFun,AllFunc,DcLength,AcLength,handleSearchInputChange,searchInput}) => {
+const CpoHeader = ({state,AcFunc,DcFun,AllFunc,DcLength,AcLength,handleSearchInputChange,searchInput}) => {
 
 
   return (
@@ -129,4 +129,4 @@ const ChargersHeader = ({state,AcFunc,DcFun,AllFunc,DcLength,AcLength,handleSear
   )
 }
 
-export default ChargersHeader
+export default CpoHeader

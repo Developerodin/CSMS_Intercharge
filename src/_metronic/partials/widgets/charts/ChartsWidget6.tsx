@@ -55,12 +55,12 @@ const ChartsWidget6: React.FC<Props> = ({className}) => {
             Sales
           </a>
 
-          <a
+          {/* <a
             className='btn btn-sm btn-color-muted btn-active btn-active-primary px-4 me-1'
             id='kt_charts_widget_6_expenses_btn'
           >
             Expenses
-          </a>
+          </a> */}
         </div>
         {/* end::Toolbar */}
       </div>
@@ -186,7 +186,7 @@ function getChartOptions(height: number): ApexOptions {
       },
       y: {
         formatter: function (val) {
-          return '$' + val + ' thousands'
+          return '₹' + val + ' thousands'
         },
       },
     },

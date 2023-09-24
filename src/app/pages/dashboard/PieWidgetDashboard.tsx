@@ -17,8 +17,9 @@ const dataMock = [
 
   const dataMock2 = [
     { title: 'MG', value: 30, color: '#FFC700' },
-    { title: 'Tata', value: 40, color: '#7239EA' },
-    { title: 'BYD', value: 30, color: '#1B9A8B'  },
+    { title: 'Tata', value: 20, color: '#7239EA' },
+    { title: 'BYD', value: 10, color: '#1B9A8B'  },
+    { title: 'FLEET', value: 40, color: '#D83F31'  },
   ];
   
 const defaultLabelStyle = {
@@ -50,8 +51,11 @@ const PieWidgetDashboard: React.FC<Props> = ({className}) =>{
             data={dataMock}
             label={({ dataEntry }) => dataEntry.value}
             labelStyle={{
-              color:"#fff",
+              
               fontSize: '7px',
+            
+            
+              
               
             }}
             

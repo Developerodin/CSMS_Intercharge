@@ -55,7 +55,7 @@ const ChartsWidget3: React.FC<Props> = ({className}) => {
             Month
           </a>
 
-          <a
+          {/* <a
             className='btn btn-sm btn-color-muted btn-active btn-active-primary px-4 me-1'
             id='kt_charts_widget_3_month_btn'
           >
@@ -68,7 +68,7 @@ const ChartsWidget3: React.FC<Props> = ({className}) => {
             id='kt_charts_widget_3_week_btn'
           >
             Week
-          </a>
+          </a> */}
         </div>
         {/* end::Toolbar */}
       </div>
@@ -191,7 +191,7 @@ function getChartOptions(height: number): ApexOptions {
       },
       y: {
         formatter: function (val) {
-          return '$' + val + ' thousands'
+          return '₹' + val + ' thousands'
         },
       },
     },

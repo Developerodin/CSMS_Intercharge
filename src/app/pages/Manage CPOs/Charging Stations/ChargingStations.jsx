@@ -49,6 +49,8 @@ const ChargingStations = () => {
   const [update, setupdate] = useState(0);
 
   const [rows,setRows] =useState([])
+  const [filterRows,setFilterRows] = useState([])
+  const [searchInput, setSearchInput] = useState("");
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -74,12 +76,29 @@ const ChargingStations = () => {
     border: "1px solid #f4f5f7 ",
     padding: "10px 5px",
   };
-  // const handelClick=(e) => {
-  //   console.log("🚀 ~ file: Chargers.jsx:22 ~ handelClick ~ e:", e.target)
-  //    navigate("/chargerdetails/", {state:{_id:"akshay"}});
-  //   //  <Navigate to="/chargerdetails" state={{todos:[]}} replace={true}/>
   
-  // }
+  const handleSearchInputChange = (event) => {
+    const inputValue = event.target.value.toLowerCase();
+ 
+    if(inputValue === ""){
+      setFilterRows(rows)
+    }
+    else{
+         // Filter the rows based on whether any property contains the search input
+    const filteredResults = filterRows.filter((item) =>
+    Object.values(item).some((value) =>
+      String(value).toLowerCase().includes(inputValue)
+    )
+  );
+
+  // Update the filteredRows state
+  setFilterRows(filteredResults);
+    }
+   
+
+    // Update the search input state
+    setSearchInput(inputValue);
+  };
 
   const column=[
     {name:"Name"},
@@ -138,6 +157,7 @@ const ChargingStations = () => {
         }));
   
         setRows(formattedData);
+        setFilterRows(formattedData)
         }
         else{
           setRows([]);
@@ -214,10 +234,10 @@ const ChargingStations = () => {
   return (
     
     <div>
-     <StationHeader state={setupdate}/>
+     <StationHeader state={setupdate} handleSearchInputChange={handleSearchInputChange}  searchInput={searchInput}/>
     <KTCard>
     
-    <GenralTabel rows={rows} column={column}/>
+    <GenralTabel rows={filterRows} column={column}/>
     </KTCard>
     <div className="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
 <div className="modal-dialog modal-dialog-centered" role="document">
