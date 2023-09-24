@@ -7,7 +7,13 @@ import SearchIcon from "@mui/icons-material/Search";
 import { useState } from "react";
 // import { FriendList } from "./FriendList";
 import LibraryAddIcon from '@mui/icons-material/LibraryAdd';
-export default function AddStation() {
+import axios from "axios";
+import { BASE_URL } from "../../../../Config/BaseUrl";
+import CloseIcon from '@mui/icons-material/Close';
+
+export default function AddStation({setUpdate}) {
+  const token =sessionStorage.getItem('token');
+  const userData=JSON.parse(sessionStorage.getItem('User'))
   const style = {
     position: "absolute",
     top: "50%",
@@ -38,7 +44,8 @@ export default function AddStation() {
     Pincode: "",
     accesstype: "",
     opentime: "",
-    closetime: ""
+    closetime: "",
+    cpoId:userData._id
   };
 
   const inputs = {
@@ -56,9 +63,22 @@ export default function AddStation() {
 
   const { values, error, handleChange, handleSubmit } = useFormik({
     initialValues: initalValues,
-    onSubmit: (value, { resetForm }) => {
-      console.log(value);
+    onSubmit: async(value, { resetForm }) => {
+      console.log("Stations Values ===>",values);
+      try{
+          const res = await axios.post(`${BASE_URL}/stations/addstation`, 
+          values
+          ,{ headers: { "Authorization": `${token}` } })
+
+          console.log("res Stations add ==>",res)
+      }
+      catch(err){
+         console.log("error in charger adding",err)
+      }
+      
       resetForm();
+      handleClose();
+      setUpdate((prev)=>prev+1);
     },
   });
 
@@ -88,7 +108,10 @@ export default function AddStation() {
             <div className="container-fluid">
               <div className="row">
                 <div className="col-12">
+                <div style={{display:"flex",justifyContent:"space-between",alignItems:"center"}}>
                   <h3>List A Station</h3>
+                   <CloseIcon onClick={handleClose}/>
+                  </div>
                   <hr />
                 </div>
                 <div className="col-12 mt-3">
@@ -176,10 +199,10 @@ export default function AddStation() {
                     <div className="col-12">
                       <input
                         type="text"
-                        name="Street"
+                        name="street"
                         id="Street"
                         placeholder="Street"
-                        value={values.Street}
+                        value={values.street}
                         onChange={handleChange}
                         style={inputs}
                       />

@@ -37,7 +37,7 @@ const SidebarMenuMain = () => {
   
   
   
-    {
+    {/* {
            userPermisson.Overview && (
               <SidebarMenuItem
               to='/manage-cpos/overview/'
@@ -48,7 +48,7 @@ const SidebarMenuMain = () => {
             />
           
             )
-          }
+          } */}
   
   {
             userPermisson.Cpos && (
@@ -133,7 +133,7 @@ const SidebarMenuMain = () => {
           </div>
                </div>
   
-               {
+               {/* {
             userPermisson.EVOwnersOverView && (
               <SidebarMenuItem
               to='/evowners/overview/'
@@ -144,7 +144,7 @@ const SidebarMenuMain = () => {
             />
           
             )
-          }
+          } */}
   
   {
             userPermisson.UserList && (
@@ -209,7 +209,7 @@ const SidebarMenuMain = () => {
           </div>
         </div>
   
-        {
+        {/* {
             userPermisson.BillingOverview && (
               <SidebarMenuItem
               to='/billing/overview/'
@@ -219,7 +219,7 @@ const SidebarMenuMain = () => {
             />
           
             )
-          }
+          } */}
   
   {
             userPermisson.AllTransactions && (
@@ -298,7 +298,7 @@ const SidebarMenuMain = () => {
           }
   
   
-  {
+  {/* {
             userPermisson.SystemMasters && (
               <SidebarMenuItem
               to='/settings/system-masters/'
@@ -308,7 +308,7 @@ const SidebarMenuMain = () => {
             />
           
             )
-          }
+          } */}
   
   
   

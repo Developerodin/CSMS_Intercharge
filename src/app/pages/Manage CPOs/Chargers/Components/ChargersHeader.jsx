@@ -23,7 +23,7 @@ const MyBox = styled('Button')({
 
 
 
-const ChargersHeader = () => {
+const ChargersHeader = ({state}) => {
   return (
     <KTCard>
         <Box    justifyContent={"space-between"} p={"10px"} display='flex' sx={{display:{xs:"block",sm:"flex",md:"flex",lg:"flex",xl:"flex"}, alignItems:"center"}} >
@@ -52,11 +52,11 @@ const ChargersHeader = () => {
             
             </Box>
 
-            <Box sx={{display:{xs:"none",md:"flex",lg:"flex",xl:"flex"},  width:"20%"}} >
+            {/* <Box sx={{display:{xs:"none",md:"flex",lg:"flex",xl:"flex"},  width:"20%"}} >
 
             <Button sx={{backgroundColor:"#259300","&:hover": { backgroundColor: "#1b6802"}}}   variant="contained" >Active</Button>
             <Button  sx={{backgroundColor:"gray","&:hover": { backgroundColor: "#259300"}}} variant="contained" >InActive</Button>
-            </Box>
+            </Box> */}
             
             </Box>
             
@@ -92,7 +92,7 @@ const ChargersHeader = () => {
            
                  <Box sx={{ marginLeft:"10px", display:'flex', alignItems:"center"}}>
             <Typography sx={{color:"gray",marginTop:"5px",display:{xs:"none",sm:"none",md:"none",lg:"none",xl:"block"}}}variant="subtitle1" component="h6">Add Charger</Typography>
-            <IconButton  ><ChargeList/></IconButton>
+            <IconButton  ><ChargeList setUpdate={state}/></IconButton>
            
             </Box>
             </Box>

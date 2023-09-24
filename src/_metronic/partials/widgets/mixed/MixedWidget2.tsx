@@ -1,5 +1,5 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import React, {useEffect, useRef} from 'react'
+import React, {useEffect, useRef, useState} from 'react'
 import ApexCharts, {ApexOptions} from 'apexcharts'
 import {KTSVG} from '../../../helpers'
 import {getCSSVariableValue} from '../../../assets/ts/_utils'
@@ -7,6 +7,8 @@ import {Dropdown1} from '../../content/dropdown/Dropdown1'
 import {useThemeMode} from '../../layout/theme-mode/ThemeModeProvider'
 
 import EvStationIcon from '@mui/icons-material/EvStation';
+import { BASE_URL } from '../../../../app/Config/BaseUrl'
+import axios from 'axios'
 type Props = {
   className: string
   chartColor: string
@@ -15,6 +17,7 @@ type Props = {
 }
 
 const MixedWidget2: React.FC<Props> = ({className, chartColor, chartHeight, strokeColor}) => {
+  const token = sessionStorage.getItem("token");
   const chartRef = useRef<HTMLDivElement | null>(null)
   const {mode} = useThemeMode()
   const refreshChart = () => {
@@ -32,6 +35,7 @@ const MixedWidget2: React.FC<Props> = ({className, chartColor, chartHeight, stro
 
     return chart
   }
+  const [CposData,setCposData]=useState<any>(null)
 
   useEffect(() => {
     const chart = refreshChart()
@@ -42,6 +46,24 @@ const MixedWidget2: React.FC<Props> = ({className, chartColor, chartHeight, stro
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [chartRef, mode])
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(`${BASE_URL}/cpo/users`, {
+          headers: { Authorization: `${token}` },
+        });
+        // Assuming the response data is an array of objects with the required properties
+        console.log("response in dashbord wegit", response.data);
+        setCposData(response.data);
+        
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   return (
     <div className="card card-flush h-xl-100" >
@@ -164,7 +186,7 @@ const MixedWidget2: React.FC<Props> = ({className, chartColor, chartHeight, stro
               <div className="m-0">
                 {/*begin::Number*/}
                 <span className="text-gray-700 fw-bolder d-block fs-2qx lh-1 ls-n1 mb-1">
-                  37
+                  {CposData !== null && CposData.length}
                 </span>
                 {/*end::Number*/}
                 {/*begin::Desc*/}
