@@ -57,9 +57,9 @@ const ComapnyPaymentHeader = ({handleSearchInputChange,searchInput}) => {
             </Box>
 
 
-            <Box sx={{display:"flex", alignItems:"center",width:"40%",justifyContent:"space-evenly"}}>
+            {/* <Box sx={{display:"flex", alignItems:"center",width:"40%",justifyContent:"space-evenly"}}>
 
-                {/* <StationFilter/> */}
+              
                <ComapnyPaymentFilter/>
             
             
@@ -68,11 +68,10 @@ const ComapnyPaymentHeader = ({handleSearchInputChange,searchInput}) => {
                  </IconButton>
            
                  <Box sx={{ marginLeft:"10px", display:'flex', alignItems:"center"}}>
-            {/* <Typography sx={{color:"gray",marginTop:"5px",display:{xs:"none",sm:"none",md:"none",lg:"none",xl:"block"}}}variant="subtitle1" component="h6">Add Station</Typography>
-            <IconButton  ></IconButton> */}
+           
            
             </Box>
-            </Box>
+            </Box> */}
 
             
             
