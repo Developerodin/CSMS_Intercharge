@@ -54,7 +54,8 @@ const UserActionsCell: FC<Props> = ({id}) => {
         data-kt-menu='true'
       >
         <div className='menu-item px-3'>
-          <a className='menu-link px-3' data-bs-toggle="modal" data-bs-target="#exampleModalCenter2">
+          {/* <a className='menu-link px-3' data-bs-toggle="modal" data-bs-target="#exampleModalCenter2"> */}
+          <a className='menu-link px-3' >
             View
           </a>
         </div>
