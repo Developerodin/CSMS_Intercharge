@@ -1,0 +1,1 @@
+export const BASE_URLPE="https://api.plugeasy.in/genapi/version1.6/"
